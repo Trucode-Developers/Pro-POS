@@ -30,6 +30,7 @@ export default function Home() {
       <main>
         <h1 className="text-2xl text-red-500">Welcome to POS</h1>
         <button className="bg-blue-700 text-white hover:bg-opacity-70 px-4 py-2 rounded-2xl" onClick={greet}>Greet</button>
+        <button className="bg-yellow-500 text-white hover:bg-opacity-70 px-4 py-2 rounded-2xl" onClick={greet}>Greet</button>
         <h3>{greeting}</h3>
       </main>
     </Layout>
