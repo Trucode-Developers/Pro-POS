@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "pro_pos",
-    "version": "0.1.21"
+    "version": "0.1.0"
   },
   "tauri": {
     "allowlist": {
