@@ -4,8 +4,9 @@ import { useEffect } from "react";
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
-import Layout from "@/components/Layout";
+import Layout from "@/components/layouts/sale";
 import { invoke } from "@tauri-apps/api/tauri";
+import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,19 +21,26 @@ export default function Home() {
     setGreeting("Hello World");
   }
   return (
-    <Layout>
+    <>
       <Head>
         <title>Pro POS</title>
         <meta name="description" content="Truecode POS" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
+      <main className="flex justify-center items-center min-h-screen gap-4 flex-col ">
+        <div>
+
         <h1 className="text-2xl text-red-500">Welcome to POS</h1>
         <button className="bg-blue-700 text-white hover:bg-opacity-70 px-4 py-2 rounded-2xl" onClick={greet}>Greet</button>
         <button className="bg-yellow-500 text-white hover:bg-opacity-70 px-4 py-2 rounded-2xl" onClick={greet}>Greet</button>
         <h3>{greeting}</h3>
+        </div>
+        <div>
+          <Link href="/admin/services"> Admin</Link>
+          <Link href="/cashier/sale"> Sale</Link>
+        </div>
       </main>
-    </Layout>
+    </>
   );
 }
