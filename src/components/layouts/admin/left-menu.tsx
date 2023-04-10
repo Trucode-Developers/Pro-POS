@@ -8,6 +8,7 @@ import Link from "next/link";
 import { TbReportAnalytics } from "react-icons/tb";
 import { FiFolder } from "react-icons/fi";
 import { HiOutlineCog } from "react-icons/hi";
+import pos from "./pos.png";
 
 export default function LeftMenu({ setVertical }: any) {
   const { asPath } = useRouter();
@@ -23,7 +24,7 @@ export default function LeftMenu({ setVertical }: any) {
     if (open) {
       setVertical(["20%", "auto", "20%"]);
     } else {
-      setVertical(["5%", "auto", "5%"]);
+      setVertical(["5%", "auto", "4%"]);
     }
   }, [open]);
 
@@ -58,23 +59,21 @@ export default function LeftMenu({ setVertical }: any) {
           open ? "w-full" : "w-16"
         } duration-500  px-4 flex flex-col`}
       >
-        <div className="py-2 flex justify-between">
-          <HiMenuAlt3
-            size={26}
-            className="cursor-pointer"
-            onClick={() => setOpen(!open)}
-          />
+        <div className="py-2 flex justify-between items-center">
+          {open && (
+            <Link href="/" >
+              <Image src={pos} width={50} height={50} alt="service image" />
+            </Link>
+          )}
           <HiMenuAlt3
             size={26}
             className="cursor-pointer"
             onClick={() => setOpen(!open)}
           />
         </div>
-        {open && (
-          <Link href="/" className=" flex justify-center items-center p-2">
-            <div>Welcome UserName</div>
-          </Link>
-        )}
+        <Link href="/" className=" flex justify-center items-center p-2 ">
+          <div className="truncate ">Welcome UserName</div>
+        </Link>
 
         <div>
           <input
@@ -90,7 +89,7 @@ export default function LeftMenu({ setVertical }: any) {
             (item) =>
               item.children.length > 0 && (
                 <div key={item.id} className="flex flex-col">
-                  <div className="text-secondary text-2xl font-bold">
+                  <div className="text-secondary text-2xl font-bold truncate ">
                     {item.title}
                   </div>
                   {item.children.map((sub) => (
@@ -101,14 +100,17 @@ export default function LeftMenu({ setVertical }: any) {
                     >
                       <div>
                         {/* {React.createElement(item?.icon, { size: "20" })} */}
-                        <Image
+                        {React.createElement(MdOutlineDashboard, {
+                          size: "20",
+                        })}
+                        {/* <Image
                           src={sub.image}
                           width={50}
                           height={50}
                           alt="service image"
                           objectFit="cover"
                           objectPosition="center"
-                        />
+                        /> */}
                       </div>
                       <h2
                         style={{

@@ -29,7 +29,7 @@ export default function Layout({ children }: LayoutProps) {
           split="vertical"
           sizes={vertical}
           onChange={setVertical}
-          style={{ "--pane-min-width": "5%" } as React.CSSProperties} //note this is not working yet
+          // style={{ "--pane-min-width": "5%" } as React.CSSProperties} //note this is not working yet
           sashRender={() => <div className="sash" />}
         >
           <Pane className="bg-primary text-primary_text">

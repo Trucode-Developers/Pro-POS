@@ -57,21 +57,24 @@ export default function RightMenu() {
   ];
 
   return (
-    <div className="flex justify-between flex-col min-h-screen p-2 overflow-hidden">
+    <div className="flex justify-between flex-col min-h-screen p-2 overflow-">
       <div>leftmenu</div>
       <div className="flex flex-col gap-2">
         {menu.map((item) => (
           <div key={item.id}>
-            <Link
-              href={item.link}
-              className="flex justify-end items-center "
-            >
-              <div className="flex items-center gap-2 hover:text-secondary">
+            <Link href={item.link} className="flex justify-end items-center ">
+              <div className="flex items-center gap-4 hover:text-secondary">
                 <div className="flex flex-col items-end">
-                  <h3 className="text-lg">{item.title}</h3>
-                  <p className="text-[10px]">{item.description}</p>
+                  <h3 className="text-lg truncate ">{item.title}</h3>
+                  <p className="text-[10px] truncate ">{item.description}</p>
                 </div>
-                <Image src={item.image} width={50} height={50} alt="service icon" />
+                <Image
+                  src={item.image}
+                  width={50}
+                  height={50}
+                  alt="service icon"
+                  className="truncate min-w-[40px] min-h-[40px]"
+                />
               </div>
             </Link>
           </div>
