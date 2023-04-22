@@ -108,7 +108,7 @@ export default function Layout({ children }: LayoutProps) {
             onChange={setSizes}
             sashRender={() => <div className="sash" />}
           >
-            <Pane style={{ ...layoutCSS, background: "#d5d7d9" }}>
+            <Pane style={{background: "#d5d7d9" }}>
               <main>{children}</main>
             </Pane>
             <SplitPane
