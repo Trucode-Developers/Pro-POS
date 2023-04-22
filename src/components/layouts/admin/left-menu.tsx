@@ -22,7 +22,7 @@ export default function LeftMenu({ setVertical }: any) {
 
   useEffect(() => {
     if (open) {
-      setVertical(["20%", "auto", "20%"]);
+      setVertical(["16%", "auto", "16%"]);
     } else {
       setVertical(["5%", "auto", "4%"]);
     }

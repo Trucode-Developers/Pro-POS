@@ -10,9 +10,9 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   const [vertical, setVertical] = useState<(number | string | string)[]>([
-    "20%",
+    "16%",
     "auto",
-    "20%",
+    "4%",
   ]);
 
   const layoutCSS = {
@@ -24,7 +24,7 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <>
-      <div className="h-screen">
+      <div className="h-screen bg-gradient-to-b from-primary via-gray-400 to-primary">
         <SplitPane
           split="vertical"
           sizes={vertical}
@@ -32,10 +32,13 @@ export default function Layout({ children }: LayoutProps) {
           // style={{ "--pane-min-width": "5%" } as React.CSSProperties} //note this is not working yet
           sashRender={() => <div className="sash" />}
         >
-          <Pane className="bg-primary text-primary_text">
+          <Pane className=" text-primary_text">
             <LeftMenu setVertical={setVertical} />
           </Pane>
-          <Pane style={{ ...layoutCSS }} className="bg-secondary">
+          <Pane
+            style={{ ...layoutCSS }}
+            className="p-10 bg-gray-100 rounded-l-3xl "
+          >
             <div>
               <div>Center-line</div>
               <div>Center-line</div>

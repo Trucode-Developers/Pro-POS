@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
-import Layout from "@/components/layouts/sale";
+import Layout from "@/components/layouts/cashier/layout";
 import { invoke } from "@tauri-apps/api/tauri";
 import Link from "next/link";
 
@@ -30,15 +30,13 @@ export default function Home() {
       </Head>
       <main className="flex justify-center items-center min-h-screen gap-4 flex-col ">
         <div>
-
-        <h1 className="text-2xl text-red-500">Welcome to POS</h1>
-        <button className="bg-blue-700 text-white hover:bg-opacity-70 px-4 py-2 rounded-2xl" onClick={greet}>Greet</button>
-        <button className="bg-yellow-500 text-white hover:bg-opacity-70 px-4 py-2 rounded-2xl" onClick={greet}>Greet</button>
-        <h3>{greeting}</h3>
+          <h1 className="text-2xl text-red-500">Welcome to POS</h1>
+          <h3>Pages under development </h3>
         </div>
-        <div>
+        <div className="flex flex-wrap gap-4 text-2xl [&>*]:text-primary hover:[&>*]:text-secondary [&>*]:underline ">
           <Link href="/admin/services"> Admin</Link>
           <Link href="/cashier/sale"> Sale</Link>
+          <Link href="/partitions"> Partitions stores</Link>
         </div>
       </main>
     </>
