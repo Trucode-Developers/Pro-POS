@@ -9,7 +9,10 @@ import {
   VscLayoutPanel,
   VscLayoutSidebarRightOff,
   VscLayoutSidebarRight,
+  VscExclude,
+  VscGear,
 } from "react-icons/vsc";
+import Settings from "./settings";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -17,6 +20,7 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   const [vertical, setVertical] = useState<(number | string)[]>([
+    "0.05%",
     "auto",
     "25%",
   ]);
@@ -52,13 +56,14 @@ export default function Layout({ children }: LayoutProps) {
   //closing and opening the left side
   const [isRightOpen, setIsRightOpen] = useState(true);
   const [isPanelOpen, setIsPanelOpen] = useState(true);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   //a function to close the left side
   const closeAndOpenRight = () => {
     if (isRightOpen) {
-      setVertical(["auto", "0.2%"]);
+      setVertical(["0.05%","auto", "0.2%"]);
       setIsRightOpen(false);
     } else {
-      setVertical(["auto", "25%"]);
+      setVertical(["0.05%","auto", "25%"]);
       setIsRightOpen(true);
     }
   };
@@ -72,6 +77,16 @@ export default function Layout({ children }: LayoutProps) {
       setIsPanelOpen(true);
     }
   };
+  //a function to open and close the panel
+  const closeAndOpenSettings = () => {
+    if (isSettingsOpen) {
+      setVertical(["0.05%", "auto", "25%"]);
+      setIsSettingsOpen(false);
+    } else {
+      setVertical(["25%","auto", "25%"]);
+      setIsSettingsOpen(true);
+    }
+  };
 
   return (
     <>
@@ -80,35 +95,47 @@ export default function Layout({ children }: LayoutProps) {
           className="h-[5vh] flex justify-between items-center px-4"
           style={{ backgroundColor, color: textColor }}
         >
-          <div> this is the upper nav</div>
+          <div className="flex gap-4 justify-center items-center">
+            {isSettingsOpen ? (
+              <VscExclude onClick={closeAndOpenSettings} />
+            ) : (
+              <VscGear onClick={closeAndOpenSettings} />
+            )}
+            <div>this is the upper nav</div>
+          </div>
           <div className="flex gap-4 [&>*]:cursor-pointer">
             {isPanelOpen ? (
-              <VscLayoutPanelOff onClick={closeAndOpenPanel} />
-            ) : (
               <VscLayoutPanel onClick={closeAndOpenPanel} />
+            ) : (
+              <VscLayoutPanelOff onClick={closeAndOpenPanel} />
             )}
             {isRightOpen ? (
-              <VscLayoutSidebarRightOff onClick={closeAndOpenRight} />
-            ) : (
               <VscLayoutSidebarRight onClick={closeAndOpenRight} />
+            ) : (
+              <VscLayoutSidebarRightOff onClick={closeAndOpenRight} />
             )}
             <VscCloud />
             <VscAccount />
           </div>
         </div>
+
         <SplitPane
           split="vertical"
           sizes={vertical}
           onChange={setVertical}
           sashRender={() => <div className="sash" />}
         >
+          <Pane style={{ ...layoutCSS, background: "#a1a544" }}>
+            <Settings />
+          </Pane>
+
           <SplitPane
             split="horizontal"
             sizes={sizes}
             onChange={setSizes}
             sashRender={() => <div className="sash" />}
           >
-            <Pane style={{background: "#d5d7d9" }}>
+            <Pane style={{ background: "#d5d7d9" }}>
               <main>{children}</main>
             </Pane>
             <SplitPane
@@ -122,13 +149,10 @@ export default function Layout({ children }: LayoutProps) {
               <Pane style={{ ...layoutCSS, background: "#c0c3c6" }}>
                 Bottom Pane111
               </Pane>
-              {/* <Pane style={{ ...layoutCSS, background: "#c0c3c6" }}>
-                Bottom Pane3
-              </Pane> */}
             </SplitPane>
           </SplitPane>
           <Pane style={{ ...layoutCSS, background: "#a1a5a9" }}>
-            <div>left side</div>
+            <div>Right side</div>
           </Pane>
         </SplitPane>
       </div>
