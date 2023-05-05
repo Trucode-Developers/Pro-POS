@@ -20,3 +20,9 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #555; 
 }
+
+/* add root colors */
+:root {
+  --primary: #0099ff;
+  --secondary: #e54b2d;
+}
