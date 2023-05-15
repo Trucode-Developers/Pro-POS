@@ -125,7 +125,7 @@ export default function Layout({ children }: LayoutProps) {
           onChange={setVertical}
           sashRender={() => <div className="sash" />}
         >
-          <Pane style={{ ...layoutCSS, background: "#a1a544" }}>
+          <Pane>
             <Settings />
           </Pane>
 

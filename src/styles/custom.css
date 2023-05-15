@@ -1,3 +1,19 @@
+.themCardStyle{
+  display:flex;
+  flex-direction: column;
+}
+.themCardStyle label{
+  width: 100%;
+}
+.themCardStyle input{
+ border:1px solid transparent;
+ width: 100%;
+ min-height: 40px;
+}
+
+
+
+
 /* width */
 ::-webkit-scrollbar {
   width: 8px;
