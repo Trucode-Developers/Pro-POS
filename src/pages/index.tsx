@@ -36,6 +36,7 @@ export default function Home() {
         <div className="flex flex-wrap gap-4 text-2xl [&>*]:text-primary hover:[&>*]:text-secondary [&>*]:underline ">
           <Link href="/admin/services"> Admin</Link>
           <Link href="/cashier/sale"> Sale</Link>
+          <Link href="/cashier/theming"> Theming</Link>
           <Link href="/partitions"> Partitions stores</Link>
         </div>
       </div>
