@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import SplitPane, { Pane } from "split-pane-react";
 import "split-pane-react/esm/themes/default.css";
+import { ThemeContext } from "../../../pages/_app";
 //icons
 import {
   VscCloud,
@@ -19,6 +20,8 @@ interface LayoutProps {
 }
 
 export default function Layout({ children }: LayoutProps) {
+  
+  const getTheme: any = useContext(ThemeContext);
   const [vertical, setVertical] = useState<(number | string)[]>([
     "0.05%",
     "auto",
@@ -28,12 +31,10 @@ export default function Layout({ children }: LayoutProps) {
   // const [sizes1, setSizes1] = useState<(number | string)[]>(["20%", "auto"]);
   const [sizes2, setSizes2] = useState<(number | string)[]>(["auto", "30%"]);
 
-  const layoutCSS = {
-    height: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  };
+  // const leftBorderCSS = {
+  //   height: "100%",
+  //   borderRight: "5px solid red",
+  // };
 
   //theme
   const [isDarkTheme, setIsDarkTheme] = useState(false);
@@ -101,7 +102,7 @@ export default function Layout({ children }: LayoutProps) {
             ) : (
               <VscGear onClick={closeAndOpenSettings} />
             )}
-            <div>this is the upper nav</div>
+            <div>Quality service for you !</div>
           </div>
           <div className="flex gap-4 [&>*]:cursor-pointer">
             {isPanelOpen ? (
@@ -135,7 +136,7 @@ export default function Layout({ children }: LayoutProps) {
             onChange={setSizes}
             sashRender={() => <div className="sash" />}
           >
-            <Pane style={{ background: "#d5d7d9" }}>
+            <Pane style={(getTheme.viewStyle)}>
               <main>{children}</main>
             </Pane>
             <SplitPane
@@ -143,15 +144,11 @@ export default function Layout({ children }: LayoutProps) {
               onChange={setSizes2}
               sashRender={() => <div className="sash" />}
             >
-              <Pane style={{ ...layoutCSS, background: "#a1a5a9" }}>
-                Bottom Pane2
-              </Pane>
-              <Pane style={{ ...layoutCSS, background: "#c0c3c6" }}>
-                Bottom Pane111
-              </Pane>
+              <Pane style={getTheme.tabsStyle}>Bottom Pane2</Pane>
+              <Pane style={getTheme.tabsStyle}>Bottom Pane111</Pane>
             </SplitPane>
           </SplitPane>
-          <Pane style={{ ...layoutCSS, background: "#a1a5a9" }}>
+          <Pane style={getTheme.tabsStyle}>
             <div>Right side</div>
           </Pane>
         </SplitPane>
