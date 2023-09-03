@@ -5,8 +5,8 @@ interface ThemeContextType {
     primary: string;
     secondary: string;
     text: string;
-    background: string;
-    };
+    tertiary: string;
+  };
   setTheme: (theme: any) => void;
 }
 
@@ -15,7 +15,7 @@ const initialThemeContext: ThemeContextType = {
     primary: "#1a1a1a",
     secondary: "#1a1a1a",
     text: "#1a1a1a",
-    background: "#1a1a1a",
+    tertiary: "#1a1a1a",
   },
   setTheme: () => {},
 };
