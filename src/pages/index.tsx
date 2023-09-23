@@ -37,6 +37,7 @@ export default function Home() {
           <Link href="/admin/services"> Admin</Link>
           <Link href="/cashier/sale"> Sale</Link>
           <Link href="/partitions"> Partitions stores</Link>
+          <Link href="/greet"> Greet</Link>
         </div>
       </div>
       <div className="flex justify-center items-center gap-4 flex-col text-xl ">

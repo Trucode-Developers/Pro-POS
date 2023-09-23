@@ -67,3 +67,9 @@ jobs:
           releaseBody: 'See the assets to download and install this version.'
           releaseDraft: true
           prerelease: false
+
+
+
+//this is the updater link that shoul dnot be included in this file:
+
+        // "https://gist.github.com/Silomalo/824d4cd3f68c1c97956280b4d0c379e5/raw/pos-updater.json"
