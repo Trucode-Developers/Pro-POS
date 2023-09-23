@@ -17,8 +17,8 @@ export default function Greet() {
 
   // Necessary because we will have to use Greet as a component later.
   return (
-    <div>
-      <Link href="/">← Back to home</Link>
+    <div className="flex gap-2 justify-center items-center flex-wrap flex-col bg-blue-200 h-full w-full">
+      <Link href="/">← Back to hom now</Link>
       <br />
       <div>
         <h1 className="text-4xl font-bold">Greet</h1>

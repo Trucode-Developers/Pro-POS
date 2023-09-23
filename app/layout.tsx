@@ -1,19 +1,17 @@
-import "@/styles/globals.css";
-import "@/styles/custom.css";
-import type { AppProps } from "next/app";
+"use client"
 import { createContext, useEffect, useState } from "react";
-import React from "react";
-// import { ThemeContext } from "@/components/themeContext";
+import "./globals.css";
+import "./custom.css";
+import NextTopLoader from "nextjs-toploader";
 
 export const ThemeContext = createContext({});
 
-export default function App({ Component, pageProps }: AppProps) {
-  // const [primary, setPrimary] = useState("#3a55df");
-  // const [secondary, setSecondary] = useState("#000000");
-  // const [secondaryColor, setSecondaryColor] = useState("#000000");
-  // const [tertiary, setTertiary] = useState("#000000");
-  // const [textColor, setTextColor] = useState("#000000");
-  // const [fontSize, setFontSize] = useState("12");
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+
   const [change, setChange] = useState(1);
 
   const [primary, setPrimary] = useState("#1c1c1c");
@@ -53,8 +51,27 @@ export default function App({ Component, pageProps }: AppProps) {
   };
 
   return (
-    <ThemeContext.Provider value={{ tabsStyle, viewStyle, change, setChange }}>
-      <Component {...pageProps} />
-    </ThemeContext.Provider>
+    <html lang="en">
+      <body>
+        <NextTopLoader
+          color="#DEB200"
+          initialPosition={0.08}
+          crawlSpeed={200}
+          height={5}
+          crawl={true}
+          showSpinner={true}
+          easing="ease"
+          speed={200}
+          shadow="0 0 10px #2299DD,0 0 5px #2299DD"
+        />
+
+        <ThemeContext.Provider
+          value={{ tabsStyle, viewStyle, change, setChange }}
+        >
+          {/* <Component {...pageProps} /> */}
+        {children}
+        </ThemeContext.Provider>
+      </body>
+    </html>
   );
 }

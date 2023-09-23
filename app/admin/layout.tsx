@@ -1,8 +1,9 @@
+"use client";
 import React, { useState } from "react";
 import SplitPane, { Pane } from "split-pane-react";
 import "split-pane-react/esm/themes/default.css";
-import RightMenu from "./right-menu";
-import  LeftMenu from "./left-menu";
+import RightMenu from "./components/right-menu";
+import LeftMenu from "./components/left-menu";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -39,14 +40,7 @@ export default function Layout({ children }: LayoutProps) {
             style={{ ...layoutCSS }}
             className="p-10 bg-gray-100 rounded-l-3xl "
           >
-            <div>
-              <div>Center-line</div>
-              <div>Center-line</div>
-              <button onClick={() => setVertical(["20%", "auto", "10%"])}>
-                {" "}
-                Hide right
-              </button>
-            </div>
+            <div>{children}</div>
           </Pane>
 
           <Pane className="bg-gray-300">

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { data } from "@/components/layouts/admin/services_data";
+import { data } from "./services_data";
 import Image from "next/image";
 import { HiMenuAlt3 } from "react-icons/hi";
 import { MdOutlineDashboard } from "react-icons/md";
-import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { TbReportAnalytics } from "react-icons/tb";
 import { FiFolder } from "react-icons/fi";
@@ -11,7 +11,7 @@ import { HiOutlineCog } from "react-icons/hi";
 import pos from "./pos.png";
 
 export default function LeftMenu({ setVertical }: any) {
-  const { asPath } = useRouter();
+  const pathname = usePathname();
   const [open, setOpen] = useState(true);
 
   const menus = [
@@ -61,7 +61,7 @@ export default function LeftMenu({ setVertical }: any) {
       >
         <div className="py-2 flex justify-between items-center">
           {open && (
-            <Link href="/" >
+            <Link href="/">
               <Image src={pos} width={50} height={50} alt="service image" />
             </Link>
           )}
@@ -95,22 +95,13 @@ export default function LeftMenu({ setVertical }: any) {
                   {item.children.map((sub) => (
                     <div
                       className={` group flex items-center text-sm  gap-3.5 font-medium p-2 hover:bg-secondary rounded-md ${
-                        asPath === item.link ? "bg-secondary" : ""
+                        pathname === item.link ? "bg-yellow-500" : ""
                       }`}
                     >
                       <div>
-                        {/* {React.createElement(item?.icon, { size: "20" })} */}
                         {React.createElement(MdOutlineDashboard, {
                           size: "20",
                         })}
-                        {/* <Image
-                          src={sub.image}
-                          width={50}
-                          height={50}
-                          alt="service image"
-                          objectFit="cover"
-                          objectPosition="center"
-                        /> */}
                       </div>
                       <h2
                         style={{
@@ -161,15 +152,8 @@ export default function LeftMenu({ setVertical }: any) {
               </h2>
             </div>
           </Link>
-
-          {/* <div>
-            <Order />
-          </div> */}
         </div>
       </div>
-      {/* <div className="m-0 -ml-6 text-xl  font-semibold bg-blue- text-center w-full max-h-screen overflow-auto">
-        <main>{children}</main>
-      </div> */}
     </section>
   );
 }

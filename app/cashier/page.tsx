@@ -1,7 +1,8 @@
+"use client";
 import { useEffect, useState, useContext } from "react";
 import SplitPane, { Pane } from "split-pane-react";
 import "split-pane-react/esm/themes/default.css";
-import { ThemeContext } from "../../../pages/_app";
+import { ThemeContext } from "../layout";
 //icons
 import {
   VscCloud,
@@ -14,13 +15,13 @@ import {
   VscGear,
 } from "react-icons/vsc";
 import Settings from "./settings";
+import Sale from "./sale";
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
-export default function Layout({ children }: LayoutProps) {
-  
+export default function Page() {
   const getTheme: any = useContext(ThemeContext);
   const [vertical, setVertical] = useState<(number | string)[]>([
     "0.05%",
@@ -30,11 +31,6 @@ export default function Layout({ children }: LayoutProps) {
   const [sizes, setSizes] = useState<(number | string)[]>(["70%", "auto"]);
   // const [sizes1, setSizes1] = useState<(number | string)[]>(["20%", "auto"]);
   const [sizes2, setSizes2] = useState<(number | string)[]>(["auto", "30%"]);
-
-  // const leftBorderCSS = {
-  //   height: "100%",
-  //   borderRight: "5px solid red",
-  // };
 
   //theme
   const [isDarkTheme, setIsDarkTheme] = useState(false);
@@ -61,10 +57,10 @@ export default function Layout({ children }: LayoutProps) {
   //a function to close the left side
   const closeAndOpenRight = () => {
     if (isRightOpen) {
-      setVertical(["0.05%","auto", "0.2%"]);
+      setVertical(["0.05%", "auto", "0.2%"]);
       setIsRightOpen(false);
     } else {
-      setVertical(["0.05%","auto", "25%"]);
+      setVertical(["0.05%", "auto", "25%"]);
       setIsRightOpen(true);
     }
   };
@@ -84,7 +80,7 @@ export default function Layout({ children }: LayoutProps) {
       setVertical(["0.05%", "auto", "25%"]);
       setIsSettingsOpen(false);
     } else {
-      setVertical(["25%","auto", "25%"]);
+      setVertical(["25%", "auto", "25%"]);
       setIsSettingsOpen(true);
     }
   };
@@ -136,8 +132,10 @@ export default function Layout({ children }: LayoutProps) {
             onChange={setSizes}
             sashRender={() => <div className="sash" />}
           >
-            <Pane style={(getTheme.viewStyle)}>
-              <main>{children}</main>
+            <Pane style={getTheme.viewStyle}>
+              <main>
+                <Sale />
+              </main>
             </Pane>
             <SplitPane
               sizes={sizes2}

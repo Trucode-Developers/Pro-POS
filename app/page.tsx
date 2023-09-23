@@ -1,26 +1,12 @@
-import Head from "next/head";
-import { useState } from "react";
-import { useEffect } from "react";
 import Image from "next/image";
 import { Inter } from "next/font/google";
-import styles from "@/styles/Home.module.css";
-import Layout from "@/components/layouts/cashier/layout";
 import { invoke } from "@tauri-apps/api/tauri";
 import Link from "next/link";
 import { VscAccount, VscGear, VscWorkspaceTrusted } from "react-icons/vsc";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Home() {
-  const [greeting, setGreeting] = useState("Hello");
-  useEffect(() => {
-    invoke("greet", { name: "World" }).then(console.log).catch(console.error);
-  }, []);
-  function greet() {
-    const greet=invoke("greet", { name: "World" }).then(console.log).catch(console.error);
-    //save invoked result to greeting
-    // setGreeting(greet);
-  }
+export default function Page() {
   return (
     <main className="grid grid-cols-2 min-h-screen relative">
       <div className="flex justify-center items-center gap-4 flex-col bg-gray-300">
@@ -34,14 +20,12 @@ export default function Home() {
           </h3>
         </div>
         <div className="flex flex-wrap gap-4 text-2xl [&>*]:text-primary hover:[&>*]:text-secondary [&>*]:underline ">
-          <Link href="/admin/services"> Admin</Link>
-          <Link href="/cashier/sale"> Sale</Link>
-          <Link href="/partitions"> Partitions stores</Link>
+          <Link href="/admin"> Admin</Link>
+          <Link href="/cashier"> Sale</Link>
           <Link href="/greet"> Greet</Link>
         </div>
       </div>
       <div className="flex justify-center items-center gap-4 flex-col text-xl ">
-
         <div>
           <h1 className="text-2xl md:text-4xl font-bold text-[var(--primary)] py-5">
             LOGIN

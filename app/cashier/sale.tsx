@@ -1,7 +1,7 @@
+"use client";
 import { useState, useRef, useEffect } from "react";
 // import debounce from "lodash/debounce";
 import Link from "next/link";
-import Layout from "@/components/layouts/cashier/layout";
 
 interface Product {
   name: string;
@@ -93,7 +93,7 @@ export default function Sale() {
   };
 
   return (
-    <Layout>
+    <div>
       <Link href="/" className="bg-yellow-500 px-4 py-2 rounded-xl">
         Back home
       </Link>
@@ -118,6 +118,6 @@ export default function Sale() {
           )}
         </div>
       </div>
-    </Layout>
+    </div>
   );
 }
