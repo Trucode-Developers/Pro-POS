@@ -42,3 +42,10 @@
   --primary: #0099ff;
   --secondary: #e54b2d;
 }
+
+::selection {
+  background: #0099ff3f; /* WebKit/Blink Browsers */
+}
+::-moz-selection {
+  background: #0099ff3f; /* Gecko Browsers */
+}

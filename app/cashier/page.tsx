@@ -16,6 +16,7 @@ import {
 } from "react-icons/vsc";
 import Settings from "./settings";
 import Sale from "./sale";
+import { SettingsModal } from "./settingsSheet";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -98,6 +99,7 @@ export default function Page() {
             ) : (
               <VscGear onClick={closeAndOpenSettings} />
             )}
+            <SettingsModal />
             <div>Quality service for you !</div>
           </div>
           <div className="flex gap-4 [&>*]:cursor-pointer">

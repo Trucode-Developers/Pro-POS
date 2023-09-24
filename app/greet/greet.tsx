@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import Link from "next/link";
+import { Button } from "@/components/ui/button" 
 
 export default function Greet() {
   const [greeting, setGreeting] = useState("");
@@ -23,6 +24,7 @@ export default function Greet() {
       <div>
         <h1 className="text-4xl font-bold">Greet</h1>
         <p className="text-2xl">{greeting}</p>
+        <Button>Click me</Button>
       </div>
     </div>
   );

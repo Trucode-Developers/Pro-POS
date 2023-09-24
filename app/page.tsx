@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { invoke } from "@tauri-apps/api/tauri";
 import Link from "next/link";
 import { VscAccount, VscGear, VscWorkspaceTrusted } from "react-icons/vsc";
+import { InitialSetUp } from "./initialSetUp";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -62,8 +63,8 @@ export default function Page() {
           </form>
         </div>
       </div>
-      <div className="absolute p-2 top-0 right-0 text-2xl hover:text-[var(--primary)]">
-        <VscGear />
+      <div className="absolute p-2 top-2 right-2">
+        <InitialSetUp />
       </div>
     </main>
   );
