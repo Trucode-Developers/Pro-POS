@@ -1,70 +1,36 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
+use sqlx::postgres::PgPoolOptions;
+use sqlx::PgPool;
+use tokio::runtime::Runtime;
 mod routes;
-// mod models;
+use routes::users::{create, greet, update, delete_user,get_user, get_all_users, PgPoolWrapper};
 
-use sqlx::Row;
-// use sqlx::Connection;
-use std::error::Error;
-use dotenv::dotenv;
-
-// use routes::users::{greet, get_user};
-use routes::users::greet;
-// use tauri::Manager;
-
-
-struct User {
-    // id: i32,
-    name: String,
-    role: i32,
-    email: String,
-    password: String,
-    is_active: bool,
-    // created_at: String,
+async fn establish_connection() -> PgPool {
+    dotenv::dotenv().expect("Unable to load environment variables from .env file");
+    let db_url = std::env::var("DATABASE_URL").expect("Unable to read DATABASE_URL env var");
+    PgPoolOptions::new()
+        .max_connections(100)
+        .connect(&db_url)
+        .await
+        .expect("Unable to connect to Postgres")
 }
 
-async fn create(user: &User, pool: &sqlx::PgPool)->Result<(), Box <dyn Error>>{
-    let query = "INSERT INTO users (name, role, email, password, is_active) VALUES ($1, $2, $3, $4, $5)";
-
-    sqlx::query(query)
-        .bind(&user.name)
-        .bind(&user.role)
-        .bind(&user.email)
-        .bind(&user.password)
-        .bind(&user.is_active)
-        .execute(pool)
-        .await?;
-
-    Ok(())
-}
-
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn Error>> {
-    dotenv().ok();
-    let url: String = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    let pool = sqlx::postgres::PgPool::connect(&url).await?;
-    //call the migrate macro
-    sqlx::migrate!("./migrations").run(&pool).await?;
-
-    let res = sqlx::query("SELECT 1+1 as sum").fetch_one(&pool).await?;
-
-    let sum: i32 = res.get("sum");
-    println!("sum: {}", sum);
-
-    let user =User{
-        name: "John the second".to_string(),
-        role: 1,
-        email: "john2@yahoo.com".to_string(),
-        password: "john2@yahoo.com".to_string(),
-        is_active: true,
-    };
-
-    create(&user, &pool).await?;
-
+// #[tokio::main]
+fn main() {
+    let pool: PgPool = Runtime::new().unwrap().block_on(establish_connection());
 
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet])
-        // .invoke_handler(tauri::generate_handler![get_user])
+        .manage(PgPoolWrapper { pool }) // Add PgPoolWrapper State.
+        .invoke_handler(tauri::generate_handler![
+            greet, // Export Rust function to be called with invoke [https://tauri.app/v1/guides/features/command/]
+            create, update, delete_user,get_all_users,get_user
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
-    Ok(())
 }
+
+// #[tauri::command]
+// pub fn greet(name: &str) -> String {
+//    format!("Hello, {}!", name)
+// }
