@@ -38,14 +38,14 @@ export default function Layout({ children }: LayoutProps) {
           </Pane>
           <Pane
             style={{ ...layoutCSS }}
-            className="p-10 bg-gray-100 rounded-l-3xl "
+            className="px-2 bg-gray-100 rounded-l-3xl "
           >
             <div>{children}</div>
           </Pane>
 
-          <Pane className="bg-gray-300">
+          {/* <Pane className="bg-gray-300">
             <RightMenu />
-          </Pane>
+          </Pane> */}
         </SplitPane>
       </div>
     </>

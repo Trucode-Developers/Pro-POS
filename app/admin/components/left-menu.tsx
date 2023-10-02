@@ -93,7 +93,8 @@ export default function LeftMenu({ setVertical }: any) {
                     {item.title}
                   </div>
                   {item.children.map((sub) => (
-                    <div
+                    <Link
+                      href={sub.link}
                       className={` group flex items-center text-sm  gap-3.5 font-medium p-2 hover:bg-secondary rounded-md ${
                         pathname === item.link ? "bg-yellow-500" : ""
                       }`}
@@ -120,7 +121,7 @@ export default function LeftMenu({ setVertical }: any) {
                       >
                         {sub?.title}
                       </h2>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               )

@@ -105,9 +105,9 @@ export const data = [
     children: [
       {
         id: 1,
-        title: "Point of Sale",
+        title: "Users",
         //description: "View order, sales and usage reports",
-        link: "/admin/reports",
+        link: "/admin/users",
         image: MdOutlineDashboard,
       },
       {
