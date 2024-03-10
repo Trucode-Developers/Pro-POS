@@ -62,6 +62,7 @@ export default function Greet() {
   };
 
   const createUser = async () => {
+    console.log(user);
     await invoke("create", { user })
       .then((response) => get_all_users())
       .catch(console.error);
@@ -86,9 +87,9 @@ export default function Greet() {
 
   // Necessary because we will have to use Greet as a component later.
   return (
-    <div className=" bg-blue-200 h-full w-full">
-      <div className="flex gap-4  flex-wrap">
-        <div className="p-5 flex-1">
+    <div className="w-full h-full bg-blue-200 ">
+      <div className="flex flex-wrap gap-4">
+        <div className="flex-1 p-5">
           <Link href="/">← Back to hom now</Link>
           <br />
           <h1 className="text-4xl font-bold">Greet</h1>
@@ -130,7 +131,7 @@ export default function Greet() {
               name="role"
               id="role"
               value={user.role}
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex w-full h-10 px-3 py-2 text-sm border rounded-md border-input bg-background ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               // onChange={(e) => setUser({ ...user, role: e.target.value })}
             >
               <option value="1">Admin</option>
@@ -140,7 +141,7 @@ export default function Greet() {
             <select
               name="is_active"
               id="is_active"
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex w-full h-10 px-3 py-2 text-sm border rounded-md border-input bg-background ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               onChange={(e) =>
                 setUser({ ...user, is_active: e.target.value === "1" })
               }
@@ -150,7 +151,7 @@ export default function Greet() {
               <option value="0">No</option>
             </select>
           </form>
-          <div className="flex gap-4 flex-wrap justify-evenly p-5">
+          <div className="flex flex-wrap gap-4 p-5 justify-evenly">
             {/* <Button className="bg-blue-500 hover:bg-black" >Click me</Button> */}
             {active_id !== "" ? (
               <Button
@@ -193,13 +194,13 @@ export default function Greet() {
             <tbody>
               {Object.values(users).map((user: any, index: number) => (
                 <tr key={index}>
-                  <td className="border px-4 py-2">{user.name}</td>
-                  <td className="border px-4 py-2">{user.email}</td>
-                  <td className="border px-4 py-2">{user.role}</td>
-                  <td className="border px-4 py-2">
+                  <td className="px-4 py-2 border">{user.name}</td>
+                  <td className="px-4 py-2 border">{user.email}</td>
+                  <td className="px-4 py-2 border">{user.role}</td>
+                  <td className="px-4 py-2 border">
                     {user.is_active ? "Yes" : "No"}
                   </td>
-                  <td className="border px-4 py-2">
+                  <td className="px-4 py-2 border">
                     <Button
                       className="bg-blue-500 hover:bg-slate-500"
                       onClick={() => {
@@ -209,7 +210,7 @@ export default function Greet() {
                       Edit + {user.email}
                     </Button>
                   </td>
-                  <td className="border px-4 py-2">
+                  <td className="px-4 py-2 border">
                     <Button
                       className="bg-red-500 hover:bg-black"
                       onClick={() => deleteUser(user.email)}

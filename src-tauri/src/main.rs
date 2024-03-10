@@ -6,6 +6,7 @@ use tokio::runtime::Runtime;
 mod routes;
 use routes::users::{create, greet, update, delete_user,get_user, get_all_users, PgPoolWrapper};
 
+
 async fn establish_connection() -> PgPool {
     dotenv::dotenv().expect("Unable to load environment variables from .env file");
     let db_url = std::env::var("DATABASE_URL").expect("Unable to read DATABASE_URL env var");
@@ -15,10 +16,16 @@ async fn establish_connection() -> PgPool {
         .await
         .expect("Unable to connect to Postgres")
 }
+async fn run_migrations() {
+    let pool: PgPool = establish_connection().await;
+    sqlx::migrate!("./migrations").run(&pool).await;
+}
 
 // #[tokio::main]
 fn main() {
     let pool: PgPool = Runtime::new().unwrap().block_on(establish_connection());
+    Runtime::new().unwrap().block_on(run_migrations());
+    
 
     tauri::Builder::default()
         .manage(PgPoolWrapper { pool }) // Add PgPoolWrapper State.
