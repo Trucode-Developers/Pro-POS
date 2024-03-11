@@ -133,6 +133,7 @@ name = "app"
 version = "0.1.2"
 dependencies = [
  "dotenv",
+ "futures",
  "serde",
  "serde_derive",
  "serde_json",
