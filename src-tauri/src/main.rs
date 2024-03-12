@@ -58,7 +58,7 @@ async fn run_sqlite_migrations(pool: &SqlitePool) {
 }
 #[tokio::main]
 async fn main() {
-    let use_postgres = false; // Set to true to use PostgreSQL, false to use SQLite
+    let use_postgres = true; // Set to true to use PostgreSQL, false to use SQLite
 
   
    let pool = if use_postgres {
