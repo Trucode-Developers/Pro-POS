@@ -1,7 +1,11 @@
-use sqlx::{PgPool, SqlitePool};
-use tauri::State;
 
-
+// use tauri::State;
+use sqlx::migrate::MigrateDatabase;
+use sqlx::postgres::PgPoolOptions;
+use sqlx::{PgPool, Sqlite, SqlitePool};
+use std::env;
+use std::result::Result;
+use std::fs;
 
 
 pub struct DbPool {
@@ -50,5 +54,36 @@ pub async fn run_sqlite_migrations(pool: &SqlitePool) {
         .expect("SQLite migration failed");
     if let Err(err) = sqlx::migrate!("./migrations").run(pool).await {
         eprintln!("SQLite migration failed: {:?}", err);
+    }
+}
+
+//creating and managing local docs to handle db_url, logged in user, and other state
+pub fn create_local_docs()->bool{
+    let path: &str = "./docs";
+    let create_dir_result: Result<(), Error> = fs::create_dir(path);
+    match create_dir_result {
+        Ok(_) => {
+            println!("Directory created");
+            true 
+        } ,
+        Err(e) => {
+            println!("Error creating directory: {:?}", e);
+            false
+        } 
+    }
+}
+
+pub fn write_to_file(file_name: &str, content: &str) -> bool {
+    let path = format!("./docs/{}", file_name);
+    let write_result = fs::write(&path, content);
+    match write_result {
+        Ok(_) => {
+            println!("File written");
+            true
+        },
+        Err(e) => {
+            println!("Error writing to file: {:?}", e);
+            false
+        },
     }
 }

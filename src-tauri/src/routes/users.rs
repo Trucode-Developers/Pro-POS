@@ -3,18 +3,8 @@ use sqlx::{PgPool, SqlitePool};
 use tauri::State;
 use thiserror::Error;
 
-// mod connections;
-// pub use crate::dbconnections::{DbPool, PoolType};
+use crate::db_connections::{DbPool, PoolType};
 
-
-pub struct DbPool {
-    pub pool: PoolType,
-}
-
-pub enum PoolType {
-    Postgres(PgPool),
-    SQLite(SqlitePool),
-}
 
 #[derive(Serialize, Deserialize, Debug, sqlx::FromRow)]
 pub struct User {
@@ -67,6 +57,8 @@ pub async fn create(user: User, state: State<'_, DbPool>) -> Result<(), CustomEr
     }
     Ok(())
 }
+
+
 
 #[tauri::command]
 pub async fn update(id: i32, user: User, state: State<'_, DbPool>) -> Result<(), CustomError> {

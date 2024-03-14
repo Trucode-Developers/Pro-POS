@@ -17,6 +17,7 @@ export default function Greet() {
   });
 
   const [active_id, setActive_id] = useState("");
+  const url = "postgres://postgres:Server@2244@localhost/pos";
 
   useEffect(() => {
     invoke<string>("greet", { name: "Professional POS" })
@@ -45,6 +46,8 @@ export default function Greet() {
       })
       .catch(console.error);
   };
+
+  
   const id = 2;
   const prepare_updating_user = async (email: string) => {
     setActive_id(email);
@@ -54,12 +57,13 @@ export default function Greet() {
   };
 
   const updateUser = async () => {
-    console.log(id);
-    console.log(user);
+
     await invoke("update", { id, user })
       .then((response) => get_all_users())
       .catch(console.error);
   };
+  
+
 
   const createUser = async () => {
     console.log(user);
@@ -175,6 +179,8 @@ export default function Greet() {
             >
               Reset users
             </Button>
+
+            
           </div>
         </div>
 
