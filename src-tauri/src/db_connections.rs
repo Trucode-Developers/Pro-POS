@@ -3,12 +3,9 @@ use sqlx::migrate::MigrateDatabase;
 use sqlx::postgres::PgPoolOptions;
 use sqlx::{PgPool, Sqlite, SqlitePool};
 
-use std::io::Error;
 use std::result::Result;
-
-use std::fs;
-use std::fs::OpenOptions;
-use std::io::Write;
+use std::fs::{self,OpenOptions,File};
+use std::io::{self, Read,BufRead, Error,Write,ErrorKind,Seek, SeekFrom,};
 
 pub struct DbPool {
     pub pool: PoolType,
@@ -25,6 +22,37 @@ pub fn get_active_database_type(db_pool: &DbPool) -> &'static str {
         PoolType::SQLite(_) => "sqlite",
     }
 }
+pub fn set_active_db( db_pool: DbPool) -> DbPool {
+    let content = get_active_database_type(&db_pool).to_string();
+    // every time the file is written , the app re-renders and the active db is updated
+    //so lets read and compare whats their and only write once to re-render this prevents loops 
+    let active_db = read_specific_line(2).unwrap();
+    if active_db != content {
+        //this allows the app to re-render only when active db has changed
+        let _ = update_file(&content, 1);
+    }
+    db_pool
+}
+
+pub async fn establish_database_connection(db_url: &str) -> DbPool {
+    let db_pool = if let Ok(pg_pool) = establish_postgres_connection(db_url).await {
+        let _ = run_postgres_migrations(&pg_pool).await; // Run migrations for PostgreSQL
+        DbPool {
+            pool: PoolType::Postgres(pg_pool),
+        }
+    } else {
+        let sqlite_pool = establish_sqlite_connection()
+            .await
+            .expect("Unable to establish SQLite database connection");
+        let _ = run_sqlite_migrations(&sqlite_pool).await; // Run migrations for SQLite
+        DbPool {
+            pool: PoolType::SQLite(sqlite_pool),
+        }
+    };
+    // Call set_active_db with the DbPool object
+    set_active_db(db_pool)
+}
+
 
 // pub async fn establish_database_connection(db_url: &str) -> DbPool {
 //     if let Ok(pg_pool) = establish_postgres_connection(db_url).await {
@@ -43,27 +71,7 @@ pub fn get_active_database_type(db_pool: &DbPool) -> &'static str {
 //     }
 
 // }
-pub async fn establish_database_connection(db_url: &str) -> DbPool {
-    let db_pool = if let Ok(pg_pool) = establish_postgres_connection(db_url).await {
-        let _ = run_postgres_migrations(&pg_pool).await; // Run migrations for PostgreSQL
-        DbPool {
-            pool: PoolType::Postgres(pg_pool),
-        }
-    } else {
-        let sqlite_pool = establish_sqlite_connection()
-            .await
-            .expect("Unable to establish SQLite database connection");
-        let _ = run_sqlite_migrations(&sqlite_pool).await; // Run migrations for SQLite
-        DbPool {
-            pool: PoolType::SQLite(sqlite_pool),
-        }
-    };
 
-    // Call set_active_db with the DbPool object
-    set_active_db(db_pool)
-
-    // db_pool // Return the DbPool object
-}
 
 async fn establish_postgres_connection(db_url: &str) -> Result<PgPool, sqlx::Error> {
     PgPoolOptions::new()
@@ -102,48 +110,57 @@ async fn run_sqlite_migrations(pool: &SqlitePool) {
     }
 }
 
-//postgress url
-pub fn write_to_file(file_name: &str, content: &str) -> Option<String> {
-    let path = format!("./docs/{}", file_name);
 
-    // Truncate the file if it exists
-    if path_exists(&path) {
-        if let Err(err) = OpenOptions::new().write(true).truncate(true).open(&path) {
-            return Some(format!("Error truncating file: {}", err));
+
+// pub fn create_new()-> Result<String, Error> {
+//     let mut file = fs::File::create("local.txt")?;
+//     file.write_all(b"sqlite")?;
+//     file.write_all(b"\n")?; // Writing a newline character
+//     file.write_all(b"custom")?;
+//     file.write_all(b"\n")?; // Writing a newline character
+//     file.write_all(b"random")?;
+//     update_file("sqlite", 1);
+//     Ok("File created successfully".to_string())
+// }
+
+
+pub fn update_file(content: &str,line_to_update: usize) -> Result<String, Error> {
+    // Read the contents of the file
+    let file_path = "local.txt";
+    let file = fs::File::open(file_path)?;
+    let reader = io::BufReader::new(file);
+    let mut lines = reader.lines().collect::<Result<Vec<String>, _>>()?;
+    // Update the lines as needed
+    if line_to_update < lines.len() {
+        lines[line_to_update] = content.to_string();
+    } else {
+        return Err(Error::new(ErrorKind::InvalidInput, "Line index out of bounds"));
+    }
+    // Write the modified contents back to the file
+    let mut file = fs::File::create(file_path)?;
+    for line in lines {
+        file.write_all(line.as_bytes())?;
+        file.write_all(b"\n")?; // Add newline after each line
+    }
+
+    Ok("File updated successfully".to_string())
+}
+
+pub fn read_specific_line(line_number: usize) -> Result<String, Error> {
+    // Open the file
+    let file = File::open("local.txt")?;
+    let reader = io::BufReader::new(file);
+
+    // Iterate through the lines until the desired line
+    for (index, line) in reader.lines().enumerate() {
+        if index == line_number - 1 {
+            // Return the line if found
+            return line.map_err(|e| Error::new(ErrorKind::Other, e));
         }
     }
-
-    // Write content to the file
-    match fs::write(&path, content) {
-        Ok(_) => None,
-        Err(err) => Some(format!("Error writing to file: {}", err)),
-    }
+    Err(Error::new(
+        ErrorKind::InvalidInput,
+        format!("Line {} not found", line_number),
+    ))
 }
 
-// Function to check if a file exists
-fn path_exists(path: &str) -> bool {
-    fs::metadata(path).is_ok()
-}
-
-pub fn read_file_content(file_path: &str) -> Result<String, Error> {
-    fs::read_to_string(file_path).map_err(|e| e.into())
-}
-//postgress url
-
-//active database
-//get the value of get_active_database_type and write it to a file
-pub fn set_active_db( db_pool: DbPool) -> DbPool {
-    let content = get_active_database_type(&db_pool).to_string();
-    if let Some(err) = write_to_file("active_db.txt", &content) {
-        eprintln!("Error: {}", err);
-    }
-    db_pool
-}
-
-// read the active_db
-// #[tauri::command]
-pub fn read_active_db() -> Result<String, Error> {
-    let path = "./docs/active_db.txt";
-    read_file_content(path)
-
-}

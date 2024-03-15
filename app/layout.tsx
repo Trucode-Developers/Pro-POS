@@ -3,6 +3,7 @@ import { createContext, useEffect, useState } from "react";
 import "./globals.css";
 import "./custom.css";
 import NextTopLoader from "nextjs-toploader";
+import { invoke } from "@tauri-apps/api/tauri";
 
 export const ThemeContext = createContext({});
 
@@ -20,6 +21,7 @@ export default function RootLayout({
   const [tertiary, setTertiary] = useState("#000000");
   const [textColor, setTextColor] = useState("#ffffff");
   const [fontSize, setFontSize] = useState("12");
+  const [activeDB, setActiveDB] = useState("postgres");
 
   useEffect(() => {
     const storedPrimary = localStorage.getItem("primary");
@@ -50,9 +52,29 @@ export default function RootLayout({
     // borderTop: `1px dotted lightgray`,
   };
 
+  //active DB
+   const activeDb = async () => {
+     await invoke("current_active_db").then((response: unknown) => {
+       if (typeof response === "string") {
+         setActiveDB(response);
+       } else {
+         console.error("Response is not a string:", response);
+       }
+     });
+   };
+
+   //use effect to call active db
+    useEffect(() => {
+      activeDb();
+    }, []);
+
   return (
     <html lang="en">
-      <body>
+      <body
+        className={` border-8 ${
+          activeDB === "postgres" ? "border-green-500" : "border-red-500"
+        }`}
+      >
         <NextTopLoader
           color="#DEB200"
           initialPosition={0.08}
@@ -66,10 +88,10 @@ export default function RootLayout({
         />
 
         <ThemeContext.Provider
-          value={{ tabsStyle, viewStyle, change, setChange }}
+          value={{ tabsStyle, viewStyle, change, setChange, activeDB }}
         >
           {/* <Component {...pageProps} /> */}
-        {children}
+          {children}
         </ThemeContext.Provider>
       </body>
     </html>

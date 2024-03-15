@@ -17,14 +17,12 @@ export default function Greet() {
   });
 
   const [active_id, setActive_id] = useState("");
-  const url = "postgres://postgres:Server@2244@localhost/pos";
 
   useEffect(() => {
     invoke<string>("greet", { name: "Professional POS" })
       .then(
         (greeting) => setGreeting(greeting),
         (error) => console.error(error)
-        // console.log(greeting)
       )
       .catch(console.error);
     get_all_users();
