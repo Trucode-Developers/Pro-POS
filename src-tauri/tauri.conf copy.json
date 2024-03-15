@@ -50,7 +50,17 @@
     "security": {
       "csp": null
     },
-   
+    "updater": {
+      "windows": {
+        "installMode": "passive"
+      },
+      "active": true,
+      "endpoints": [
+        "https://gist.github.com/Silomalo/824d4cd3f68c1c97956280b4d0c379e5"
+      ],
+      "dialog": true,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDMyMUZBRkZDQzdDNjBBNUUKUldSZUNzYkgvSzhmTW1xZE4vaVBvSFRWQVhtd0M4LzhXa1FLQktjRWV4d1hudDBhMUpjTE5TY3cK"
+    },
     "windows": [
       {
         "fullscreen": false,

@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+// import { useRouter } from "next/navigation";
 import {
   Dialog,
   DialogContent,
@@ -15,23 +16,25 @@ import { VscGear } from "react-icons/vsc";
 import { Switch } from "@/components/ui/switch";
 import { invoke } from "@tauri-apps/api/tauri";
 import { useContext, useState } from "react";
-import { ThemeContext } from "./layout";
+import { ThemeContext } from "./context";
 import { Triangle, Bars } from "react-loader-spinner";
+import { relaunch } from "@tauri-apps/api/process";
 
 export function InitialSetUp() {
+  // const router = useRouter();
   const getTheme: any = useContext(ThemeContext);
   const [url, setUrl] = useState("");
 
   const changeDatabase = async () => {
     await invoke("change_db", { url })
-      .then((response) => console.log(response))
+      .then(async (response) => await relaunch())
       .catch(console.error);
   };
 
   const revokeDatabase = async () => {
     setUrl("not set");
     await invoke("change_db", { url })
-      .then((response) => console.log(response))
+      .then(async (response) => await relaunch())
       .catch(console.error);
   };
 

@@ -2,7 +2,7 @@
 import { useEffect, useState, useContext } from "react";
 import SplitPane, { Pane } from "split-pane-react";
 import "split-pane-react/esm/themes/default.css";
-import { ThemeContext } from "../layout";
+import { ThemeContext } from "../context";
 //icons
 import {
   VscCloud,

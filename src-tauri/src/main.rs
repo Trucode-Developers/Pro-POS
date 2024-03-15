@@ -4,12 +4,12 @@ mod routes;
 use routes::users::{create, delete_user, get_all_users, get_user, greet, update};
 
 pub mod db_connections;
-use db_connections::{establish_database_connection, read_specific_line, update_file, DbPool};
+use db_connections::{establish_database_connection,create_new, read_specific_line, update_file, DbPool};
 
 
 #[tauri::command]
 async fn change_db(url: String) -> String {
-    let active_db = establish_database_connection(&url).await;
+    let _ = establish_database_connection(&url).await;
     _ = update_file(&url, 0);
 
     format!("Hello {}", url)
@@ -22,7 +22,7 @@ async fn current_active_db() -> String {
 
 #[tokio::main]
 async fn main() {
-    // _= create_new();
+    _= create_new();
     let db_url = read_specific_line(1).unwrap();
 
     //if the file reads has a right url it will connect to postgres else it will default to sqlite

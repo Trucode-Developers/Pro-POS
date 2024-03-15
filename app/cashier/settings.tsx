@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import React from "react";
-import { ThemeContext } from "../layout";
+import { ThemeContext } from "../context";
 import { VscColorMode, VscCircleLarge } from "react-icons/vsc";
 
 export default function Settings() {
