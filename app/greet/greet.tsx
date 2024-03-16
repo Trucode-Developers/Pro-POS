@@ -92,7 +92,7 @@ export default function Greet() {
     <div className="w-full h-full bg-blue-200 ">
       <div className="flex flex-wrap gap-4">
         <div className="flex-1 p-5">
-          <Link href="/">← Back to hom now</Link>
+          <a href="/">← Back to hom now</a>
           <br />
           <h1 className="text-4xl font-bold">Greet</h1>
           <p className="text-2xl">{greeting}</p>

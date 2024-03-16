@@ -27,16 +27,22 @@ export function InitialSetUp() {
 
   const changeDatabase = async () => {
     await invoke("change_db", { url })
-      .then(async (response) => await relaunch())
+      .then((response) => refresh_page())
       .catch(console.error);
   };
 
   const revokeDatabase = async () => {
     setUrl("not set");
     await invoke("change_db", { url })
-      .then(async (response) => await relaunch())
+      .then((response) => refresh_page())
       .catch(console.error);
   };
+
+  const refresh_page = async () => {
+    await relaunch();
+    // console.log("Relaunched");
+  }
+  
 
   //  const activeDb = async () => {
   //    setUrl("not set");

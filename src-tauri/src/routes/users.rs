@@ -5,7 +5,6 @@ use thiserror::Error;
 
 use crate::db_connections::{DbPool, PoolType};
 
-
 #[derive(Serialize, Deserialize, Debug, sqlx::FromRow)]
 pub struct User {
     pub name: String,
@@ -58,8 +57,6 @@ pub async fn create(user: User, state: State<'_, DbPool>) -> Result<(), CustomEr
     Ok(())
 }
 
-
-
 #[tauri::command]
 pub async fn update(id: i32, user: User, state: State<'_, DbPool>) -> Result<(), CustomError> {
     match &state.pool {
@@ -101,16 +98,13 @@ async fn get_all_users_sqlite(pool: &SqlitePool) -> Result<Vec<User>, CustomErro
     // Define the query to fetch all users
     let query = "SELECT * FROM users";
     // Execute the query and fetch all users from the SQLite database
-    let result = sqlx::query_as::<_, User>(query)
-        .fetch_all(pool)
-        .await;
+    let result = sqlx::query_as::<_, User>(query).fetch_all(pool).await;
     // Check if the query execution was successful
     match result {
         Ok(users) => Ok(users), // Return the fetched users if successful
         Err(_) => Err(CustomError::GenericError), // Return a generic error if an error occurs
     }
 }
-
 
 #[tauri::command]
 pub async fn get_user(id: i32, state: State<'_, DbPool>) -> Result<Option<User>, CustomError> {

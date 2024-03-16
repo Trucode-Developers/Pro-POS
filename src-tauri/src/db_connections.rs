@@ -5,8 +5,9 @@ use sqlx::{PgPool, Sqlite, SqlitePool};
 
 use std::fs::{self, File, OpenOptions};
 use std::io::{self, BufRead, Error, ErrorKind, Read, Seek, SeekFrom, Write};
+use std::path::{Path, PathBuf};
 use std::result::Result;
-
+use dirs;
 pub struct DbPool {
     pub pool: PoolType,
 }
@@ -60,15 +61,56 @@ async fn establish_postgres_connection(db_url: &str) -> Result<PgPool, sqlx::Err
         .await
 }
 
+// async fn establish_sqlite_connection() -> Result<SqlitePool, sqlx::Error> {
+//     let db_url = String::from("sqlite://sqlite.db");
+//     if !Sqlite::database_exists(&db_url).await.unwrap() {
+//         Sqlite::create_database(&db_url).await.unwrap();
+//         let pool = SqlitePool::connect(&db_url).await.unwrap();
+//         let _ = sqlx::migrate!("./migrations").run(&pool).await;
+//     }
+//     Ok(SqlitePool::connect(&db_url).await?)
+// }
 async fn establish_sqlite_connection() -> Result<SqlitePool, sqlx::Error> {
-    let db_url = String::from("sqlite://sqlite.db");
+    // Get the AppData directory
+    let mut appdata_dir = match dirs::data_dir() {
+        Some(dir) => dir,
+        None => {
+            return Err(sqlx::Error::Io(io::Error::new(
+                io::ErrorKind::NotFound,
+                "AppData directory not found",
+            )));
+        }
+    };
+
+    // Append the folder name "truepos" to the AppData directory
+    appdata_dir.push("truepos");
+
+    // Check if the directory exists, create it if it doesn't
+    if !appdata_dir.exists() {
+        fs::create_dir_all(&appdata_dir)?;
+    }
+
+    // Append the database file name to the folder path
+    appdata_dir.push("sqlite.db");
+
+    // Convert the path to a string
+    let db_path = appdata_dir.to_string_lossy().to_owned();
+
+    // Database URL with the path to the SQLite file
+    let db_url = format!("sqlite://{}", db_path);
+
+    // Check if the database exists, create it if it doesn't
     if !Sqlite::database_exists(&db_url).await.unwrap() {
         Sqlite::create_database(&db_url).await.unwrap();
         let pool = SqlitePool::connect(&db_url).await.unwrap();
         let _ = sqlx::migrate!("./migrations").run(&pool).await;
     }
+
+    // Connect to the SQLite database
     Ok(SqlitePool::connect(&db_url).await?)
 }
+
+
 
 async fn run_postgres_migrations(pool: &PgPool) {
     let _ = sqlx::migrate!("./migrations")
@@ -90,38 +132,101 @@ async fn run_sqlite_migrations(pool: &SqlitePool) {
     }
 }
 
-pub fn create_new() -> Result<String, Error> {
-    let file_path = "local.txt";
+// pub fn create_new() -> Result<String, Error> {
+//     let file_path = "local.txt";
+//     // Check if the file exists
+//     if !file_exists(&file_path)? {
+//         // File doesn't exist, create it and write default content
+//         let mut file = fs::File::create(&file_path)?;
+//         file.write_all(b"sqlite")?;
+//         file.write_all(b"\n")?; // Writing a newline character
+//         file.write_all(b"sqlite ")?;
+//         file.write_all(b"\n")?; // Writing a newline character
+//         file.write_all(b"third line")?;
+//         file.write_all(b"\n")?; // Writing a newline character
+//         file.write_all(b"fourth line")?;
+//         file.write_all(b"\n")?; // Writing a newline character
+//         file.write_all(b"fifth line")?;
+//         Ok("File created successfully".to_string())
+//     } else {
+//         // File exists, no need to update
+//         Ok("File already exists".to_string())
+//     }
+// }
+
+// fn file_exists(file_path: &str) -> Result<bool, Error> {
+//     match fs::metadata(file_path) {
+//         Ok(metadata) => Ok(metadata.is_file()),
+//         Err(_) => Ok(false), // File doesn't exist
+//     }
+// }
+pub fn create_new() -> Result<String, io::Error> {
+    // Get the AppData directory
+    let mut appdata_dir = match dirs::data_dir() {
+        Some(dir) => dir,
+        None => {
+            return Err(io::Error::new(
+                io::ErrorKind::NotFound,
+                "AppData directory not found",
+            ));
+        }
+    };
+
+    // Append the folder name "truepos" to the AppData directory
+    appdata_dir.push("truepos");
+
+    // Check if the directory exists, create it if it doesn't
+    if !appdata_dir.exists() {
+        fs::create_dir_all(&appdata_dir)?;
+    }
+
+    // Append the file name "local.txt" to the folder path
+    appdata_dir.push("local.txt");
+
+    // Convert the path to a string
+    let file_path = appdata_dir.to_string_lossy().to_owned();
+
     // Check if the file exists
     if !file_exists(&file_path)? {
         // File doesn't exist, create it and write default content
-        let mut file = fs::File::create(&file_path)?;
-        file.write_all(b"sqlite")?;
-        file.write_all(b"\n")?; // Writing a newline character
-        file.write_all(b"sqlite ")?;
-        file.write_all(b"\n")?; // Writing a newline character
-        file.write_all(b"third line")?;
-        file.write_all(b"\n")?; // Writing a newline character
-        file.write_all(b"fourth line")?;
-        file.write_all(b"\n")?; // Writing a newline character
-        file.write_all(b"fifth line")?;
+        let mut file = fs::File::create(&*file_path)?;
+        file.write_all(b"sqlite\n")?;
+        file.write_all(b"sqlite\n")?;
+        file.write_all(b"third line\n")?;
+        file.write_all(b"fourth line\n")?;
+        file.write_all(b"fifth line\n")?;
         Ok("File created successfully".to_string())
     } else {
         // File exists, no need to update
         Ok("File already exists".to_string())
     }
 }
-fn file_exists(file_path: &str) -> Result<bool, Error> {
-    match fs::metadata(file_path) {
-        Ok(metadata) => Ok(metadata.is_file()),
-        Err(_) => Ok(false), // File doesn't exist
-    }
+
+fn file_exists(file_path: &str) -> io::Result<bool> {
+    let path = Path::new(file_path);
+    Ok(path.exists())
+}
+
+fn get_file_path(file_name: &str) -> Option<PathBuf> {
+    // Get the AppData directory
+    let mut appdata_dir = match dirs::data_dir() {
+        Some(dir) => dir,
+        None => return None, // Unable to get the AppData directory
+    };
+
+    // Append the folder name "truepos" to the AppData directory
+    appdata_dir.push("truepos");
+
+    // Append the file name to the folder path
+    appdata_dir.push(file_name);
+
+    Some(appdata_dir)
 }
 
 pub fn update_file(content: &str, line_to_update: usize) -> Result<String, Error> {
     // Read the contents of the file
-    let file_path = "local.txt";
-    let file = fs::File::open(file_path)?;
+    let file_path = get_file_path("local.txt").unwrap();
+    let file = fs::File::open(file_path.clone())?;
     let reader = io::BufReader::new(file);
     let mut lines = reader.lines().collect::<Result<Vec<String>, _>>()?;
     // Update the lines as needed
@@ -145,7 +250,8 @@ pub fn update_file(content: &str, line_to_update: usize) -> Result<String, Error
 
 pub fn read_specific_line(line_number: usize) -> Result<String, Error> {
     // Open the file
-    let file = File::open("local.txt")?;
+    let file_path = get_file_path("local.txt").unwrap();
+    let file = File::open(file_path)?;
     let reader = io::BufReader::new(file);
 
     // Iterate through the lines until the desired line
