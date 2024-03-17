@@ -1,50 +1,35 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+"use client";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { VscGear } from "react-icons/vsc";
+import Settings from "./settings";
+import { ThemeContext } from "../context";
+import { useContext } from "react";
 
 export function SettingsModal() {
+  const getTheme: any = useContext(ThemeContext);
   return (
     <Sheet>
-      <SheetTrigger asChild>
-        <Button variant="outline">Open</Button>
-      </SheetTrigger>
-      <SheetContent side="left">
-        <SheetHeader>
-          <SheetTitle>Edit profile</SheetTitle>
-          <SheetDescription>
-            Make changes to your profile here. Click save when you're done.
-          </SheetDescription>
-        </SheetHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <Input id="name" value="Pedro Duarte" className="col-span-3" />
+        <SheetTrigger asChild>
+          <VscGear />
+        </SheetTrigger>
+        <SheetContent side="left" style={getTheme.tabsStyle} className="border-none">
+          <SheetHeader>
+            <h2 className="text-lg md:text-xl lg:text-2xl">Settings</h2>
+            <p>
+              Make changes to your settings here
+            </p>
+          </SheetHeader>
+          <div>
+            <Settings />
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
-            </Label>
-            <Input id="username" value="@peduarte" className="col-span-3" />
-          </div>
-        </div>
-        <SheetFooter>
-          <SheetClose asChild>
-            <Button type="submit">Save changes</Button>
-          </SheetClose>
-        </SheetFooter>
-      </SheetContent>
+        </SheetContent>
     </Sheet>
   );
 }

@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 // import debounce from "lodash/debounce";
 import Link from "next/link";
+import { HiOutlineSearchCircle } from "react-icons/hi";
 
 interface Product {
   name: string;
@@ -94,18 +95,18 @@ export default function Sale() {
 
   return (
     <div>
-      <Link href="/" className="bg-yellow-500 px-4 py-2 rounded-xl">
-        Back home
-      </Link>
       <div className="relative">
-        <div className="flex justify-center flex-col items-center gap-2">
-          <input
-            type="text"
-            className="border-2 border-gray-300 bg-white h-10 sm:w-[90%] md:w-[70%] px-5 pr-16 rounded-lg text-sm focus:outline-none"
-            placeholder="Search for products, brands and more/ Scan barcode"
-            value={searchTerm}
-            onChange={handleInputChange}
-          />
+        <div className="flex flex-col items-center justify-center gap-2">
+          <div className="flex items-center justify-center w-full mt-5 lg:mt-10">
+            <input
+              type="search"
+              className="border-2 border-gray-300 bg-white  sm:w-[90%] md:w-[70%] px-5 py-1 pr-16 rounded-lg focus:outline-none text-center"
+              placeholder="Search for products, brands and more/ Scan barcode"
+              value={searchTerm}
+              onChange={handleInputChange}
+            />
+            <HiOutlineSearchCircle className="-ml-10 text-2xl font-bold text-gray-400 cursor-pointer md:text-3xl" />
+          </div>
           {isOverlayVisible && (
             <div className="relative w-full sm:w-[90%] md:w-[70%]">
               <div
@@ -116,6 +117,10 @@ export default function Sale() {
               </div>
             </div>
           )}
+
+          <Link href="/" className="px-4 py-2 m-10 bg-yellow-500 rounded-xl">
+            Back home
+          </Link>
         </div>
       </div>
     </div>

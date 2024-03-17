@@ -1,7 +1,10 @@
+// "use client"
 import { useContext, useEffect, useState } from "react";
 import React from "react";
 import { ThemeContext } from "../context";
 import { VscColorMode, VscCircleLarge } from "react-icons/vsc";
+import Slider from "rc-slider";
+import "rc-slider/assets/index.css";
 
 export default function Settings() {
   const getTheme: any = useContext(ThemeContext);
@@ -100,17 +103,31 @@ export default function Settings() {
   }
 
   return (
-    <div style={getTheme.tabsStyle} className="h-full p-5">
+    <div style={getTheme.tabsStyle} className="h-full py-5">
+      <div className="px-2 overflow-x-hidden ">
+        <label className="mr-2">Font Size:</label>
+        <Slider
+          startPoint={12}
+          min={12}
+          max={50}
+          className="p-5 bg-gray-400"
+          value={parseInt(fontSize)}
+          defaultValue={12}
+          onChange={(e) => {
+            handleColorChange("fontSize", e.toString());
+          }}
+        />
+      </div>
       <div className="flex justify-between flex-wrap font-bold pb-4 hover:[&>*]:text-blue-500">
         <div
-          className="flex  gap-2 items-center"
+          className="flex items-center gap-2"
           onClick={(e) => darkThemeLightTheme("light")}
         >
           <label>Light mode</label>
           <VscCircleLarge className="text-2xl md:text-3xl" />
         </div>
         <div
-          className="flex  gap-2 items-center"
+          className="flex items-center gap-2"
           onClick={(e) => darkThemeLightTheme("dark")}
         >
           <label>Dark mode</label>
@@ -164,15 +181,15 @@ export default function Settings() {
           />
         </div>
 
-        <div className="themCardStyle">
+        {/* <div className="themCardStyle">
           <label className="mr-2">Font Size:</label>
           <input
             type="number"
-            className="border border-gray-300 rounded text-blue-500"
+            className="text-blue-500 border border-gray-300 rounded"
             value={fontSize}
             onChange={(e) => handleColorChange("fontSize", e.target.value)}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );

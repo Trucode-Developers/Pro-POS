@@ -9,8 +9,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function Page() {
   return (
-    <main className="grid grid-cols-2 min-h-screen relative">
-      <div className="flex justify-center items-center gap-4 flex-col bg-gray-300">
+    <main className="relative grid min-h-screen grid-cols-2">
+      <div className="flex flex-col items-center justify-center gap-4 bg-gray-300">
         <div className="flex flex-col items-center">
           <Image src="/pos.png" alt="main pic" width={180} height={200} />
           <h1 className="text-2xl text-[var(--primary)]">Welcome back: </h1>
@@ -26,7 +26,7 @@ export default function Page() {
           <Link href="/greet"> Greet</Link>
         </div>
       </div>
-      <div className="flex justify-center items-center gap-4 flex-col text-xl ">
+      <div className="flex flex-col items-center justify-center gap-4 text-xl ">
         <div>
           <h1 className="text-2xl md:text-4xl font-bold text-[var(--primary)] py-5">
             LOGIN
@@ -35,7 +35,6 @@ export default function Page() {
         <div>
           <form
             className="flex flex-col gap-4 w-[200px] md:w-[350px]
-          
           [&>input]:px-4
           [&>input]:border-b-4
           [&>input]:rounded-2xl
@@ -43,9 +42,7 @@ export default function Page() {
           [&>input]:border-[var(--primary)]
           [&>input]:outline-none
           [&>input]:text-center
-
-          "
-          >
+          ">
             <div className="flex justify-between">
               <label>UserName:</label>
               <VscAccount />

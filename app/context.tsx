@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { createContext, ReactNode, useEffect, useState } from "react";
 import "./globals.css";
 import "./custom.css";
@@ -43,7 +43,7 @@ export default function ContextProvider({ children }: { children: ReactNode }) {
     backgroundColor: primary,
     color: textColor,
     fontSize: `${fontSize}px`,
-    borderLeft: `1px dotted lightgray`,
+    // borderLeft: `1px dotted lightgray`,
     // borderTop: `1px dotted lightgray`,
   };
 
@@ -67,11 +67,7 @@ export default function ContextProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <div
-      className={` border-8 ${
-        activeDB === "postgres" ? "border-green-500" : "border-red-500"
-      }`}
-    >
+    <div >
       <ThemeContext.Provider
         value={{ tabsStyle, viewStyle, change, setChange, activeDB }}
       >
