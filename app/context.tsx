@@ -31,7 +31,7 @@ export default function ContextProvider({ children }: { children: ReactNode }) {
     if (storedSecondaryColor) setSecondaryColor(storedSecondaryColor);
     if (storedTertiary) setTertiary(storedTertiary);
     if (storedTextColor) setTextColor(storedTextColor);
-    if (storedFontSize) setFontSize(storedFontSize);
+    // if (storedFontSize) setFontSize(storedFontSize);
   }, [change]);
 
   const viewStyle = {
@@ -67,9 +67,9 @@ export default function ContextProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <div >
+    <div>
       <ThemeContext.Provider
-        value={{ tabsStyle, viewStyle, change, setChange, activeDB }}
+        value={{ tabsStyle, viewStyle, change, setChange, activeDB, fontSize,setFontSize }}
       >
         <NextTopLoader
           color="#DEB200"

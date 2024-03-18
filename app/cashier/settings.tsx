@@ -28,7 +28,7 @@ export default function Settings() {
     if (storedSecondaryColor) setSecondaryColor(storedSecondaryColor);
     if (storedTertiary) setTertiary(storedTertiary);
     if (storedTextColor) setTextColor(storedTextColor);
-    if (storedFontSize) setFontSize(storedFontSize);
+    // if (storedFontSize) setFontSize(storedFontSize);
   }, []);
 
   const handleColorChange = (colorName: string, newValue: string) => {
@@ -59,12 +59,12 @@ export default function Settings() {
         reloadTheme();
         break;
       case "fontSize":
-        const parsedValue = parseInt(newValue, 10);
-        if (!isNaN(parsedValue) && parsedValue >= 12 && parsedValue <= 60) {
-          const stringValue = parsedValue.toString();
-          setFontSize(stringValue);
-          localStorage.setItem("fontSize", stringValue);
-        }
+        // const parsedValue = parseInt(newValue, 10);
+        // if (!isNaN(parsedValue) && parsedValue >= 12 && parsedValue <= 60) {
+        //   const stringValue = parsedValue.toString();
+        //   setFontSize(stringValue);
+        //   localStorage.setItem("fontSize", stringValue);
+        // }
         reloadTheme();
         break;
       default:
@@ -103,8 +103,8 @@ export default function Settings() {
   }
 
   return (
-    <div style={getTheme.tabsStyle} className="h-full py-5">
-      <div className="px-2 overflow-x-hidden ">
+    <div style={getTheme.tabsStyle} className="h-full py-5 ">
+      {/* <div className="px-2 overflow-x-hidden ">
         <label className="mr-2">Font Size:</label>
         <Slider
           startPoint={12}
@@ -117,8 +117,8 @@ export default function Settings() {
             handleColorChange("fontSize", e.toString());
           }}
         />
-      </div>
-      <div className="flex justify-between flex-wrap font-bold pb-4 hover:[&>*]:text-blue-500">
+      </div> */}
+      <div className="flex justify-between flex-wrap font-bold pb-4 hover:[&>*]:scale-115">
         <div
           className="flex items-center gap-2"
           onClick={(e) => darkThemeLightTheme("light")}

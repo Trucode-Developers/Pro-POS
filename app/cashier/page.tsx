@@ -8,12 +8,13 @@ import { useEffect, useState, useContext } from "react";
 import { ThemeContext } from "../context";
 //icons
 import {
-  VscCloud,
   VscAccount,
   VscLayoutPanelOff,
   VscLayoutPanel,
   VscLayoutSidebarRightOff,
   VscLayoutSidebarRight,
+  VscZoomIn,
+  VscZoomOut,
 } from "react-icons/vsc";
 import Sale from "./sale";
 import { SettingsModal } from "./settingsSheet";
@@ -21,6 +22,7 @@ import Payments from "./payments";
 import Queue from "./queue";
 import { HiPaperClip, HiRss, HiSignal, HiSignalSlash } from "react-icons/hi2";
 import { HiOutlineLink } from "react-icons/hi";
+import Zoom from "../sharedComponents/zoom";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -77,6 +79,7 @@ export default function Page() {
       >
         <div className="flex items-center justify-center gap-4">
           <SettingsModal />
+          <Zoom className="flex items-center justify-center gap-4 text-xl" />
           <div className="hidden lg:block">Quality service for you !</div>
         </div>
         <div className="flex gap-4 [&>*]:cursor-pointer justify-center items-center">
