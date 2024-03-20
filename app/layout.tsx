@@ -1,4 +1,5 @@
-import ContextProvider from "./context";
+// import ContextProvider from "./context";
+import Initiator from "./initiator";
 
 export default function RootLayout({
   children,
@@ -8,7 +9,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ContextProvider>{children}</ContextProvider>
+        <Initiator />
+        <div>{children}</div>
       </body>
     </html>
   );

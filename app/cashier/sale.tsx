@@ -95,7 +95,7 @@ export default function Sale() {
 
   return (
     <div>
-      <div className="relative">
+      <div className="relative p-5">
         <div className="flex flex-col items-center justify-center gap-2">
           <div className="flex items-center justify-center w-full mt-5 lg:mt-10">
             <input

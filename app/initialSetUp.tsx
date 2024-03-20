@@ -1,6 +1,5 @@
 "use client";
 import { Button } from "@/components/ui/button";
-// import { useRouter } from "next/navigation";
 import {
   Dialog,
   DialogContent,
@@ -16,13 +15,12 @@ import { VscGear } from "react-icons/vsc";
 import { Switch } from "@/components/ui/switch";
 import { invoke } from "@tauri-apps/api/tauri";
 import { useContext, useState } from "react";
-import { ThemeContext } from "./context";
 import { Triangle, Bars } from "react-loader-spinner";
 import { relaunch } from "@tauri-apps/api/process";
+import { useThemeStore } from "@/lib/store";
 
 export function InitialSetUp() {
-  // const router = useRouter();
-  const getTheme: any = useContext(ThemeContext);
+   const activeDB = useThemeStore((state) => state.activeDb);
   const [url, setUrl] = useState("");
 
   const changeDatabase = async () => {
@@ -43,13 +41,6 @@ export function InitialSetUp() {
     // console.log("Relaunched");
   }
   
-
-  //  const activeDb = async () => {
-  //    setUrl("not set");
-  //    await invoke("current_active_db")
-  //      .then((response) => console.log(response))
-  //      .catch(console.error);
-  //  };
 
   return (
     <Dialog>
@@ -74,7 +65,7 @@ export function InitialSetUp() {
               <p>postgres://postgres:Server@2244@localhost/pos</p>
             </div>
             <div className="min-w-[100px]">
-              {getTheme.activeDB === "postgres" ? (
+              {activeDB === "postgres" ? (
                 <Bars
                   height="80"
                   width="80"
@@ -104,9 +95,7 @@ export function InitialSetUp() {
               Connection
             </Label>
             <div className="flex col-span-3 gap-2 capitalize">
-              {getTheme.activeDB === "postgres"
-                ? "multi-node mode"
-                : "single node mode"}
+              {activeDB === "postgres" ? "multi-node mode" : "single node mode"}
             </div>
           </div>
           <div className="grid items-center grid-cols-4 gap-4">
@@ -121,7 +110,7 @@ export function InitialSetUp() {
           </div>
         </div>
         <div className="flex justify-between gap-8 ">
-          {getTheme.activeDB === "postgres" && (
+          {activeDB === "postgres" && (
             <button
               type="button"
               onClick={revokeDatabase}
@@ -130,13 +119,6 @@ export function InitialSetUp() {
               Switch to single node
             </button>
           )}
-          {/* <button
-            type="button"
-            onClick={revokeDatabase}
-            className="px-4 py-2 text-white bg-green-700 rounded"
-          >
-            Work remotely
-          </button> */}
           <button
             type="submit"
             onClick={changeDatabase}

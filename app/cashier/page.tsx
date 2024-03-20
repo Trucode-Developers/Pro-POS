@@ -5,7 +5,7 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { useEffect, useState, useContext } from "react";
-import { ThemeContext } from "../context";
+// import { ThemeContext } from "../context";
 //icons
 import {
   VscAccount,
@@ -13,8 +13,6 @@ import {
   VscLayoutPanel,
   VscLayoutSidebarRightOff,
   VscLayoutSidebarRight,
-  VscZoomIn,
-  VscZoomOut,
 } from "react-icons/vsc";
 import Sale from "./sale";
 import { SettingsModal } from "./settingsSheet";
@@ -22,15 +20,17 @@ import Payments from "./payments";
 import Queue from "./queue";
 import { HiPaperClip, HiRss, HiSignal, HiSignalSlash } from "react-icons/hi2";
 import { HiOutlineLink } from "react-icons/hi";
-import Zoom from "../sharedComponents/zoom";
+import Zoom from "../../src/components/zoom";
+import { getTabStyle, getSalesStyle, useThemeStore } from "@/lib/store";
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 export default function Page() {
-  const getTheme: any = useContext(ThemeContext);
-
+    const activeDB = useThemeStore((state) => state.activeDb);
+  // const getTheme: any = useContext(ThemeContext);
+  // const salesStyle = getTabStyle();
   //theme
   const [isDarkTheme, setIsDarkTheme] = useState(false);
 
@@ -95,28 +95,25 @@ export default function Page() {
           )}
           <HiSignal
             className={` text-xl animate-pulse ${
-              getTheme.activeDB == "postgres"
-                ? "text-green-500"
-                : "text-red-500"
+              activeDB == "postgres" ? "text-green-500" : "text-red-500"
             }`}
           />
           {/* <HiSignalSlash /> */}
           <HiOutlineLink
             className={` text-md ${
-              getTheme.activeDB == "postgres"
-                ? "text-green-500"
-                : "text-red-500"
+              activeDB == "postgres" ? "text-green-500" : "text-red-500"
             }`}
           />
           <VscAccount />
         </div>
       </div>
-      <div className={`h-[calc(100vh-40px)]`}>
+      <div className={`h-[calc(100vh-56px)] `}>
         <ResizablePanelGroup direction="horizontal" className="bg-yellow-500">
           <ResizablePanel defaultSize={75} minSize={30}>
             <ResizablePanelGroup direction="vertical">
-              <ResizablePanel defaultSize={75} style={getTheme.viewStyle}>
+              <ResizablePanel defaultSize={75} style={getSalesStyle()}>
                 <Sale />
+                {/* {getTabStyle().backgroundColor} */}
               </ResizablePanel>
               <ResizableHandle withHandle />
               {isPanelOpen && (
@@ -125,7 +122,7 @@ export default function Page() {
                   minSize={10}
                   maxSize={75}
                   collapsible={true}
-                  style={getTheme.tabsStyle}
+                  style={getTabStyle()}
                 >
                   {isPaymentLeftAligned ? (
                     <Queue
@@ -151,7 +148,7 @@ export default function Page() {
                 minSize={10}
                 maxSize={50}
                 collapsible={true}
-                style={getTheme.tabsStyle}
+                style={getTabStyle()}
               >
                 {isPaymentLeftAligned ? (
                   <Payments
