@@ -11,7 +11,7 @@ export type ThemeState = {
   tabsColor: string;
   salesBgColor: string;
   salesColor: string;
-
+  adminSidebarSize: number[];
 };
 
 export type ThemeActions = {
@@ -30,6 +30,7 @@ export const useThemeStore = create<ThemeState & ThemeActions>()(
       tabsColor: "#ffffff",
       salesBgColor: "#1c1c1c",
       salesColor: "#ffffff",
+      adminSidebarSize: [20,80],
 
       darkMode: () =>
         set((state) => ({

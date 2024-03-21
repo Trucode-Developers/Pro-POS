@@ -4,9 +4,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { useEffect, useState, useContext } from "react";
-// import { ThemeContext } from "../context";
-//icons
+import { useEffect, useState } from "react";
 import {
   VscAccount,
   VscLayoutPanelOff,

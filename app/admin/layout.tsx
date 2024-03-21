@@ -5,32 +5,53 @@ import "split-pane-react/esm/themes/default.css";
 import RightMenu from "./components/right-menu";
 import LeftMenu from "./components/left-menu";
 
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
+import { useThemeStore } from "@/lib/store";
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 export default function Layout({ children }: LayoutProps) {
-  const [vertical, setVertical] = useState<(number | string | string)[]>([
-    "16%",
-    "auto",
-    "4%",
-  ]);
+    const adminSidebarSize = useThemeStore((state) => state.adminSidebarSize);
 
-  const layoutCSS = {
-    height: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  };
+
+   const onLayout = (sizes: number[]) => {
+    // console.log(sizes);
+    useThemeStore.setState({ adminSidebarSize: sizes });
+   };
 
   return (
     <>
-      <div className="h-screen bg-gradient-to-b from-primary via-gray-400 to-primary">
+      <ResizablePanelGroup
+        onLayout={onLayout}
+        direction="horizontal"
+        className="h-screen min-h-screen bg-gradient-to-b from-primary via-gray-400 to-primary"
+      >
+        <ResizablePanel
+          defaultSize={adminSidebarSize[0]}
+          minSize={4}
+          collapsible={true}
+        >
+          <LeftMenu  />
+        </ResizablePanel>
+        <ResizableHandle withHandle className="bg-transparent border-none" />
+        <ResizablePanel
+          defaultSize={adminSidebarSize[1]}
+          minSize={60}
+          className="items-center justify-center min-h-full p-4 bg-gray-200 rounded-l-3xl"
+        >
+          <div>{children}</div>
+        </ResizablePanel>
+      </ResizablePanelGroup>
+      {/* <div className="h-screen bg-gradient-to-b from-primary via-gray-400 to-primary">
         <SplitPane
           split="vertical"
           sizes={vertical}
           onChange={setVertical}
-          // style={{ "--pane-min-width": "5%" } as React.CSSProperties} //note this is not working yet
           sashRender={() => <div className="sash" />}
         >
           <Pane className=" text-primary_text">
@@ -42,12 +63,8 @@ export default function Layout({ children }: LayoutProps) {
           >
             <div>{children}</div>
           </Pane>
-
-          {/* <Pane className="bg-gray-300">
-            <RightMenu />
-          </Pane> */}
         </SplitPane>
-      </div>
+      </div> */}
     </>
   );
 }

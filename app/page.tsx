@@ -33,7 +33,7 @@ export default function Page() {
         <div className="flex flex-wrap gap-4 text-2xl [&>*]:text-primary hover:[&>*]:text-secondary [&>*]:underline ">
           <Link href="/admin"> Admin</Link>
           <Link href="/cashier"> Sale</Link>
-          <Link href="/greet"> Greet</Link>
+          <Link href="/admin/users"> Users</Link>
         </div>
       </div>
       <div className="flex flex-col items-center justify-center gap-4 text-xl ">

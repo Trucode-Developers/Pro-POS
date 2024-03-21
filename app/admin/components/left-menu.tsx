@@ -9,8 +9,10 @@ import { TbReportAnalytics } from "react-icons/tb";
 import { FiFolder } from "react-icons/fi";
 import { HiOutlineCog } from "react-icons/hi";
 import pos from "./pos.png";
+import { useThemeStore } from "@/lib/store";
 
 export default function LeftMenu({ setVertical }: any) {
+  const adminSidebarSize = useThemeStore((state) => state.adminSidebarSize);
   const pathname = usePathname();
   const [open, setOpen] = useState(true);
 
@@ -22,13 +24,13 @@ export default function LeftMenu({ setVertical }: any) {
 
   useEffect(() => {
     if (open) {
-      setVertical(["16%", "auto", "16%"]);
+      useThemeStore.setState({ adminSidebarSize: [20, 80] });
     } else {
-      setVertical(["5%", "auto", "4%"]);
+      useThemeStore.setState({ adminSidebarSize: [0, 100] });
     }
   }, [open]);
 
-  //filter out data on typing in search input
+  //filter out data on typing in search input‰‰
   const [search, setSearch] = useState("");
   const [filteredData, setFilteredData] = useState(data);
 
@@ -59,7 +61,7 @@ export default function LeftMenu({ setVertical }: any) {
           open ? "w-full" : "w-16"
         } duration-500  px-4 flex flex-col`}
       >
-        <div className="py-2 flex justify-between items-center">
+        <div className="flex items-center justify-between py-2">
           {open && (
             <Link href="/">
               <Image src={pos} width={50} height={50} alt="service image" />
@@ -71,7 +73,7 @@ export default function LeftMenu({ setVertical }: any) {
             onClick={() => setOpen(!open)}
           />
         </div>
-        <Link href="/" className=" flex justify-center items-center p-2 ">
+        <Link href="/" className="flex items-center justify-center p-2 ">
           <div className="truncate ">Welcome UserName</div>
         </Link>
 
@@ -81,7 +83,7 @@ export default function LeftMenu({ setVertical }: any) {
             placeholder="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full outline-none px-4 py-2 text-primary rounded-2xl "
+            className="w-full px-4 py-2 outline-none text-primary rounded-2xl "
           />
         </div>
         <div className="mt-4 flex flex-col gap-4 relative overflow-y-auto overflow-x-hidden max-h-[80vh]">
@@ -89,7 +91,7 @@ export default function LeftMenu({ setVertical }: any) {
             (item) =>
               item.children.length > 0 && (
                 <div key={item.id} className="flex flex-col">
-                  <div className="text-secondary text-2xl font-bold truncate ">
+                  <div className="text-2xl font-bold truncate text-secondary ">
                     {item.title}
                   </div>
                   {item.children.map((sub) => (
@@ -127,8 +129,8 @@ export default function LeftMenu({ setVertical }: any) {
               )
           )}
         </div>
-        {/* <div className="grow  flex items-end  cursor-pointer"> */}
-        <div className="grow  flex items-end  cursor-pointer flex-wrap">
+        {/* <div className="flex items-end cursor-pointer grow"> */}
+        <div className="flex flex-wrap items-end cursor-pointer grow">
           <Link href={"/Settings"}>
             <div
               className={` group flex items-center text-sm  gap-3.5 font-medium p-2 hover:bg-[var(--hoverbg)] rounded-md `}
