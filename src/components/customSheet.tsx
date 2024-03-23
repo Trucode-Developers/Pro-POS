@@ -1,42 +1,65 @@
 'use client";';
-import React, { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/router";
-import Image from "next/image";
-import { HiArrowSmLeft } from "react-icons/hi";
-
+import React, { ReactNode, useEffect, useState } from "react";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { useThemeStore } from "@/lib/store";
+import { closePopUp, useThemeStore } from "@/lib/store";
+import { HiArrowsRightLeft } from "react-icons/hi2";
+import { VscChromeClose } from "react-icons/vsc";
 
-export default function FadedSec({ title, children }: any) {
-  const adminSidebarSize = useThemeStore((state) => state.adminSidebarSize);
+interface Props {
+  children: ReactNode;
+  title?: string;
+}
+export default function CustomSheet({ title, children }: Props) {
+  const adminPopUpSize = useThemeStore((state) => state.adminPopUpSize);
+  const isPopUpOpen = useThemeStore((state) => state.isPopUpOpen);
 
   const onLayout = (sizes: number[]) => {
     // console.log(sizes);
-    useThemeStore.setState({ adminSidebarSize: sizes });
+    useThemeStore.setState({ adminPopUpSize: sizes });
   };
-  const cartRef: any = useRef();
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(isPopUpOpen);
+  const [isCardExpanded, setCardExpansion] = useState(false);
 
   //   const router = useRouter();
-  const handleCloseCart = () => {
-    setOpen(false);
-    //   cartRef.current.classList.remove("animate-fade-in");
-    //   cartRef.current.classList.add("animate-fade-out");
-    //   setTimeout(() => {
-    //   //   router.push("/admin/users");
-    // }, 300);
+  const openModal = () => {
+    useThemeStore.setState({ isPopUpOpen: true });
+    // setOpen(true); //called in useEffect
   };
+  const handleCloseModal = () => {
+    closePopUp();
+  };
+ 
+
+  //use effect to tract changes in isPopUpOpen
+  useEffect(() => {
+    setOpen(isPopUpOpen);
+  }, [isPopUpOpen]);
+
+  const toggleWidth = () => {
+    if (isCardExpanded) {
+      useThemeStore.setState({ adminPopUpSize: [40, 60] });
+      setCardExpansion(false);
+    } else {
+      useThemeStore.setState({ adminPopUpSize: [95, 5] });
+      setCardExpansion(true);
+    }
+  };
+
+  //use effect to tract changes in adminPopUpSize
+  useEffect(() => {
+    // adjust the width of the pop up
+  }, [adminPopUpSize]);
 
   return (
     <div>
       <button
-        onClick={() => setOpen(true)}
-        className="px-4 py-2 text-white bg-blue-700 border rounded-full bg-primary"
+        onClick={() => openModal()}
+        className="px-4 py-2 text-white bg-blue-700 border rounded-full"
       >
         Open me
       </button>
@@ -49,11 +72,29 @@ export default function FadedSec({ title, children }: any) {
           >
             <ResizablePanel
               onClick={(e) => e.stopPropagation()}
-              //   defaultSize={adminSidebarSize[1]}
-              defaultSize={40}
+              defaultSize={adminPopUpSize[0]}
+              onResize={(size, prevSize) => {
+                // Update adminPopUpSize with the new size
+                // setAdminPopUpSize([size, prevSize]);
+              }}
+              // defaultSize={40}
               minSize={20}
-              className="items-center justify-center min-h-full p-4 bg-gray-200 rounded-r-2xl "
+              className="relative items-center justify-center min-h-full p-4 bg-gray-200 rounded-r-2xl"
             >
+              <div className="absolute top-0 right-0 flex gap-5 px-5 py-4 text-xl font-bold">
+                <div
+                  className="duration-500 ease-in-out cursor-pointer hover:scale-125 "
+                  onClick={toggleWidth}
+                >
+                  <HiArrowsRightLeft />
+                </div>
+                <div
+                  className="duration-500 ease-in-out cursor-pointer hover:scale-125 "
+                  onClick={handleCloseModal}
+                >
+                  <VscChromeClose />
+                </div>
+              </div>
               <div>{children}</div>
             </ResizablePanel>
             <ResizableHandle
@@ -61,11 +102,11 @@ export default function FadedSec({ title, children }: any) {
               className="bg-transparent border-none"
             />
             <ResizablePanel
-              //   defaultSize={adminSidebarSize[0]}
-              //   defaultSize={50}
+              // defaultSize={adminSidebarSize[0]}
+              // defaultSize={50}
               minSize={5}
-              //   collapsible={true}
-              onClick={handleCloseCart}
+              // collapsible={true}
+              onClick={handleCloseModal}
               className="transition-all duration-300 ease-in-out"
             >
               {/* left side is totally transparent */}
@@ -74,7 +115,7 @@ export default function FadedSec({ title, children }: any) {
         </div>
         // <div
         //   className="fixed inset-0 bg-[rgba(0,0,0,0.7)] z-[999]"
-        //   onClick={handleCloseCart}
+        //   onClick={handleCloseModal}
         // >
         //   <div
         //     ref={cartRef}

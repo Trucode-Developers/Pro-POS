@@ -2,8 +2,6 @@ import { create } from "zustand";
 import { v4 as uuid } from "uuid";
 import { persist } from "zustand/middleware";
 
-
-
 export type ThemeState = {
   activeDb: string;
   fontSize: number;
@@ -12,14 +10,14 @@ export type ThemeState = {
   salesBgColor: string;
   salesColor: string;
   adminSidebarSize: number[];
+  adminPopUpSize: number[];
+  isPopUpOpen: boolean;
 };
 
 export type ThemeActions = {
   darkMode: () => void;
   lightMode: () => void;
 };
-
-
 
 export const useThemeStore = create<ThemeState & ThemeActions>()(
   persist(
@@ -30,7 +28,9 @@ export const useThemeStore = create<ThemeState & ThemeActions>()(
       tabsColor: "#ffffff",
       salesBgColor: "#1c1c1c",
       salesColor: "#ffffff",
-      adminSidebarSize: [20,80],
+      adminSidebarSize: [20, 80],
+      adminPopUpSize: [50, 50],
+      isPopUpOpen: false,
 
       darkMode: () =>
         set((state) => ({
@@ -48,7 +48,7 @@ export const useThemeStore = create<ThemeState & ThemeActions>()(
         })),
     }),
     { name: "theme-store", skipHydration: true }
-    
+
     // then  useThemeStore.persist.rehydrate(); in the app/initiator.tsx
   )
 );
@@ -65,14 +65,12 @@ export const getSalesStyle = () => ({
   fontSize: `${useThemeStore((state) => state.fontSize)}px`,
 });
 
-
-
-
-
-
-
-
-
+export const closePopUp = () => {
+  useThemeStore.setState({ isPopUpOpen: false });
+};
+export const openPopUp = () => {
+  useThemeStore.setState({ isPopUpOpen: true });
+};
 
 
 
@@ -112,11 +110,9 @@ export type Actions = {
   updateTask: (title: string, status: Status) => void;
 };
 
-
 export const useOtherStore = create<State & Actions>()(
   persist(
     (set) => ({
-
       tasks: [],
       draggedTask: null,
       addTask: (title: string, description?: string) =>
@@ -139,6 +135,6 @@ export const useOtherStore = create<State & Actions>()(
         })),
     }),
     { name: "other-store", skipHydration: true }
-    // then  useThemeStore.persist.rehydrate(); in the app/page.tsx 
+    // then  useThemeStore.persist.rehydrate(); in the app/page.tsx
   )
 );
