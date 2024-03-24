@@ -12,7 +12,8 @@ export const data = [
         id: 0,
         title: "Dashboard",
         //description: "View order, sales and usage reports",
-        link: "/admin/dashboard",
+        link: "/admin",
+        // link: "/admin/dashboard",
         image: MdHome,
       },
       {

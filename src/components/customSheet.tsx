@@ -12,6 +12,7 @@ import { VscChromeClose } from "react-icons/vsc";
 interface Props {
   children: ReactNode;
   title?: string;
+  // canOpen: boolean;
 }
 export default function CustomSheet({ title, children }: Props) {
   const adminPopUpSize = useThemeStore((state) => state.adminPopUpSize);
@@ -33,7 +34,6 @@ export default function CustomSheet({ title, children }: Props) {
   const handleCloseModal = () => {
     closePopUp();
   };
- 
 
   //use effect to tract changes in isPopUpOpen
   useEffect(() => {
@@ -61,7 +61,7 @@ export default function CustomSheet({ title, children }: Props) {
         onClick={() => openModal()}
         className="px-4 py-2 text-white bg-blue-700 border rounded-full"
       >
-        Open me
+        {title}
       </button>
       {open && (
         <div className="fixed inset-0 bg-[rgba(0,0,0,0.52)] z-[999]">

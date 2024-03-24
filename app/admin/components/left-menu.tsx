@@ -17,7 +17,7 @@ export default function LeftMenu({ setVertical }: any) {
   const [open, setOpen] = useState(true);
 
   const menus = [
-    { name: "Dashboard", link: "/portal", icon: MdOutlineDashboard },
+    { name: "Dashboard", link: "/admin", icon: MdOutlineDashboard },
     { name: "Packages", link: "/portal/packages", icon: FiFolder },
     { name: "Payments", link: "/portal/payments", icon: TbReportAnalytics },
   ];

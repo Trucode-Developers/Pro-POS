@@ -1,16 +1,17 @@
+'use client';
 import CustomSheet from "@/components/customSheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { closePopUp,openPopUp, useThemeStore } from "@/lib/store";
 import { invoke } from "@tauri-apps/api/tauri";
-import React from "react";
+import React, { useEffect } from "react";
 
 export default function UserCrud({
   user,
   setUser,
+  reset_users,
   get_all_users,
   active_id,
-  setActive_id,
 }: any) {
   const createUser = async () => {
     console.log(user);
@@ -19,33 +20,17 @@ export default function UserCrud({
       .catch(console.error);
   };
 
-  const id = 2;
+  // const idd = 2;
   const updateUser = async () => {
-    await invoke("update", { id, user })
+    await invoke("update", { active_id, user })
       .then((response) => get_all_users())
       .catch(console.error);
     closePopUp();
   };
 
-  const reset_users = async () => {
-    setUser({
-      name: "",
-      role: 1,
-      email: "",
-      password: "",
-      is_active: true,
-    });
-    setActive_id("");
-  };
-
-  // const closePopUp = () => {
-  //   // const isPopUpOpen = useThemeStore((state) => state.isPopUpOpen);
-  //   useThemeStore.setState({ isPopUpOpen: false });
-  // };
-
 
   return (
-    <CustomSheet title="Open me">
+    <CustomSheet title="New Staff">
       <div>
         <form className="flex flex-col gap-4">
           <label htmlFor="name">Name</label>
