@@ -17,10 +17,8 @@ CREATE TABLE roles (
 
 CREATE TABLE permissions (
   id serial PRIMARY KEY,
-  name varchar(255) NOT NULL,
-  created_by int NOT NULL,
-  created_at timestamp NOT NULL,
-  FOREIGN KEY (created_by) REFERENCES users(id)
+  slug varchar(255) NOT NULL UNIQUE,
+  name varchar(255) NOT NULL
 );
 
 CREATE TABLE role_permissions (

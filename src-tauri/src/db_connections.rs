@@ -8,6 +8,8 @@ use std::io::{self, BufRead, Error, ErrorKind, Read, Seek, SeekFrom, Write};
 use std::path::{Path, PathBuf};
 use std::result::Result;
 use dirs;
+
+use crate::routes::permissions::compare_and_add_permissions;
 pub struct DbPool {
     pub pool: PoolType,
 }
@@ -51,6 +53,7 @@ pub async fn establish_database_connection(db_url: &str) -> DbPool {
         }
     };
     // Call set_active_db with the DbPool object
+    _ = compare_and_add_permissions(&db_pool).await;
     set_active_db(db_pool)
 }
 
