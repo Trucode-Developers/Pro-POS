@@ -1,8 +1,8 @@
-'use client';
+"use client";
 import CustomSheet from "@/components/customSheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { closePopUp,openPopUp, useThemeStore } from "@/lib/store";
+import { closePopUp, openPopUp, useThemeStore } from "@/lib/store";
 import { invoke } from "@tauri-apps/api/tauri";
 import React, { useEffect } from "react";
 
@@ -14,7 +14,6 @@ export default function UserCrud({
   active_id,
 }: any) {
   const createUser = async () => {
-    console.log(user);
     await invoke("create", { user })
       .then((response) => get_all_users())
       .catch(console.error);
@@ -28,11 +27,37 @@ export default function UserCrud({
     closePopUp();
   };
 
-
   return (
-    <CustomSheet title="New Staff">
+    <CustomSheet>
       <div>
         <form className="flex flex-col gap-4">
+          <label htmlFor="name">Upload images</label>
+          <div className="relative">
+            <label
+              title="Click to upload"
+              htmlFor="button2"
+              className="flex items-center gap-4 px-6 py-4 cursor-pointer before:border-gray-400/60 hover:before:border-gray-300 group before:bg-gray-100 before:absolute before:inset-0 before:rounded-3xl before:border before:border-dashed before:transition-transform before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95"
+            >
+              <div className="relative w-max">
+                <img
+                  className="w-12"
+                  src="https://www.svgrepo.com/show/485545/upload-cicle.svg"
+                  alt="file upload icon"
+                  width="512"
+                  height="512"
+                />
+              </div>
+              <div className="relative">
+                <span className="relative block text-base font-semibold text-blue-900 group-hover:text-blue-500">
+                  Upload a file
+                </span>
+                <span className="mt-0.5 block text-sm text-gray-500">
+                  Max 2 MB
+                </span>
+              </div>
+            </label>
+            <input hidden type="file" name="button2" id="button2" />
+          </div>
           <label htmlFor="name">Name</label>
           <Input
             type="text"

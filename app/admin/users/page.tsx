@@ -5,7 +5,12 @@ import { Button } from "@/components/ui/button";
 import UserCrud from "./userCrud";
 import { openPopUp, closePopUp } from "@/lib/store";
 import { VscListUnordered, VscOrganization, VscTable } from "react-icons/vsc";
-import { HiArchiveBoxXMark, HiBarsArrowUp, HiFunnel, HiPencilSquare } from "react-icons/hi2";
+import {
+  HiArchiveBoxXMark,
+  HiBarsArrowUp,
+  HiFunnel,
+  HiPencilSquare,
+} from "react-icons/hi2";
 import SearchBar from "@/components/expandableSearch";
 import {
   Table,
@@ -17,16 +22,26 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+interface User {
+  name: string;
+  role: number;
+  email: string;
+  password: string;
+  is_active: boolean;
+}
+
+const defaultUser = {
+  name: "",
+  role: 1,
+  email: "",
+  password: "",
+  is_active: true,
+};
+
 export default function Page() {
   const [greeting, setGreeting] = useState("");
   const [users, setUsers] = useState({} as any);
-  const [user, setUser] = useState({
-    name: "sample name",
-    role: 1,
-    email: "",
-    password: "",
-    is_active: true,
-  });
+  const [user, setUser] = useState<User>(defaultUser);
 
   const [active_id, setActive_id] = useState("");
   const [search_value, setSearchValue] = useState("");
@@ -48,20 +63,17 @@ export default function Page() {
     await invoke("get_all_users")
       .then((response) => {
         setUsers(response);
-        console.log(response);
+        // console.log(response);
       })
       .catch(console.error);
   };
 
   const prepare_updating_user = async (email: string) => {
-    //clicking twice on the same user will open the pop up with the right id
-    if (active_id === email) {
-      openPopUp();
-    }
     setActive_id(email);
     //filter user by id and assign to user
     const user = users.filter((user: any) => user.email === email)[0];
     setUser(user);
+    openPopUp();
   };
 
   const deleteUser = async (email: string) => {
@@ -70,36 +82,24 @@ export default function Page() {
       .catch(console.error);
   };
 
-  useEffect(() => {
-    if (active_id !== "") {
-      openPopUp();
-    } else {
-      reset_users();
-    }
-  }, [active_id]);
-
   const reset_users = async () => {
-    setUser({
-      name: "",
-      role: 1,
-      email: "",
-      password: "",
-      is_active: true,
-    });
+    setUser(defaultUser);
     setActive_id("");
+  };
+
+  const newUser = async () => {
+    openPopUp();
+    reset_users();
   };
 
   return (
     <div className="w-full h-full ">
-      <a
-        href="/"
-        className="flex items-center gap-2 pt-5 text-2xl font-bold lg:text-4xl"
-      >
+      <div className="flex items-center gap-2 pt-5 text-2xl font-bold lg:text-4xl">
         <div>
           <VscOrganization />
         </div>
         <div>Staffs</div>
-      </a>
+      </div>
       <p className="py-2 ">{greeting}</p>
       <div className="flex items-center justify-between py-1 mb-2 border-b border-blue-800 lg:mb-5">
         <div className="flex items-center gap-8">
@@ -123,6 +123,11 @@ export default function Page() {
             onChange={(e) => setSearchValue(e.target.value)}
             placeholder={"Search by name, email, Id ..."}
           />
+          <div>
+            <Button className="bg-green-500 hover:bg-black" onClick={newUser}>
+              New User
+            </Button>
+          </div>
           <UserCrud
             user={user}
             setUser={setUser}
@@ -148,7 +153,7 @@ export default function Page() {
           {Object.values(users).map((user: any, index: number) => (
             <TableRow
               key={index}
-              className="py-0 my-0 border-gray-400 border-opacity-50 border-y-2"
+              className="py-0 my-0 border-gray-400 border-opacity-50 border-y"
             >
               <TableCell className="font-medium capitalize">
                 {user.name}
@@ -158,10 +163,10 @@ export default function Page() {
               <TableCell className="w-{100px]">
                 {user.is_active ? "Yes" : "No"}
               </TableCell>
-              <TableCell className="flex justify-end gap-4 text-xl lg:text-2xl">
+              <TableCell className="flex justify-end gap-2 text-sm lg:text-lg">
                 {" "}
                 <div
-                  className="text-blue-500 cursor-pointer hover:scale-125"
+                  className="cursor-pointer hover:text-blue-500 hover:scale-125"
                   onClick={() => {
                     prepare_updating_user(user.email);
                   }}
@@ -169,7 +174,7 @@ export default function Page() {
                   <HiPencilSquare />
                 </div>
                 <div
-                  className="text-red-500 cursor-pointer hover:scale-125"
+                  className="cursor-pointer hover:text-red-500 hover:scale-125"
                   onClick={() => deleteUser(user.email)}
                 >
                   <HiArchiveBoxXMark />
