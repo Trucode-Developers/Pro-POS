@@ -2,6 +2,7 @@
 // use routes::users::{create, delete_user, get_all_users, get_user, greet, update,DbPool,PoolType};
 // use fix_path_env;
 mod routes;
+use routes::branches::{create_branch,get_all_branches,update_branch,delete_branch};
 use routes::users::{create, delete_user, get_all_users, get_user, greet, update};
 pub mod db_connections;
 use db_connections::{ create_new, establish_database_connection, read_specific_line, update_file};
@@ -38,6 +39,12 @@ async fn main() {
             get_user,
             change_db,
             current_active_db,
+
+            //branches
+            get_all_branches,
+            create_branch,
+            update_branch,
+            delete_branch,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

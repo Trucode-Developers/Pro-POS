@@ -21,27 +21,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TypeUserSchema } from "@/lib/types/users";
 
-interface User {
-  name: string;
-  role: number;
-  email: string;
-  password: string;
-  is_active: boolean;
-}
+
 
 const defaultUser = {
   name: "",
   role: 1,
   email: "",
   password: "",
+  confirmPassword: "",
   is_active: true,
 };
 
 export default function Page() {
   const [greeting, setGreeting] = useState("");
   const [users, setUsers] = useState({} as any);
-  const [user, setUser] = useState<User>(defaultUser);
+  const [user, setUser] = useState<TypeUserSchema>(defaultUser);
 
   const [active_id, setActive_id] = useState("");
   const [search_value, setSearchValue] = useState("");
@@ -74,6 +70,7 @@ export default function Page() {
     const user = users.filter((user: any) => user.email === email)[0];
     setUser(user);
     openPopUp();
+    // console.log(user);
   };
 
   const deleteUser = async (email: string) => {
@@ -130,8 +127,6 @@ export default function Page() {
           </div>
           <UserCrud
             user={user}
-            setUser={setUser}
-            reset_users={reset_users}
             get_all_users={get_all_users}
             active_id={active_id}
           />
@@ -152,7 +147,7 @@ export default function Page() {
         <TableBody>
           {Object.values(users).map((user: any, index: number) => (
             <TableRow
-              key={index}
+              key={index+1}
               className="py-0 my-0 border-gray-400 border-opacity-50 border-y"
             >
               <TableCell className="font-medium capitalize">

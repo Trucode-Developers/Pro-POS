@@ -75,7 +75,7 @@ export const data = [
     ],
   },
   {
-    id: 1,
+    id: 2,
     title: "Purchasing",
     //description: "View order, sales and usage reports",
     link: "/admin/reports",
@@ -98,7 +98,7 @@ export const data = [
     ],
   },
   {
-    id: 1,
+    id: 3,
     title: "Staff Management",
     //description: "View order, sales and usage reports",
     link: "/admin/reports",
@@ -113,9 +113,9 @@ export const data = [
       },
       {
         id: 2,
-        title: "Point of Sale",
+        title: "Branches",
         //description: "View order, sales and usage reports",
-        link: "/admin/reports",
+        link: "/admin/branches",
         image: MdOutlineDashboard,
       },
     ],
