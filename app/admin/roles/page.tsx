@@ -3,7 +3,11 @@ import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import { Button } from "@/components/ui/button";
 import { openPopUp, closePopUp } from "@/lib/store";
-import { VscCircuitBoard, VscListUnordered, VscOrganization, VscTable } from "react-icons/vsc";
+import {
+  VscKey,
+  VscListUnordered,
+  VscTable,
+} from "react-icons/vsc";
 import {
   HiArchiveBoxXMark,
   HiBarsArrowUp,
@@ -20,8 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import BranchCrud from "./branchesCrud";
-import { TypeBranchSchema } from "@/lib/types/users";
+import { TypeRoleSchema } from "@/lib/types/users";
 import {
   Dialog,
   DialogContent,
@@ -32,20 +35,16 @@ import {
 } from "@/components/ui/dialog";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import RolesCrud from "./rolesCrud";
 
 const defaultBranch = {
   code: "",
-  name: "",
-  address: "",
-  phone: "",
-  email: "",
-  status: true,
-  description: "",
+  name: ""
 };
 
 export default function Page() {
   const [branches, setBranches] = useState({} as any);
-  const [branch, setBranch] = useState<TypeBranchSchema>(defaultBranch);
+  const [branch, setBranch] = useState<TypeRoleSchema>(defaultBranch);
   const [showModal, setShowModal] = useState(false);
   const [branchName, setBranchName] = useState("");
   const [active_code, setActiveCode] = useState("");
@@ -73,7 +72,6 @@ export default function Page() {
     const branch = branches.filter((branch: any) => branch.code === code)[0];
     setBranch(branch);
     openPopUp();
-    // console.log(branch, code);
   };
 
   const initiateDeleteBranch = async (code: string) => {
@@ -108,9 +106,9 @@ export default function Page() {
       <ToastContainer />
       <div className="flex items-center gap-2 pt-5 text-2xl font-bold lg:text-4xl">
         <div>
-          <VscCircuitBoard />
+          <VscKey />
         </div>
-        <div>Branches</div>
+        <div>System Roles</div>
         <Dialog open={showModal} onOpenChange={setShowModal}>
           {/* <DialogTrigger>Open</DialogTrigger> */}
           <DialogContent>
@@ -144,9 +142,10 @@ export default function Page() {
           </DialogContent>
         </Dialog>
       </div>
-      <p className="py-2 ">
-        Manage branches before adding any other details inthe system. All
-        products, staffs, and reports are attached to a branch.{" "}
+      <p className="py-2 lg:w-[60vw]">
+        This are the roles that indicate which permissions a user has. You can
+        add, update or delete a role. A role can be assigned to a user to
+        determine what they can do in the system.{" "}
       </p>
       <div className="flex items-center justify-between py-1 mb-2 border-b border-blue-800 lg:mb-5">
         <div className="flex items-center gap-8">
@@ -172,10 +171,10 @@ export default function Page() {
           />
           <div>
             <Button className="bg-green-500 hover:bg-black" onClick={newBranch}>
-              Add Branch
+              Add Role
             </Button>
           </div>
-          <BranchCrud
+          <RolesCrud
             branch={branch}
             get_all_branches={get_all_branches}
             active_code={active_code}
@@ -200,11 +199,8 @@ export default function Page() {
         <TableHeader>
           <TableRow className="text-white uppercase bg-gray-500 hover:bg-gray-500">
             <TableHead className="text-white ">Code</TableHead>
-            <TableHead className="text-white ">Branch Name</TableHead>
-            <TableHead className="text-white ">Address</TableHead>
-            <TableHead className="text-white w-[100px]">Phone</TableHead>
-            <TableHead className="text-white w-[100px]">Email</TableHead>
-            <TableHead className="text-white ">Description</TableHead>
+            <TableHead className="text-white ">Role Name</TableHead>
+            <TableHead className="text-white ">Permissions</TableHead>
             <TableHead className="text-white w-[100px]">Status</TableHead>
             <TableHead className="text-right text-white ">Actions</TableHead>
           </TableRow>
@@ -221,10 +217,11 @@ export default function Page() {
               <TableCell className="font-medium capitalize">
                 {branch.name}
               </TableCell>
-              <TableCell className="lowercase">{branch.address}</TableCell>
-              <TableCell className="w-{100px]">{branch.phone}</TableCell>
-              <TableCell className="w-{100px]">{branch.email}</TableCell>
-              <TableCell className="">{branch.description}</TableCell>
+              <TableCell className="lowercase">
+                <a href="#" className="text-blue-500">
+                  3 Permissions
+                </a>
+              </TableCell>
               <TableCell className="w-{100px]">
                 {branch.status ? (
                   <div className="px-2 py-1 text-center text-white bg-green-500 rounded">

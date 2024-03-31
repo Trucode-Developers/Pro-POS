@@ -1,5 +1,6 @@
 import img from "./report.png";
 import {  MdCastForEducation, MdCreateNewFolder, MdDeviceHub, MdDriveFileRenameOutline, MdFactCheck, MdHome, MdInsertEmoticon, MdOutlineDashboard, MdPaid, MdSwapHorizontalCircle, MdTableView } from "react-icons/md";
+import {VscCircuitBoard, VscKey, VscOrganization } from "react-icons/vsc";
 export const data = [
   {
     id: 1,
@@ -107,15 +108,22 @@ export const data = [
       {
         id: 1,
         title: "Users",
-        //description: "View order, sales and usage reports",
+        // icon: VscOrganization,
         link: "/admin/users",
         image: MdOutlineDashboard,
       },
       {
         id: 2,
         title: "Branches",
-        //description: "View order, sales and usage reports",
+        icon: VscCircuitBoard,
         link: "/admin/branches",
+        image: MdOutlineDashboard,
+      },
+      {
+        id: 2,
+        title: "Roles",
+        icon: VscKey,
+        link: "/admin/roles",
         image: MdOutlineDashboard,
       },
     ],

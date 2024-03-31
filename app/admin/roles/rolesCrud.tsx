@@ -9,11 +9,11 @@ import { closePopUp } from "@/lib/store";
 import { invoke } from "@tauri-apps/api/tauri";
 import React, { useEffect } from "react";
 import Loading from "@/components/loading";
-import { BranchSchema, TypeBranchSchema } from "@/lib/types/users";
+import { RoleSchema, TypeRoleSchema } from "@/lib/types/users";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function BranchCrud({
+export default function RolesCrud({
   branch,
   get_all_branches,
   active_code,
@@ -23,8 +23,8 @@ export default function BranchCrud({
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<TypeBranchSchema>({
-    resolver: zodResolver(BranchSchema),
+  } = useForm<TypeRoleSchema>({
+    resolver: zodResolver(RoleSchema),
     defaultValues: branch,
   });
 
@@ -32,9 +32,8 @@ export default function BranchCrud({
     reset(branch); // Update the form values when `user` changes
   }, [branch, reset]);
 
-  const onSubmit = async (data: TypeBranchSchema) => {
+  const onSubmit = async (data: TypeRoleSchema) => {
     let branch = data;
-    // console.log(branch);
     try {
       if (active_code) {
         updateBranch(data);
@@ -56,7 +55,7 @@ export default function BranchCrud({
     }
   };
 
-  const updateBranch = async (data: TypeBranchSchema) => {
+  const updateBranch = async (data: TypeRoleSchema) => {
     let branch = data;
     let code = active_code; //as rust expects an object with a key of code
     console.log(code, branch);
@@ -74,84 +73,37 @@ export default function BranchCrud({
   };
 
   return (
-    <CustomSheet title="Branches">
+    <CustomSheet title="Roles">
       <div className="p-4 m-auto max-w-7xl ">
         <div>
           <h1 className="text-2xl font-bold text-center">
-            {active_code ? "Update Branch" : "Create New Branch"}
+            {active_code ? "Update Role" : "Create New Role"}
           </h1>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 "> */}
           <div className="grid gap-4 py-5">
-            {!active_code && (
+           
               <CustomInput
-                label="Branch Code"
+                label="Role code"
                 type="text"
-                placeholder="e.g: Br01"
+                placeholder="Enter role code"
                 innerClass=""
                 outerClass=""
                 register={register("code")}
                 error={errors.code}
               />
-            )}
-
-            <CustomInput
-              label="Name"
-              type="text"
-              placeholder="branch name"
-              innerClass=""
-              outerClass=""
-              register={register("name")}
-              error={errors.name}
-            />
-
-            <CustomInput
-              label="Address/Location"
-              type="string"
-              placeholder="branch address"
-              innerClass=""
-              outerClass=""
-              register={register("address")}
-              error={errors.address}
-            />
-            <CustomInput
-              label="Phone"
-              type="string"
-              placeholder="+254 ... ... .."
-              innerClass=""
-              outerClass=""
-              register={register("phone")}
-              error={errors.phone}
-            />
-            <CustomInput
-              label="Branch Email"
-              type="email"
-              placeholder="branch email"
-              innerClass=""
-              outerClass=""
-              register={register("email")}
-              error={errors.email}
-            />
-            <div>
-              <label htmlFor="description">Description</label>
-              <textarea
-                className="w-full h-32 px-3 py-2 text-base text-gray-700 placeholder-gray-600 border border-b-2 border-gray-400 rounded focus:border-blue-600 focus:outline-none"
-                placeholder="more about the branch "
-                {...register("description")}
-              ></textarea>
-            </div>
-            <div>
-              <label htmlFor="status">Status</label>
-              <select {...register("status")} className="w-full">
-                <option value="1">Active</option>
-                <option value="0">Inactive</option>
-              </select>
-              {errors.status && (
-                <span className="text-red-500"> {errors.status.message} </span>
-              )}
-            </div>
+              <CustomInput
+                label="Role name"
+                type="text"
+                placeholder="Enter role name"
+                innerClass=""
+                outerClass=""
+                register={register("name")}
+                error={errors.code}
+              />
+          
           </div>
           <div className="flex justify-center">
             <button
@@ -161,9 +113,9 @@ export default function BranchCrud({
               {isSubmitting ? (
                 <Loading color="#ffffff" width="40" />
               ) : active_code ? (
-                "Update Branch"
+                "Update Role"
               ) : (
-                "Create New Branch"
+                "Create New Role"
               )}
             </button>
           </div>

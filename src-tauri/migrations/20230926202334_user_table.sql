@@ -9,6 +9,7 @@ CREATE TABLE users (
 
 CREATE TABLE roles (
   id serial PRIMARY KEY,
+  code varchar(255) NOT NULL UNIQUE,
   name varchar(255) NOT NULL,
   created_by int NOT NULL,
   created_at timestamp NOT NULL,

@@ -107,9 +107,11 @@ export default function LeftMenu({ setVertical }: any) {
                       }`}
                     >
                       <div>
-                        {React.createElement(MdOutlineDashboard, {
-                          size: "20",
-                        })}
+                        {sub.icon ? (
+                          <sub.icon size="20" />
+                        ) : (
+                          <MdOutlineDashboard size="20" />
+                        )}
                       </div>
                       <h2
                         style={{
