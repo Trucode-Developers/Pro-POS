@@ -6,6 +6,7 @@ export const BranchSchema = z.object({
   address: z.string(),
   phone: z.string().min(8, "Phone number must be at least 8 characters"),
   email: z.string().email(),
+  // status: z.string(),
   status: z.string().transform((val) => val === "1"),
   description: z.string(),
 });

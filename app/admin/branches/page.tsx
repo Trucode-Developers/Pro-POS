@@ -61,6 +61,7 @@ export default function Page() {
       .then((response: any) => {
         if (response.status === 200) {
           setBranches(response.data);
+          // console.log(response.data);
         }
         //add a toast here
       })
@@ -85,7 +86,10 @@ export default function Page() {
   const deleteBranch = async () => {
     let code = active_code;
     await invoke("delete_branch", { code })
-      .then((response) => get_all_branches())
+      .then((response) => {
+        setShowModal(false), get_all_branches();
+        toast.success("Branch deleted successfully");
+      })
       .catch(console.error);
   };
 
@@ -112,22 +116,26 @@ export default function Page() {
           <DialogContent>
             <DialogHeader>
               <DialogTitle>
-                Are you sure you want delete {branchName} ?
+                Are you sure you want delete branch: {branchName}?
               </DialogTitle>
               <DialogDescription>
-                This action cannot be undone. {branchName} will be deleted
-                permanently. To proceed, click the delete button below.
+                This action cannot be undone.{" "}
+                <span className="px-2 py-1 my-2 bg-gray-300 rounded">
+                  {branchName}
+                </span>{" "}
+                will be deleted permanently. To proceed, click the delete button
+                below.
               </DialogDescription>
             </DialogHeader>
             <div className="flex justify-between">
               <button
-                className="px-4 py-2 text-white bg-blue-500 rounded-md"
+                className="px-4 py-2 text-white bg-blue-500 rounded"
                 onClick={() => setShowModal(false)}
               >
                 Cancel
               </button>
               <button
-                className="px-4 py-2 text-white bg-red-500 rounded-md"
+                className="px-4 py-2 text-white bg-red-500 rounded"
                 onClick={() => deleteBranch()}
               >
                 Delete permanently
@@ -176,7 +184,19 @@ export default function Page() {
       </div>
 
       <Table>
-        <TableCaption>A list of branches.</TableCaption>
+        <TableCaption className="py-4 font-bold border-t border-blue-800 text-start">
+          You have a total of {Object.values(branches).length} branches. Active
+          branches are{" "}
+          {
+            Object.values(branches).filter((branch: any) => branch.status)
+              .length
+          }{" "}
+          while inactive branches are{" "}
+          {
+            Object.values(branches).filter((branch: any) => !branch.status)
+              .length
+          }
+        </TableCaption>
         <TableHeader>
           <TableRow className="text-white uppercase bg-gray-500 hover:bg-gray-500">
             <TableHead className="text-white ">Code</TableHead>
@@ -206,8 +226,15 @@ export default function Page() {
               <TableCell className="w-{100px]">{branch.email}</TableCell>
               <TableCell className="">{branch.description}</TableCell>
               <TableCell className="w-{100px]">
-                {" "}
-                {branch.status ? "Active" : "Inactive"}{" "}
+                {branch.status ? (
+                  <div className="px-2 py-1 text-center text-white bg-green-500 rounded">
+                    Active
+                  </div>
+                ) : (
+                  <div className="px-2 py-1 text-center text-white bg-red-500 rounded">
+                    Inactive
+                  </div>
+                )}
               </TableCell>
               <TableCell className="flex justify-end gap-2 text-sm lg:text-lg">
                 <div

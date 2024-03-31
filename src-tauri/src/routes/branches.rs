@@ -112,7 +112,7 @@ pub async fn get_all_branches(state: State<'_, DbPool>) -> Result<Value, Value> 
 }
 
 async fn get_all_branches_postgres(pool: &PgPool) -> Result<Vec<Branch>, Value> {
-    let query = "SELECT * FROM branches";
+    let query = "SELECT * FROM branches ORDER BY id DESC";
     let result = sqlx::query_as::<_, Branch>(query)
         .fetch_all(pool)
         .await;
@@ -126,7 +126,7 @@ async fn get_all_branches_postgres(pool: &PgPool) -> Result<Vec<Branch>, Value> 
 }
 
 async fn get_all_branches_sqlite(pool: &SqlitePool) -> Result<Vec<Branch>, Value> {
-    let query = "SELECT * FROM branches";
+    let query = "SELECT * FROM branches ORDER BY id DESC";
     let result = sqlx::query_as::<_, Branch>(query)
         .fetch_all(pool)
         .await;
@@ -203,7 +203,6 @@ pub async fn update_branch(code: String, branch: Branch, state: State<'_, DbPool
         }
     }
 }
-
 
 #[tauri::command]
 pub async fn delete_branch(code: String, state: State<'_, DbPool>) -> Result<Value, Value> {

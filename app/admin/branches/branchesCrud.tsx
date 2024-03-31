@@ -1,32 +1,23 @@
 "use client";
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TypeUserSchema, UserSchema } from "@/lib/types/users";
 
 import { cn } from "@/lib/utils";
 import CustomInput from "@/components/custom/input";
 import CustomSheet from "@/components/customSheet";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { closePopUp, openPopUp, useThemeStore } from "@/lib/store";
+import { closePopUp } from "@/lib/store";
 import { invoke } from "@tauri-apps/api/tauri";
-import React, { useEffect, useState } from "react";
-import CustomSelect from "@/components/custom/select";
+import React, { useEffect } from "react";
 import Loading from "@/components/loading";
 import { BranchSchema, TypeBranchSchema } from "@/lib/types/branches";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { t } from "@tauri-apps/api/tauri-44146e48";
-
-
 
 export default function BranchCrud({
   branch,
   get_all_branches,
   active_code,
 }: any) {
-
   const {
     register,
     handleSubmit,
@@ -42,36 +33,42 @@ export default function BranchCrud({
   }, [branch, reset]);
 
   const onSubmit = async (data: TypeBranchSchema) => {
-    let branch = data; 
+    let branch = data;
     // console.log(branch);
     try {
       if (active_code) {
-        updateBranch();
+        updateBranch(data);
         return;
       }
-      const response = await invoke("create_branch", { branch });
-      reset();
-      get_all_branches();
-      // console.log(response);
-      toast.success("Branch created successfully");
-    } catch (error) {
-      // console.error(error);
-      toast.error("Branch creation failed, check your inputs and try again");
+      const response: any = await invoke("create_branch", { branch });
+      if (response.status === 200) {
+        reset();
+        get_all_branches();
+        toast.success("Branch created successfully");
+      } else {
+        toast.error("Branch creation failed, check your inputs and try again");
+      }
+    } catch (error: any) {
+      // toast.error(error.message);
+      toast.error(
+        "Failed, check your inputs  ensure you have a unique branch code then try again"
+      );
     }
   };
 
-
-  const updateBranch = async () => {
+  const updateBranch = async (data: TypeBranchSchema) => {
+    let branch = data;
     let code = active_code; //as rust expects an object with a key of code
     console.log(code, branch);
     await invoke("update_branch", { code, branch })
-      .then((response:any) => {
+      .then((response: any) => {
         if (response.status === 200) {
           toast.success("Branch updated successfully");
-        }else{
+        } else {
           toast.error("Branch update failed, check your inputs and try again");
         }
-        get_all_branches()})
+        get_all_branches();
+      })
       .catch(console.error);
     closePopUp();
   };
@@ -84,20 +81,22 @@ export default function BranchCrud({
             {active_code ? "Update Branch" : "Create New Branch"}
           </h1>
         </div>
-      
 
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 "> */}
-          <div className="grid gap-4 pb-5">
-            <CustomInput
-              label="Branch Code"
-              type="text"
-              placeholder="e.g: Br01"
-              innerClass=""
-              outerClass=""
-              register={register("code")}
-              error={errors.code}
-            />
+          <div className="grid gap-4 py-5">
+            {!active_code && (
+              <CustomInput
+                label="Branch Code"
+                type="text"
+                placeholder="e.g: Br01"
+                innerClass=""
+                outerClass=""
+                register={register("code")}
+                error={errors.code}
+              />
+            )}
+
             <CustomInput
               label="Name"
               type="text"

@@ -10,17 +10,12 @@ import { FiFolder } from "react-icons/fi";
 import { HiOutlineCog } from "react-icons/hi";
 import pos from "./pos.png";
 import { useThemeStore } from "@/lib/store";
+import CustomInput from "@/components/custom/input";
 
 export default function LeftMenu({ setVertical }: any) {
   const adminSidebarSize = useThemeStore((state) => state.adminSidebarSize);
   const pathname = usePathname();
   const [open, setOpen] = useState(true);
-
-  const menus = [
-    { name: "Dashboard", link: "/admin", icon: MdOutlineDashboard },
-    { name: "Packages", link: "/portal/packages", icon: FiFolder },
-    { name: "Payments", link: "/portal/payments", icon: TbReportAnalytics },
-  ];
 
   useEffect(() => {
     if (open) {
@@ -78,13 +73,22 @@ export default function LeftMenu({ setVertical }: any) {
         </Link>
 
         <div>
-          <input
+          <CustomInput
+            label="Search "
+            type="search"
+            placeholder="search"
+            value={search}
+            onChange={(e: any) => setSearch(e.target.value)}
+            className="w-full px-4 py-2 outline-none text-primary rounded-2xl "
+            register={"name"} //this should not be here but for code reuse it is here
+          />
+          {/* <input
             type="search"
             placeholder="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full px-4 py-2 outline-none text-primary rounded-2xl "
-          />
+          /> */}
         </div>
         <div className="mt-4 flex flex-col gap-4 relative overflow-y-auto overflow-x-hidden max-h-[80vh]">
           {filteredData?.map(
@@ -98,8 +102,8 @@ export default function LeftMenu({ setVertical }: any) {
                     <Link
                       key={sub.id}
                       href={sub.link}
-                      className={` group flex items-center text-sm  gap-3.5 font-medium p-2 hover:bg-secondary rounded-md ${
-                        pathname === item.link ? "bg-yellow-500" : ""
+                      className={` group flex items-center text-sm  gap-3.5 font-medium px-2 py-2 my-1 hover:bg-gray-400 rounded-md ${
+                        pathname === sub.link ? "bg-gray-300" : ""
                       }`}
                     >
                       <div>

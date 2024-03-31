@@ -99,7 +99,7 @@ export const data = [
   },
   {
     id: 3,
-    title: "Staff Management",
+    title: "Users Management",
     //description: "View order, sales and usage reports",
     link: "/admin/reports",
     image: img,
