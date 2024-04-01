@@ -1,8 +1,7 @@
 use serde::{Deserialize, Serialize};
+use serde_json::{json, Value};
 use sqlx::{PgPool, SqlitePool};
 use tauri::State;
-use thiserror::Error;
-use serde_json::{json, Value};
 
 use crate::db_connections::{DbPool, PoolType};
 
@@ -16,13 +15,6 @@ pub struct Branch {
     pub description: String,
     pub status: bool,
 }
-
-// #[derive(Error, Serialize, Debug)]
-// pub enum CustomError {
-//     #[error("An error occurred")]
-//     GenericError,
-// }
-
 
 #[tauri::command]
 pub async fn create_branch(branch: Branch, state: State<'_, DbPool>) -> Result<Value, Value> {
@@ -113,9 +105,7 @@ pub async fn get_all_branches(state: State<'_, DbPool>) -> Result<Value, Value> 
 
 async fn get_all_branches_postgres(pool: &PgPool) -> Result<Vec<Branch>, Value> {
     let query = "SELECT * FROM branches ORDER BY id DESC";
-    let result = sqlx::query_as::<_, Branch>(query)
-        .fetch_all(pool)
-        .await;
+    let result = sqlx::query_as::<_, Branch>(query).fetch_all(pool).await;
     result.map_err(|e| {
         let json = json!({
             "status": 500,
@@ -127,9 +117,7 @@ async fn get_all_branches_postgres(pool: &PgPool) -> Result<Vec<Branch>, Value> 
 
 async fn get_all_branches_sqlite(pool: &SqlitePool) -> Result<Vec<Branch>, Value> {
     let query = "SELECT * FROM branches ORDER BY id DESC";
-    let result = sqlx::query_as::<_, Branch>(query)
-        .fetch_all(pool)
-        .await;
+    let result = sqlx::query_as::<_, Branch>(query).fetch_all(pool).await;
     result.map_err(|e| {
         let json = json!({
             "status": 500,
@@ -141,7 +129,11 @@ async fn get_all_branches_sqlite(pool: &SqlitePool) -> Result<Vec<Branch>, Value
 //get data from the db
 
 #[tauri::command]
-pub async fn update_branch(code: String, branch: Branch, state: State<'_, DbPool>) -> Result<Value, Value> {
+pub async fn update_branch(
+    code: String,
+    branch: Branch,
+    state: State<'_, DbPool>,
+) -> Result<Value, Value> {
     match &state.pool {
         PoolType::Postgres(pool) => {
             let query = "UPDATE branches SET name = $2, address = $3, phone = $4, email = $5, description = $6, status = $7 WHERE code = $1";
@@ -209,10 +201,7 @@ pub async fn delete_branch(code: String, state: State<'_, DbPool>) -> Result<Val
     match &state.pool {
         PoolType::Postgres(pool) => {
             let query = "DELETE FROM branches WHERE code = $1";
-            let result = sqlx::query(query)
-                .bind(&code)
-                .execute(pool)
-                .await;
+            let result = sqlx::query(query).bind(&code).execute(pool).await;
             match result {
                 Ok(_) => {
                     let json = json!({
@@ -232,10 +221,7 @@ pub async fn delete_branch(code: String, state: State<'_, DbPool>) -> Result<Val
         }
         PoolType::SQLite(pool) => {
             let query = "DELETE FROM branches WHERE code = ?";
-            let result = sqlx::query(query)
-                .bind(&code)
-                .execute(pool)
-                .await;
+            let result = sqlx::query(query).bind(&code).execute(pool).await;
             match result {
                 Ok(_) => {
                     let json = json!({

@@ -11,8 +11,8 @@ CREATE TABLE roles (
   id serial PRIMARY KEY,
   code varchar(255) NOT NULL UNIQUE,
   name varchar(255) NOT NULL,
-  created_by int NOT NULL,
-  created_at timestamp NOT NULL,
+  created_by int  NULL,
+  created_at timestamp  NULL,
   FOREIGN KEY (created_by) REFERENCES users(id)
 );
 
@@ -26,8 +26,8 @@ CREATE TABLE role_permissions (
   id serial PRIMARY KEY,
   role_id int NOT NULL,
   permission_id int NOT NULL,
-  created_by int NOT NULL,
-  created_at timestamp NOT NULL,
+  created_by int  NULL,
+  created_at timestamp  NULL,
   FOREIGN KEY (role_id) REFERENCES roles(id),
   FOREIGN KEY (permission_id) REFERENCES permissions(id),
   FOREIGN KEY (created_by) REFERENCES users(id)

@@ -3,11 +3,7 @@ import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import { Button } from "@/components/ui/button";
 import { openPopUp, closePopUp } from "@/lib/store";
-import {
-  VscKey,
-  VscListUnordered,
-  VscTable,
-} from "react-icons/vsc";
+import { VscKey, VscListUnordered, VscTable } from "react-icons/vsc";
 import {
   HiArchiveBoxXMark,
   HiBarsArrowUp,
@@ -38,67 +34,105 @@ import "react-toastify/dist/ReactToastify.css";
 import RolesCrud from "./rolesCrud";
 
 const defaultBranch = {
+  id: 0,
+  total_permissions: 0,
   code: "",
-  name: ""
+  name: "",
 };
 
 export default function Page() {
-  const [branches, setBranches] = useState({} as any);
-  const [branch, setBranch] = useState<TypeRoleSchema>(defaultBranch);
+  const [roles, setRoles] = useState({} as any);
+  const [permissions, setPermissions] = useState({});
+  const [allocatedPermissions, setAllocatedPermissions] = useState([
+    1, 2, 4,
+  ] as any);
+  const [role, setRole] = useState<TypeRoleSchema>(defaultBranch);
   const [showModal, setShowModal] = useState(false);
-  const [branchName, setBranchName] = useState("");
-  const [active_code, setActiveCode] = useState("");
+  const [roleName, setRoleName] = useState("");
+  const [active_id, setActiveId] = useState(0);
   const [search_value, setSearchValue] = useState("");
 
+
+    // const get_permission_slugs = async () => {
+    //   let roleId = 2;
+    //   await invoke("get_allocated_permission_slugs", { roleId })
+    //     .then((response: any) => {
+    //       if (response.status === 200) {
+    //         setRoles(response.data);
+    //         console.log(response.data);
+    //       }
+    //     })
+    //     .catch(console.error);
+    // };
+    
   useEffect(() => {
-    get_all_branches();
+    get_all_roles();
+    get_all_permissions();
+    // get_permission_slugs();
   }, []);
 
-  const get_all_branches = async () => {
+  const get_all_roles = async () => {
     closePopUp();
-    await invoke("get_all_branches")
+    await invoke("get_all_roles")
       .then((response: any) => {
         if (response.status === 200) {
-          setBranches(response.data);
+          setRoles(response.data);
           // console.log(response.data);
         }
-        //add a toast here
+      })
+      .catch(console.error);
+  };
+  const get_all_permissions = async () => {
+    await invoke("get_all_permissions")
+      .then((response: any) => {
+        setPermissions(response);
+        // console.log(response);
+      })
+      .catch(console.error);
+  };
+  const get_allocated_permissions = async (roleId: number) => {
+    await invoke("get_role_permissions", { roleId })
+      .then((response: any) => {
+        setAllocatedPermissions(response.data);
+        // console.log(response);
       })
       .catch(console.error);
   };
 
-  const prepare_updating_branch = async (code: string) => {
-    setActiveCode(code);
-    const branch = branches.filter((branch: any) => branch.code === code)[0];
-    setBranch(branch);
+  const prepare_updating_role = async (id: number) => {
+    setActiveId(id);
+    get_allocated_permissions(id);
+    const role = roles.filter((role: any) => role.id === id)[0];
+    setRole(role);
     openPopUp();
   };
 
-  const initiateDeleteBranch = async (code: string) => {
-    setActiveCode(code);
-    //set branchName to the name of the branch
-    const branch = branches.filter((branch: any) => branch.code === code)[0];
-    setBranchName(branch.name);
+  const initiateDeleteRole = async (id: number) => {
+    setActiveId(id);
+    //set roleName to the name of the role
+    const role = roles.filter((role: any) => role.id === id)[0];
+    // console.log(role);
+    setRoleName(role.name);
     setShowModal(true);
   };
-  const deleteBranch = async () => {
-    let code = active_code;
-    await invoke("delete_branch", { code })
+  const deleteRole = async () => {
+    let id = active_id;
+    await invoke("delete_role", { id })
       .then((response) => {
-        setShowModal(false), get_all_branches();
-        toast.success("Branch deleted successfully");
+        setShowModal(false), get_all_roles();
+        toast.success("Role deleted successfully");
       })
       .catch(console.error);
   };
 
-  const reset_branches = async () => {
-    setBranch(defaultBranch);
-    setActiveCode("");
+  const reset_roles = async () => {
+    setRole(defaultBranch);
+    setActiveId(0);
   };
 
-  const newBranch = async () => {
+  const newRole = async () => {
     openPopUp();
-    reset_branches();
+    reset_roles();
   };
 
   return (
@@ -114,12 +148,12 @@ export default function Page() {
           <DialogContent>
             <DialogHeader>
               <DialogTitle>
-                Are you sure you want delete branch: {branchName}?
+                Are you sure you want delete role: {roleName}?
               </DialogTitle>
               <DialogDescription>
                 This action cannot be undone.{" "}
                 <span className="px-2 py-1 my-2 bg-gray-300 rounded">
-                  {branchName}
+                  {roleName}
                 </span>{" "}
                 will be deleted permanently. To proceed, click the delete button
                 below.
@@ -134,7 +168,7 @@ export default function Page() {
               </button>
               <button
                 className="px-4 py-2 text-white bg-red-500 rounded"
-                onClick={() => deleteBranch()}
+                onClick={() => deleteRole()}
               >
                 Delete permanently
               </button>
@@ -170,81 +204,71 @@ export default function Page() {
             placeholder={"Search by name, email, Id ..."}
           />
           <div>
-            <Button className="bg-green-500 hover:bg-black" onClick={newBranch}>
+            <Button className="bg-green-500 hover:bg-black" onClick={newRole}>
               Add Role
             </Button>
           </div>
           <RolesCrud
-            branch={branch}
-            get_all_branches={get_all_branches}
-            active_code={active_code}
+            permissions={permissions}
+            role={role}
+            get_all_roles={get_all_roles}
+            active_id={active_id}
+            allocatedPermissions={allocatedPermissions}
+            setAllocatedPermissions={setAllocatedPermissions}
           />
         </div>
       </div>
 
       <Table>
         <TableCaption className="py-4 font-bold border-t border-blue-800 text-start">
-          You have a total of {Object.values(branches).length} branches. Active
-          branches are{" "}
-          {
-            Object.values(branches).filter((branch: any) => branch.status)
-              .length
-          }{" "}
-          while inactive branches are{" "}
-          {
-            Object.values(branches).filter((branch: any) => !branch.status)
-              .length
-          }
+          You have a total of {Object.values(roles).length} roles. Active roles
+          are {Object.values(roles).filter((role: any) => role.status).length}{" "}
+          while inactive roles are{" "}
+          {Object.values(roles).filter((role: any) => !role.status).length}
         </TableCaption>
         <TableHeader>
           <TableRow className="text-white uppercase bg-gray-500 hover:bg-gray-500">
             <TableHead className="text-white ">Code</TableHead>
             <TableHead className="text-white ">Role Name</TableHead>
             <TableHead className="text-white ">Permissions</TableHead>
-            <TableHead className="text-white w-[100px]">Status</TableHead>
             <TableHead className="text-right text-white ">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {Object.values(branches).map((branch: any, index: number) => (
+          {Object.values(roles).map((role: any, index: number) => (
             <TableRow
               key={index + 1}
               className="py-0 my-0 border-gray-400 border-opacity-50 border-y"
             >
               <TableCell className="font-medium capitalize">
-                {branch.code}
+                {role.code} {role.id}
               </TableCell>
               <TableCell className="font-medium capitalize">
-                {branch.name}
+                {role.name}
               </TableCell>
               <TableCell className="lowercase">
-                <a href="#" className="text-blue-500">
-                  3 Permissions
+                <a
+                  href="#"
+                  onClick={() => {
+                    prepare_updating_role(role.id);
+                  }}
+                  className="text-blue-500"
+                >
+                  {role.total_permissions} Permissions
                 </a>
-              </TableCell>
-              <TableCell className="w-{100px]">
-                {branch.status ? (
-                  <div className="px-2 py-1 text-center text-white bg-green-500 rounded">
-                    Active
-                  </div>
-                ) : (
-                  <div className="px-2 py-1 text-center text-white bg-red-500 rounded">
-                    Inactive
-                  </div>
-                )}
               </TableCell>
               <TableCell className="flex justify-end gap-2 text-sm lg:text-lg">
                 <div
                   className="cursor-pointer hover:text-blue-500 hover:scale-125"
                   onClick={() => {
-                    prepare_updating_branch(branch.code);
+                    prepare_updating_role(role.id);
                   }}
                 >
                   <HiPencilSquare />
                 </div>
                 <div
                   className="cursor-pointer hover:text-red-500 hover:scale-125"
-                  onClick={() => initiateDeleteBranch(branch.code)}
+                  onClick={() => initiateDeleteRole(role.id)}
                 >
                   <HiArchiveBoxXMark />
                 </div>

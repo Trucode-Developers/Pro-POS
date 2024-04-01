@@ -5,8 +5,6 @@ import { HiMenuAlt3 } from "react-icons/hi";
 import { MdOutlineDashboard } from "react-icons/md";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { TbReportAnalytics } from "react-icons/tb";
-import { FiFolder } from "react-icons/fi";
 import { HiOutlineCog } from "react-icons/hi";
 import pos from "./pos.png";
 import { useThemeStore } from "@/lib/store";

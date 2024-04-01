@@ -1,11 +1,13 @@
 use serde::{Deserialize, Serialize};
 use sqlx::{PgPool, SqlitePool};
 use thiserror::Error;
+use tauri::State;
 
 use crate::db_connections::{DbPool, PoolType};
 
 #[derive(Serialize, Deserialize, Debug, sqlx::FromRow)]
-struct Permission {
+pub struct Permission {
+    pub id: Option<i32>,
     pub name: String,
     pub slug: String
 }
@@ -59,28 +61,39 @@ async fn create_permissions_in_pool(permission: Permission, db_pool: &DbPool) ->
 pub async fn compare_and_add_permissions(db_pool: &DbPool) -> Result<(), CustomError> {
     let permissions = vec![
         Permission {
+            id: None,
             slug: String::from("can-view-user"),
             name: String::from("View User")
         },
         Permission {
+            id: None,
             slug: String::from("can-delete-user"),
             name: String::from("Delete User")
         },
         Permission {
+            id: None,
             slug: String::from("can-create-user"),
             name: String::from("Create User")
         },
         Permission {
+            id: None,
             slug: String::from("can-view-dashboard"),
             name: String::from("View Dashboard")
         },
         Permission {
+            id: None,
             slug: String::from("can-manage-settings"),
             name: String::from("Manage Settings")
         },
         Permission {
+            id: None,
             slug: String::from("can-new-settings"),
             name: String::from("New Settings")
+        },
+        Permission {
+            id: None,
+            slug: String::from("can-view-roles"),
+            name: String::from("View System Roles")
         },
     ];
 
@@ -99,9 +112,17 @@ pub async fn compare_and_add_permissions(db_pool: &DbPool) -> Result<(), CustomE
 
 
 
-async fn get_permissions_from_pool(db_pool: &DbPool) -> Result<Vec<Permission>, CustomError> {
+pub async fn get_permissions_from_pool(db_pool: &DbPool) -> Result<Vec<Permission>, CustomError> {
     match &db_pool.pool {
         PoolType::Postgres(pool) => get_all_permissions_postgres(pool).await,
         PoolType::SQLite(pool) => get_all_permissions_sqlite(pool).await,
     }
 }
+
+//get all permissions
+#[tauri::command]
+pub async fn get_all_permissions(state: State<'_, DbPool>) -> Result<Vec<Permission>, CustomError> {
+    get_permissions_from_pool(&state).await
+}
+
+

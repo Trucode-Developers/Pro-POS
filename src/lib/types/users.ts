@@ -31,6 +31,8 @@ export type TypeBranchSchema = z.infer<typeof BranchSchema>;
 
 //roles and permissions
 export const RoleSchema = z.object({
+  id: z.number().optional(), //as its autoIncremented in the database, will be used for updating
+  total_permissions: z.number().optional(), //only used for the get_all_roles endpoint
   code: z.string().min(3, "Code must be at least 3 characters"),
   name: z.string().min(5, "Role name must be at least 5 characters"),
 });
