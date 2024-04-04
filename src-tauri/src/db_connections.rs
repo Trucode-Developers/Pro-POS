@@ -3,11 +3,11 @@ use sqlx::migrate::MigrateDatabase;
 use sqlx::postgres::PgPoolOptions;
 use sqlx::{PgPool, Sqlite, SqlitePool};
 
-use std::fs::{self, File, OpenOptions};
-use std::io::{self, BufRead, Error, ErrorKind, Read, Seek, SeekFrom, Write};
+use dirs;
+use std::fs::{self, File};
+use std::io::{self, BufRead, Error, ErrorKind, Write};
 use std::path::{Path, PathBuf};
 use std::result::Result;
-use dirs;
 
 use crate::routes::permissions::compare_and_add_permissions;
 pub struct DbPool {
@@ -112,8 +112,6 @@ async fn establish_sqlite_connection() -> Result<SqlitePool, sqlx::Error> {
     // Connect to the SQLite database
     Ok(SqlitePool::connect(&db_url).await?)
 }
-
-
 
 async fn run_postgres_migrations(pool: &PgPool) {
     let _ = sqlx::migrate!("./migrations")

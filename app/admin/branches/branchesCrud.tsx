@@ -59,7 +59,7 @@ export default function BranchCrud({
   const updateBranch = async (data: TypeBranchSchema) => {
     let branch = data;
     let code = active_code; //as rust expects an object with a key of code
-    console.log(code, branch);
+    // console.log(code, branch);
     await invoke("update_branch", { code, branch })
       .then((response: any) => {
         if (response.status === 200) {

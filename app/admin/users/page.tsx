@@ -26,6 +26,7 @@ import { TypeUserSchema } from "@/lib/types/users";
 
 
 const defaultUser = {
+  id: 0,
   name: "",
   role: 1,
   email: "",
@@ -38,9 +39,23 @@ export default function Page() {
   const [greeting, setGreeting] = useState("");
   const [users, setUsers] = useState({} as any);
   const [user, setUser] = useState<TypeUserSchema>(defaultUser);
+   const [allocatedRoles, setAllocatedRoles] = useState([] as any);
+   const [roles, setRoles] = useState([]);
 
   const [active_id, setActive_id] = useState("");
   const [search_value, setSearchValue] = useState("");
+
+
+  //  const user_slugs = async (userId: number) => {
+   const user_slugs = async () => {
+    let userId = 1;
+     await invoke("get_allocated_permission_slugs", { userId })
+       .then((response: any) => {
+         setAllocatedRoles(response.data);
+          console.log("assigned slugs", response.data);
+       })
+       .catch(console.error);
+   };
 
   useEffect(() => {
     invoke<string>("greet", {
@@ -51,30 +66,59 @@ export default function Page() {
         (error) => console.error(error)
       )
       .catch(console.error);
-    get_all_users();
+      get_all_users();
+      get_all_roles();
   }, []);
+
+   const get_all_roles = async () => {
+     closePopUp();
+     await invoke("get_all_roles")
+       .then((response: any) => {
+         if (response.status === 200) {
+           setRoles(response.data);
+           console.log(roles);
+           console.log(response.data);
+         }
+       })
+       .catch(console.error);
+   };
+   
+   const get_assigned_roles = async (userId: number) => {
+     await invoke("get_assigned_roles", { userId })
+       .then((response: any) => {
+         setAllocatedRoles(response.data);
+        //  console.log("assigned roles", response.data);
+       })
+       .catch(console.error);
+   };
+
+  
 
   const get_all_users = async () => {
     closePopUp();
     await invoke("get_all_users")
-      .then((response) => {
-        setUsers(response);
-        // console.log(response);
+      .then((response:any) => {
+        // console.log(response.data);
+          if (response.status === 200) {
+            setUsers(response.data);
+          }
       })
       .catch(console.error);
   };
 
-  const prepare_updating_user = async (email: string) => {
-    setActive_id(email);
+  const prepare_updating_user = async (id: number) => {
+    setActive_id(id.toString());
+    let userId = id;
+    get_assigned_roles(userId);
     //filter user by id and assign to user
-    const user = users.filter((user: any) => user.email === email)[0];
+    const user = users.filter((user: any) => user.id === id)[0];
     setUser(user);
     openPopUp();
     // console.log(user);
   };
 
-  const deleteUser = async (email: string) => {
-    await invoke("delete_user", { email })
+  const deleteUser = async (id: number) => {
+    await invoke("delete_user", { id })
       .then((response) => get_all_users())
       .catch(console.error);
   };
@@ -126,6 +170,9 @@ export default function Page() {
             </Button>
           </div>
           <UserCrud
+            roles={roles}
+            allocatedRoles={allocatedRoles}
+            setAllocatedRoles={setAllocatedRoles}
             user={user}
             get_all_users={get_all_users}
             active_id={active_id}
@@ -139,7 +186,7 @@ export default function Page() {
           <TableRow className="text-white uppercase bg-gray-500 hover:bg-gray-500">
             <TableHead className="text-white ">Name</TableHead>
             <TableHead className="text-white ">Email</TableHead>
-            <TableHead className="text-white w-[100px]">Role</TableHead>
+            <TableHead className="text-white w-[100px]">Roles</TableHead>
             <TableHead className="text-white w-[100px]">Status</TableHead>
             <TableHead className="text-right text-white ">Actions</TableHead>
           </TableRow>
@@ -147,14 +194,14 @@ export default function Page() {
         <TableBody>
           {Object.values(users).map((user: any, index: number) => (
             <TableRow
-              key={index+1}
+              key={index + 1}
               className="py-0 my-0 border-gray-400 border-opacity-50 border-y"
             >
               <TableCell className="font-medium capitalize">
                 {user.name}
               </TableCell>
               <TableCell className="lowercase">{user.email}</TableCell>
-              <TableCell className="w-{100px]">{user.role}</TableCell>
+              <TableCell className="w-{100px]">{user.total_roles}</TableCell>
               <TableCell className="w-{100px]">
                 {user.is_active ? "Yes" : "No"}
               </TableCell>
@@ -163,14 +210,14 @@ export default function Page() {
                 <div
                   className="cursor-pointer hover:text-blue-500 hover:scale-125"
                   onClick={() => {
-                    prepare_updating_user(user.email);
+                    prepare_updating_user(user.id);
                   }}
                 >
                   <HiPencilSquare />
                 </div>
                 <div
                   className="cursor-pointer hover:text-red-500 hover:scale-125"
-                  onClick={() => deleteUser(user.email)}
+                  onClick={() => deleteUser(user.id)}
                 >
                   <HiArchiveBoxXMark />
                 </div>
@@ -179,6 +226,8 @@ export default function Page() {
           ))}
         </TableBody>
       </Table>
+
+      <Button onClick={user_slugs} className="bg-blue-500">View my role slugs in console</Button>
     </div>
   );
 }

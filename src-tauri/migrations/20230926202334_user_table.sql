@@ -37,8 +37,8 @@ CREATE TABLE user_roles (
   id serial PRIMARY KEY,
   user_id int NOT NULL,
   role_id int NOT NULL,
-  created_by int NOT NULL,
-  created_at timestamp NOT NULL,
+  created_by int  NULL,
+  created_at timestamp  NULL,
   FOREIGN KEY (user_id) REFERENCES users(id),
   FOREIGN KEY (role_id) REFERENCES roles(id),
   FOREIGN KEY (created_by) REFERENCES users(id)

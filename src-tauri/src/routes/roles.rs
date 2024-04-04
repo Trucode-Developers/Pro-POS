@@ -79,7 +79,7 @@ pub async fn get_all_roles(state: State<'_, DbPool>) -> Result<Value, Value> {
                 "status": 200,
                 "data": roles,
             });
-            println!("roles: {:?}", roles);
+            // println!("roles: {:?}", roles);
             json
         }),
         PoolType::SQLite(pool) => get_all_roles_sqlite(pool).await.map(|roles| {
@@ -99,9 +99,9 @@ async fn get_all_roles_postgres(pool: &PgPool) -> Result<Vec<Role>, Value> {
         LEFT JOIN role_permissions ON role_permissions.role_id = roles.id
         GROUP BY roles.id
         ORDER BY roles.id DESC";
-    
+
     let result = sqlx::query_as::<_, Role>(query).fetch_all(pool).await;
-    
+
     result.map_err(|e| {
         let json = json!({
             "status": 500,
@@ -118,9 +118,9 @@ async fn get_all_roles_sqlite(pool: &SqlitePool) -> Result<Vec<Role>, Value> {
         LEFT JOIN role_permissions ON role_permissions.role_id = roles.id
         GROUP BY roles.id
         ORDER BY roles.id DESC";
-    
+
     let result = sqlx::query_as::<_, Role>(query).fetch_all(pool).await;
-    
+
     result.map_err(|e| {
         let json = json!({
             "status": 500,
@@ -129,9 +129,6 @@ async fn get_all_roles_sqlite(pool: &SqlitePool) -> Result<Vec<Role>, Value> {
         json
     })
 }
-
-
-
 
 #[tauri::command]
 pub async fn update_role(
@@ -162,7 +159,8 @@ pub async fn update_role(
 
             // Insert new role_permissions
             for permission_id in allocated_permissions {
-                let insert_query = "INSERT INTO role_permissions (role_id, permission_id) VALUES ($1, $2)";
+                let insert_query =
+                    "INSERT INTO role_permissions (role_id, permission_id) VALUES ($1, $2)";
                 sqlx::query(insert_query)
                     .bind(&id)
                     .bind(&permission_id)
@@ -195,7 +193,8 @@ pub async fn update_role(
 
             // Insert new role_permissions
             for permission_id in allocated_permissions {
-                let insert_query = "INSERT INTO role_permissions (role_id, permission_id) VALUES (?, ?)";
+                let insert_query =
+                    "INSERT INTO role_permissions (role_id, permission_id) VALUES (?, ?)";
                 sqlx::query(insert_query)
                     .bind(&id)
                     .bind(&permission_id)
@@ -214,7 +213,7 @@ pub async fn update_role(
 #[tauri::command]
 pub async fn get_role_permissions(role_id: i32, state: State<'_, DbPool>) -> Result<Value, Value> {
     match &state.pool {
-         PoolType::Postgres(pool) => {
+        PoolType::Postgres(pool) => {
             let query = "SELECT permission_id FROM role_permissions WHERE role_id = $1";
             let permissions: Vec<(i32,)> = sqlx::query_as(query)
                 .bind(&role_id)
@@ -243,113 +242,130 @@ pub async fn get_role_permissions(role_id: i32, state: State<'_, DbPool>) -> Res
     }
 }
 
+//get assigned roles to a role
+#[tauri::command]
+pub async fn get_assigned_roles(user_id: i32, state: State<'_, DbPool>) -> Result<Value, Value> {
+    match &state.pool {
+        PoolType::Postgres(pool) => {
+            let query = "SELECT role_id FROM user_roles WHERE user_id = $1";
+            let roles: Vec<(i32,)> = sqlx::query_as(query)
+                .bind(&user_id)
+                .fetch_all(pool)
+                .await
+                .map_err(|e| json!({ "status": 500, "message": e.to_string() }))?;
 
+            let roles: Vec<i32> = roles.iter().map(|(id,)| *id).collect();
+
+            let json = json!({ "status": 200, "data": roles });
+            Ok(json)
+        }
+        PoolType::SQLite(pool) => {
+            let query = "SELECT role_i FROM user_roles WHERE user_id = ?";
+            let roles: Vec<(i32,)> = sqlx::query_as(query)
+                .bind(&user_id)
+                .fetch_all(pool)
+                .await
+                .map_err(|e| json!({ "status": 500, "message": e.to_string() }))?;
+
+            let roles: Vec<i32> = roles.iter().map(|(id,)| *id).collect();
+
+            let json = json!({ "status": 200, "data": roles });
+            Ok(json)
+        }
+    }
+}
 
 #[tauri::command]
 pub async fn get_allocated_permission_slugs(
-    role_id: i32,
+    user_id: i32,
     state: State<'_, DbPool>,
 ) -> Result<Value, Value> {
-    // Clone the state to avoid borrowing issues
-    let cloned_state = state.clone();
-
-    // Get a vector of allocated ids from get_role_permissions
-    let permissions = get_role_permissions(role_id, cloned_state).await?;
-    let permissions = permissions.get("data").unwrap().as_array().unwrap();
-    let permissions: Vec<i32> = permissions
-        .iter()
-        .map(|id| id.as_i64().unwrap() as i32)
-        .collect();
-
-    // Define the query string for both Postgres and SQLite
-    let query = match &state.pool {
-        PoolType::Postgres(_) => {
-            format!("SELECT slug FROM permissions WHERE id = ANY($1)")
+    // Get the allocated role IDs for the user
+    let role_ids: Vec<i32> = match &state.pool {
+        PoolType::Postgres(pool) => {
+            let query = "SELECT role_id FROM user_roles WHERE user_id = $1";
+            let roles: Vec<(i32,)> = sqlx::query_as(query)
+                .bind(&user_id)
+                .fetch_all(pool)
+                .await
+                .map_err(|e| json!({ "status": 500, "message": e.to_string() }))?;
+            roles.iter().map(|(id,)| *id).collect()
         }
-        PoolType::SQLite(_) => {
-            let placeholders = (1..=permissions.len()).map(|_| "?").collect::<Vec<_>>().join(",");
-            format!("SELECT slug FROM permissions WHERE id IN ({})", placeholders)
+        PoolType::SQLite(pool) => {
+            let query = "SELECT role_id FROM user_roles WHERE user_id = ?";
+            let roles: Vec<(i32,)> = sqlx::query_as(query)
+                .bind(&user_id)
+                .fetch_all(pool)
+                .await
+                .map_err(|e| json!({ "status": 500, "message": e.to_string() }))?;
+            roles.iter().map(|(id,)| *id).collect()
         }
     };
 
-    // Execute the query based on the database type
-    let slugs: Vec<(String,)> = match &state.pool {
-        PoolType::Postgres(pool) => {
-            sqlx::query_as(&query)
-                .bind(&permissions)
-                .fetch_all(pool)
-                .await
-        }
-        PoolType::SQLite(pool) => {
-            let mut query = sqlx::query_as(&query);
-            for id in &permissions {
-                query = query.bind(id);
-            }
-            query.fetch_all(pool).await
-        }
-    }.map_err(|e| json!({ "status": 500, "message": e.to_string() }))?;
+    // Get the unique permission slugs for the allocated role IDs
+    let mut unique_slugs = Vec::new();
+    for role_id in &role_ids {
+        // Clone the state to avoid borrowing issues
+        let cloned_state = state.clone();
 
-    // Extract slugs from the result
-    let slugs: Vec<String> = slugs.iter().map(|(slug,)| slug.clone()).collect();
+        // Get a vector of allocated permission IDs from get_role_permissions
+        let permissions = get_role_permissions(*role_id, cloned_state).await?;
+        let permissions = permissions.get("data").unwrap().as_array().unwrap();
+        let permission_ids: Vec<i32> = permissions
+            .iter()
+            .map(|id| id.as_i64().unwrap() as i32)
+            .collect();
+
+        // Define the query string for both Postgres and SQLite
+        let query = match &state.pool {
+            PoolType::Postgres(_) => {
+                format!("SELECT slug FROM permissions WHERE id = ANY($1)")
+            }
+            PoolType::SQLite(_) => {
+                let placeholders = (1..=permission_ids.len())
+                    .map(|_| "?")
+                    .collect::<Vec<_>>()
+                    .join(",");
+                format!(
+                    "SELECT slug FROM permissions WHERE id IN ({})",
+                    placeholders
+                )
+            }
+        };
+
+        // Execute the query based on the database type
+        let slugs: Vec<(String,)> = match &state.pool {
+            PoolType::Postgres(pool) => {
+                sqlx::query_as(&query)
+                    .bind(&permission_ids)
+                    .fetch_all(pool)
+                    .await
+            }
+            PoolType::SQLite(pool) => {
+                let mut query = sqlx::query_as(&query);
+                for id in &permission_ids {
+                    query = query.bind(id);
+                }
+                query.fetch_all(pool).await
+            }
+        }
+        .map_err(|e| json!({ "status": 500, "message": e.to_string() }))?;
+
+        // Extract slugs from the result and add them to the unique_slugs vector
+        let new_slugs: Vec<_> = slugs
+            .into_iter()
+            .filter(|slug| !unique_slugs.contains(slug))
+            .collect();
+        unique_slugs.extend(new_slugs);
+    }
 
     // Return JSON response
-    let json = json!({ "status": 200, "data": slugs });
+    // let json = json!({ "status": 200, "data": unique_slugs });
+    // Ok(json)
+    // let json = json!({ "status": 200, "data": unique_slugs.iter().map(|s| s.as_str()).collect::<Vec<_>>() });
+    let json = json!({ "status": 200, "data": unique_slugs.iter().map(|(s,)| s.as_str()).collect::<Vec<_>>() });
     Ok(json)
 }
-
-
-// #[tauri::command]
-// pub async fn get_allocated_permission_slugs(
-//     role_id: i32,
-//     state: State<'_, DbPool>,
-// ) -> Result<Value, Value> {
-//     // Get a vector of allocated ids from get_role_permissions
-//     let permissions = get_role_permissions(role_id, state).await?;
-//     let permissions = permissions.get("data").unwrap().as_array().unwrap();
-//     let permissions: Vec<i32> = permissions
-//         .iter()
-//         .map(|id| id.as_i64().unwrap() as i32)
-//         .collect();
-
-//     // Having the ids, we can now get the slugs from the permissions table
-//     match &state.pool {
-//         PoolType::Postgres(pool) => {
-//             let query = format!(
-//                 "SELECT slug FROM permissions WHERE id = ANY($1)"
-//             );
-//             let slugs: Vec<(String,)> = sqlx::query_as(&query)
-//                 .bind(&permissions)
-//                 .fetch_all(pool)
-//                 .await
-//                 .map_err(|e| json!({ "status": 500, "message": e.to_string() }))?;
-
-//             let slugs: Vec<String> = slugs.iter().map(|(slug,)| slug.clone()).collect();
-
-//             let json = json!({ "status": 200, "data": slugs });
-//             Ok(json)
-//         }
-//         PoolType::SQLite(pool) => {
-//             let query = format!(
-//                 "SELECT slug FROM permissions WHERE id IN ({})",
-//                 permissions.iter().map(|_| "?").collect::<Vec<_>>().join(",")
-//             );
-//             let slugs: Vec<(String,)> = sqlx::query_as(&query)
-//                 .bind(&permissions)
-//                 .fetch_all(pool)
-//                 .await
-//                 .map_err(|e| json!({ "status": 500, "message": e.to_string() }))?;
-
-//             let slugs: Vec<String> = slugs.iter().map(|(slug,)| slug.clone()).collect();
-
-//             let json = json!({ "status": 200, "data": slugs });
-//             Ok(json)
-//         }
-//     }
-// }
-
-
-
-
 
 // Delete a role
 #[tauri::command]

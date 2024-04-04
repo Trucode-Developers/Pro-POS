@@ -52,18 +52,6 @@ export default function Page() {
   const [active_id, setActiveId] = useState(0);
   const [search_value, setSearchValue] = useState("");
 
-
-    // const get_permission_slugs = async () => {
-    //   let roleId = 2;
-    //   await invoke("get_allocated_permission_slugs", { roleId })
-    //     .then((response: any) => {
-    //       if (response.status === 200) {
-    //         setRoles(response.data);
-    //         console.log(response.data);
-    //       }
-    //     })
-    //     .catch(console.error);
-    // };
     
   useEffect(() => {
     get_all_roles();

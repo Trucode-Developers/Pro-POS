@@ -1,10 +1,10 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-// use routes::users::{create, delete_user, get_all_users, get_user, greet, update,DbPool,PoolType};
+
 // use fix_path_env;
 mod routes;
 use routes::branches::{create_branch,get_all_branches,update_branch,delete_branch};
-use routes::roles::{create_role,delete_role,get_all_roles,update_role,get_role_permissions,get_allocated_permission_slugs};
-use routes::users::{create, delete_user, get_all_users, get_user, greet, update};
+use routes::roles::{create_role,delete_role,get_all_roles,update_role,get_role_permissions,get_assigned_roles,get_allocated_permission_slugs};
+use routes::users::{create, delete_user, get_all_users, get_user, greet, update_user};
 use routes::permissions::get_all_permissions;
 pub mod db_connections;
 use db_connections::{ create_new, establish_database_connection, read_specific_line, update_file};
@@ -34,10 +34,10 @@ async fn main() {
         .invoke_handler(tauri::generate_handler![
             greet,
             create,
-            update,
+            update_user,
             delete_user,
             get_all_users,
-            get_user,
+            get_user, ////not used
             change_db,
             current_active_db,
 
@@ -54,6 +54,7 @@ async fn main() {
             get_all_permissions,
             get_role_permissions,
             get_allocated_permission_slugs,
+            get_assigned_roles,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

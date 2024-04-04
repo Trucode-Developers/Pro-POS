@@ -14,8 +14,10 @@ import { invoke } from "@tauri-apps/api/tauri";
 import React, { useEffect } from "react";
 import CustomSelect from "@/components/custom/select";
 import Loading from "@/components/loading";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-export default function UserCrud({ user, get_all_users, active_id }: any) {
+export default function UserCrud({roles,allocatedRoles,setAllocatedRoles, user, get_all_users, active_id }: any) {
   const {
     register,
     handleSubmit,
@@ -31,6 +33,10 @@ export default function UserCrud({ user, get_all_users, active_id }: any) {
   }, [user, reset]);
 
   const onSubmit = async (data: TypeUserSchema) => {
+    if (active_id) {
+      updateUser(data);
+      return;
+    }
     let user = data; //as rust expects an object with a key of user
     try {
       const response = await invoke("create", { user });
@@ -41,12 +47,34 @@ export default function UserCrud({ user, get_all_users, active_id }: any) {
     }
   };
 
-  // const idd = 2;
-  const updateUser = async () => {
-    await invoke("update", { active_id, user })
-      .then((response) => get_all_users())
+
+
+  const updateUser = async (data: TypeUserSchema) => {
+    let user = data;
+    let id = parseInt(active_id);
+    
+    await invoke("update_user", { id, allocatedRoles, user })
+      .then((response: any) => {
+        if (response.status === 200) {
+          toast.success("User updated successfully");
+        } else {
+          toast.error("User update failed, check your inputs and try again");
+        }
+        get_all_users();
+      })
       .catch(console.error);
     closePopUp();
+  };
+
+  const handleAllocation = (e: any) => {
+    let role = parseInt(e.target.value); // Convert to integer
+    if (e.target.checked) {
+      setAllocatedRoles([...allocatedRoles, role]);
+    } else {
+      setAllocatedRoles(
+        allocatedRoles.filter((p: any) => p !== role) // Filter using the integer value
+      );
+    }
   };
 
   return (
@@ -153,29 +181,57 @@ export default function UserCrud({ user, get_all_users, active_id }: any) {
                 </span>
               )}
             </div>
-
-            {/* <CustomInput
-              label="Is Active"
-              type="checkbox"
-              placeholder="confirm password"
-              innerClass=""
-              outerClass=""
-              register={register("is_active")}
-              error={errors.is_active}
-            /> */}
           </div>
-          <Button
-            disabled={isSubmitting}
-            className="bg-blue-500 hover:bg-black"
-          >
-            {isSubmitting ? (
-              <Loading color="#ffffff" width="50" />
-            ) : active_id ? (
-              "Update"
-            ) : (
-              "Create"
-            )}
-          </Button>
+
+          <div className={`${!active_id ? "hidden" : ""} pb-5`}>
+            <div>
+              <h2 className="py-4 text-lg font-bold text-center lg:text-xl">
+                Role Permissions
+                {/* {allocatedPermissions.length} */}
+              </h2>
+            </div>
+            <div className="flex flex-col flex-wrap items-start gap-4">
+              {Object.values(roles).map((role: any, index: number) => (
+                <div
+                  key={index}
+                  className={`flex items-center gap-1 text-xl cursor-pointer px-2 ${
+                    allocatedRoles.includes(role.id)
+                      ? "bg-green-500 bg-opacity-30  rounded-lg"
+                      : ""
+                  }`}
+                >
+                  {/* <div>
+                    <span>{role.id}.</span>
+                  </div> */}
+                  <input
+                    id={role.id}
+                    type="checkbox"
+                    className="w-5 h-5 border-black"
+                    value={role.id}
+                    onChange={handleAllocation}
+                    checked={allocatedRoles.includes(role.id)}
+                  />
+                  <label className="cursor-pointer " htmlFor={role.id}>
+                    {role.name}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="flex justify-center">
+            <Button
+              disabled={isSubmitting}
+              className="bg-blue-500 hover:bg-black"
+            >
+              {isSubmitting ? (
+                <Loading color="#ffffff" width="50" />
+              ) : active_id ? (
+                "Update  User"
+              ) : (
+                "Create User"
+              )}
+            </Button>
+          </div>
         </form>
       </div>
     </CustomSheet>

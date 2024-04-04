@@ -2,6 +2,7 @@ import { z } from "zod";
 //users schema
 export const UserSchema = z
   .object({
+    id: z.number().optional(),
     name: z.string().min(3, "Name must be at least 3 characters"),
     role: z.number(),
     email: z.string().email(),
