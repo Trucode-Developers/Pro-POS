@@ -1,9 +1,7 @@
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
-// use sqlx::{PgPool, SqlitePool};
+use bcrypt::{hash, DEFAULT_COST};
 use tauri::State;
-// use thiserror::Error;
-
 use crate::db_connections::{DbPool, PoolType};
 
 #[derive(Serialize, Deserialize, Debug, sqlx::FromRow)]
@@ -30,6 +28,7 @@ pub async fn greet(name: String) -> String {
 
 #[tauri::command]
 pub async fn create(user: User, state: State<'_, DbPool>) -> Result<Value, Value> {
+    let hashed_password = hash(user.password.clone(), DEFAULT_COST).unwrap();
     match &state.pool {
         PoolType::Postgres(pool) => {
             let query = "INSERT INTO users (name, role, email, password, is_active) VALUES ($1, $2, $3, $4, $5) RETURNING id";
@@ -37,7 +36,7 @@ pub async fn create(user: User, state: State<'_, DbPool>) -> Result<Value, Value
                 .bind(&user.name)
                 .bind(&user.role)
                 .bind(&user.email)
-                .bind(&user.password)
+                .bind(&hashed_password)
                 .bind(&user.is_active)
                 .fetch_one(pool)
                 .await;
@@ -66,7 +65,7 @@ pub async fn create(user: User, state: State<'_, DbPool>) -> Result<Value, Value
                 .bind(&user.name)
                 .bind(&user.role)
                 .bind(&user.email)
-                .bind(&user.password)
+                .bind(&hashed_password)
                 .bind(&user.is_active)
                 .execute(pool)
                 .await;
@@ -98,13 +97,14 @@ pub async fn update_user(
     user: User,
     state: State<'_, DbPool>,
 ) -> Result<Value, Value> {
+    let hashed_password = hash(user.password.clone(), DEFAULT_COST).unwrap();
     match &state.pool {
         PoolType::Postgres(pool) => {
             let query = "UPDATE users SET name = $1, email = $2, password = $3, is_active = $4 WHERE id = $5";
             let _ = sqlx::query(query)
                 .bind(&user.name)
                 .bind(&user.email)
-                .bind(&user.password)
+                .bind(&hashed_password)
                 .bind(&user.is_active)
                 .bind(id)
                 .execute(pool)
@@ -139,7 +139,7 @@ pub async fn update_user(
             let _ = sqlx::query(query)
                 .bind(&user.name)
                 .bind(&user.email)
-                .bind(&user.password)
+                .bind(&hashed_password)
                 .bind(&user.is_active)
                 .bind(id)
                 .execute(pool)

@@ -47,15 +47,15 @@ export default function Page() {
 
 
   //  const user_slugs = async (userId: number) => {
-   const user_slugs = async () => {
-    let userId = 1;
-     await invoke("get_allocated_permission_slugs", { userId })
-       .then((response: any) => {
-         setAllocatedRoles(response.data);
-          console.log("assigned slugs", response.data);
-       })
-       .catch(console.error);
-   };
+  //  const user_slugs = async () => {
+  //   let userId = 1;
+  //    await invoke("get_allocated_permission_slugs", { userId })
+  //      .then((response: any) => {
+  //        setAllocatedRoles(response.data);
+  //         console.log("assigned slugs", response.data);
+  //      })
+  //      .catch(console.error);
+  //  };
 
   useEffect(() => {
     invoke<string>("greet", {
@@ -227,7 +227,7 @@ export default function Page() {
         </TableBody>
       </Table>
 
-      <Button onClick={user_slugs} className="bg-blue-500">View my role slugs in console</Button>
+      {/* <Button onClick={user_slugs} className="bg-blue-500">View my role slugs in console</Button> */}
     </div>
   );
 }

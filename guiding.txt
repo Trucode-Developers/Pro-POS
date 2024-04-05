@@ -1,15 +1,9 @@
 Just added permissions to roles 
 
-next-steps: 
-1. fetch all roles and display under the user when updating user 
-2. get allocated roles  for a user and check them when modal is open
-3. when saving user update , pass the array of roles to the backend
-4. update the user roles in the backend
 
 
 //login 
 1. create a login page
 2. when user passes in the correct credentials, check the user roles in user_roles table
-3. for now we can save to local storage and use it to authenticate the user, get authed id , then get the roles for the user
-4. note you will get an array of roles for a user get permission slugs for each role and concatinate them
-use get_allocated_permission_slugs function thats already created
+3. we already have a function that gets  permission slugs, so create a login function that gets the permission slugs and stores them in the session
+by passing in the user id to the function 

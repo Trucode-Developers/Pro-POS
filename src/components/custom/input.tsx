@@ -16,12 +16,7 @@ export default function CustomInput({
   ...props
 }: Props) {
   return (
-    <div
-      className={cn(
-        "relative  my-0 bg-inherit  ",
-        outerClass
-      )}
-    >
+    <div className={cn("relative  my-0 bg-inherit  ", outerClass)}>
       <input
         id={label}
         {...props}
@@ -42,7 +37,10 @@ export default function CustomInput({
         {label}
         {": "}
         {error && (
-          <span className="text-red-500 animate-pulse"> {error.message} </span>
+          <span className="text-red-500 normal-case animate-pulse">
+            {" "}
+            {error.message}{" "}
+          </span>
         )}
       </label>
 

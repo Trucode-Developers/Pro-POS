@@ -5,8 +5,19 @@ import { useThemeStore } from "@/lib/store";
 import React, { useEffect } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import NextTopLoader from "nextjs-toploader";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Initiator() {
+  const path = usePathname();
+  const router = useRouter();
+
+  const token = useThemeStore((state) => state.token);
+  const checkToken = () => {
+    if (path != "/" && token === null) {
+      // console.log("Path:", path, "Token:", token);
+      router.push("/");
+    }
+  };
 
   // Active DB
   const activeDb = async () => {
@@ -26,7 +37,8 @@ export default function Initiator() {
   useEffect(() => {
     useThemeStore.persist.rehydrate();
     activeDb();
-  }, []);
+    checkToken();
+  }, [path]);
 
   return (
     <>

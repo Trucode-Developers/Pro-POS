@@ -6,6 +6,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+
+  //check Initiator to check token 
   return (
     <html lang="en">
       <body>

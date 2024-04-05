@@ -1,4 +1,12 @@
 import { z } from "zod";
+
+//login schema
+export const LoginSchema = z.object({
+  email: z.string().email().min(5, "too weak email!").max(50, "too long email!").optional(),
+  password: z.string().min(5, "too weak password!"),
+});
+export type TypeLoginSchema = z.infer<typeof LoginSchema>;
+
 //users schema
 export const UserSchema = z
   .object({
@@ -38,3 +46,4 @@ export const RoleSchema = z.object({
   name: z.string().min(5, "Role name must be at least 5 characters"),
 });
 export type TypeRoleSchema = z.infer<typeof RoleSchema>;
+

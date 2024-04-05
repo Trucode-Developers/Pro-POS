@@ -359,12 +359,9 @@ pub async fn get_allocated_permission_slugs(
         unique_slugs.extend(new_slugs);
     }
 
-    // Return JSON response
-    // let json = json!({ "status": 200, "data": unique_slugs });
+    // let json = json!({ "status": 200, "data": unique_slugs.iter().map(|(s,)| s.as_str()).collect::<Vec<_>>() });
     // Ok(json)
-    // let json = json!({ "status": 200, "data": unique_slugs.iter().map(|s| s.as_str()).collect::<Vec<_>>() });
-    let json = json!({ "status": 200, "data": unique_slugs.iter().map(|(s,)| s.as_str()).collect::<Vec<_>>() });
-    Ok(json)
+    Ok(unique_slugs.iter().map(|(s,)| s.to_string()).collect())
 }
 
 // Delete a role

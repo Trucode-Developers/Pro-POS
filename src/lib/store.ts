@@ -12,6 +12,8 @@ export type ThemeState = {
   adminSidebarSize: number[];
   adminPopUpSize: number[];
   isPopUpOpen: boolean;
+  token: number | null;
+  permissions: string[];
 };
 
 export type ThemeActions = {
@@ -31,6 +33,8 @@ export const useThemeStore = create<ThemeState & ThemeActions>()(
       adminSidebarSize: [20, 80],
       adminPopUpSize: [50, 50],
       isPopUpOpen: false,
+      token: null, //currently passing user_id
+      permissions: [],
 
       darkMode: () =>
         set((state) => ({

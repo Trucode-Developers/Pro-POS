@@ -9,14 +9,64 @@ import { InitialSetUp } from "./initialSetUp";
 const inter = Inter({ subsets: ["latin"] });
 import { cn } from "@/lib/utils";
 import { useThemeStore } from "@/lib/store";
-import { use, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoginSchema, TypeLoginSchema } from "@/lib/types/users";
+import CustomInput from "@/components/custom/input";
+import { useRouter } from "next/navigation";
+import Loading from "@/components/loading";
+import { useState } from "react";
 
 export default function Page() {
   const font = useThemeStore((state) => state.fontSize);
+  const router = useRouter();
+  const [error, setError] = useState("");
 
-  // useEffect(() => {
-  //   useThemeStore.persist.rehydrate();
-  // }, []);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<TypeLoginSchema>({
+    resolver: zodResolver(LoginSchema),
+    // defaultValues: role,
+  });
+
+  const onSubmit = async (data: TypeLoginSchema) => {
+    //add a demo await for 5 seconds
+    // await new Promise((resolve) => setTimeout(resolve, 5000));
+    // return ;
+    let credentials = data;
+    try {
+      setError("");
+      const response = await invoke("login", { credentials });
+      reset();
+      console.log(response);
+      const { permissions, status, user_id }: any = response;
+      if (status === 200) {
+        const { Ok } = permissions;
+        useThemeStore.setState({ permissions: Ok });
+        useThemeStore.setState({ token: user_id });
+        router.push("/admin/users");
+      } else {
+        setError("Invalid credentials!");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const permissions: string[] = useThemeStore((state) => state.permissions);
+  const user_id = useThemeStore((state) => state.token);
+  //console log type of permissions
+  // console.log(typeof permissions);
+  // console.log("permissions", permissions);
+  // console.log("user_id", user_id);
+
+  const logOut = async () => {
+    useThemeStore.setState({ permissions: [] });
+    useThemeStore.setState({ token: null });
+  };
 
   return (
     <main className="relative grid min-h-screen md:grid-cols-2">
@@ -33,43 +83,89 @@ export default function Page() {
         <div className="flex flex-wrap gap-4 text-2xl [&>*]:text-primary hover:[&>*]:text-secondary [&>*]:underline ">
           <Link href="/admin"> Admin</Link>
           <Link href="/cashier"> Sale</Link>
-          <Link href="/admin/users"> Users</Link>
+          {permissions.includes("can-view-user") && (
+            <Link href="/admin/users">Users checked</Link>
+          )}
+          {/* <Link href="/admin/users"> Users</Link> */}
         </div>
       </div>
       <div className="flex flex-col items-center justify-center gap-4 text-xl ">
-        <div>
-          <h1 className="text-2xl md:text-4xl font-bold text-[var(--primary)] py-5">
-            LOGIN
-          </h1>
-        </div>
-        <div>
-          <form
-            className="flex flex-col gap-4 w-full md:w-[350px]
-          [&>input]:px-4
-          [&>input]:border-b-4
-          [&>input]:rounded-2xl
-          [&>input]:w-full
-          [&>input]:border-[var(--primary)]
-          [&>input]:outline-none
-          [&>input]:text-center
+        {!user_id && (
+          <div>
+            <div>
+              <h1 className="text-2xl md:text-4xl font-bold text-[var(--primary)] py-5">
+                LOGIN
+              </h1>
+            </div>
+            <div>
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="flex flex-col gap-4 w-full md:w-[350px] lg:w-[420px]
+         
           "
-          >
-            <div className="flex justify-between">
-              <label>UserName:</label>
-              <VscAccount />
-            </div>
-            <input type="search" name="user-name" placeholder="user.name" />
-            <div className="flex justify-between">
-              <label>Password:</label>
-              <VscWorkspaceTrusted />
-            </div>
-            <input type="password" name="user-name" placeholder="*********" />
-            <input
+              >
+                <div>
+                  {error && (
+                    <div className="font-bold text-center text-red-500 animate-bounce ">
+                      {error}
+                    </div>
+                  )}
+                </div>
+                <CustomInput
+                  label="Email"
+                  type="text"
+                  placeholder="user name"
+                  innerClass="border-b-4 border-blue-400 rounded-b-xl text-center lowercase "
+                  outerClass=""
+                  // {...register("email")}  //has to be spread to the input element
+                  register={register("email")}
+                  error={errors.email}
+                />
+
+                <CustomInput
+                  label="Password"
+                  type="password"
+                  placeholder="******"
+                  innerClass="border-b-4 border-blue-400 rounded-b-xl text-center lowercase"
+                  outerClass="mt-5"
+                  // {...register("email")}  //has to be spread to the input element
+                  register={register("password")}
+                  error={errors.password}
+                />
+                {/* <input
               type="submit"
               className="bg-[var(--primary)] py-2 text-white hover:bg-blue-500 my-5 outline-double outline-4 cursor-pointer"
-            />
-          </form>
-        </div>
+            /> */}
+                <button
+                  className="flex justify-center py-2 my-5 text-white bg-blue-500 cursor-pointer rounded-xl hover:bg-blue-600 outline-double outline-4"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <Loading color="#ffffff" width="30" />
+                  ) : (
+                    "Login"
+                  )}
+                </button>
+              </form>
+            </div>
+            <div className="flex items-center gap-4">
+              <VscAccount />
+              <VscGear />
+              <VscWorkspaceTrusted />
+            </div>
+          </div>
+        )}
+
+        {user_id && (
+          <div>
+            <button
+              onClick={logOut}
+              className="px-5 py-2 my-5 text-white bg-blue-400 rounded cursor-pointer hover:bg-blue-500 outline-double outline-4"
+            >
+              Logout
+            </button>
+          </div>
+        )}
       </div>
       <div className="absolute p-2 top-2 right-2">
         <InitialSetUp />
