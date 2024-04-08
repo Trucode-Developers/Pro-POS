@@ -8,8 +8,6 @@
 ## END OF src-tauri/src/db_connections.rs
 ## app/admin/users/userCrud.tsx
 ## END OF app/admin/users/userCrud.tsx
-## guiding.txt
-## END OF guiding.txt
 ## app/authLayout.tsx
 ## END OF app/authLayout.tsx
 ## app/layout.tsx
@@ -20,10 +18,6 @@
 ## END OF src/components/custom/input.tsx
 ## src-tauri/src/routes/mod.rs
 ## END OF src-tauri/src/routes/mod.rs
-## src-tauri/src/main.rs
-## END OF src-tauri/src/main.rs
-## src-tauri/Cargo.toml
-## END OF src-tauri/Cargo.toml
 ## src-tauri/src/routes/roles.rs
 ## END OF src-tauri/src/routes/roles.rs
 ## src-tauri/src/routes/users.rs
@@ -36,7 +30,13 @@
 ## END OF app/initiator.tsx
 ## app/page.tsx
 ## END OF app/page.tsx
-
 ## app/admin/users/page.tsx
-
 ## END OF app/admin/users/page.tsx
+## guiding.txt
+## END OF guiding.txt
+## src-tauri/src/main.rs
+## END OF src-tauri/src/main.rs
+
+## src-tauri/Cargo.toml
+
+## END OF src-tauri/Cargo.toml

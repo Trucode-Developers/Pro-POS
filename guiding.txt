@@ -7,3 +7,6 @@ Just added permissions to roles
 2. when user passes in the correct credentials, check the user roles in user_roles table
 3. we already have a function that gets  permission slugs, so create a login function that gets the permission slugs and stores them in the session
 by passing in the user id to the function 
+
+
+https://crates.io/crates/tauri/versions
