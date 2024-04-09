@@ -1,10 +1,14 @@
 CREATE TABLE users (
   id serial PRIMARY KEY,
+  serial_number varchar(255) NOT NULL UNIQUE,
   name varchar(255) NOT NULL,
   role int NOT NULL,
   email varchar(255) NOT NULL UNIQUE,
   password varchar(255) NOT NULL,
-  is_active boolean NOT NULL DEFAULT true
+  is_active boolean NOT NULL DEFAULT true,
+  created_by int  NULL,
+  created_at timestamp  NULL,
+  updated_by int  NULL
 );
 
 CREATE TABLE roles (

@@ -275,11 +275,35 @@ pub async fn get_assigned_roles(user_id: i32, state: State<'_, DbPool>) -> Resul
     }
 }
 
+
 #[tauri::command]
 pub async fn get_allocated_permission_slugs(
-    user_id: i32,
+  
+     serial_number: String,
     state: State<'_, DbPool>,
 ) -> Result<Value, Value> {
+
+    //get user_id  from users table where serial_number = serial_number get depending on the database type then use the user_id to get the roles
+      let user_id = match &state.pool {
+        PoolType::Postgres(pool) => {
+            let query = "SELECT id FROM users WHERE serial_number = $1";
+            sqlx::query_as(query)
+                .bind(&serial_number)
+                .fetch_one(pool)
+                .await
+                .map(|user: (i32,)| user.0)
+                .map_err(|e| json!({ "status": 500, "message": e.to_string() }))?
+        }
+        PoolType::SQLite(pool) => {
+            let query = "SELECT id FROM users WHERE serial_number = ?";
+            sqlx::query_as(query)
+                .bind(&serial_number)
+                .fetch_one(pool)
+                .await
+                .map(|user: (i32,)| user.0)
+                .map_err(|e| json!({ "status": 500, "message": e.to_string() }))?
+        }
+    };
     // Get the allocated role IDs for the user
     let role_ids: Vec<i32> = match &state.pool {
         PoolType::Postgres(pool) => {
@@ -359,8 +383,6 @@ pub async fn get_allocated_permission_slugs(
         unique_slugs.extend(new_slugs);
     }
 
-    // let json = json!({ "status": 200, "data": unique_slugs.iter().map(|(s,)| s.as_str()).collect::<Vec<_>>() });
-    // Ok(json)
     Ok(unique_slugs.iter().map(|(s,)| s.to_string()).collect())
 }
 

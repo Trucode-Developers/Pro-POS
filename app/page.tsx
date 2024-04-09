@@ -41,7 +41,8 @@ export default function Page() {
       setError("");
       const response = await invoke("login", { credentials });
       reset();
-      console.log(response);
+      // console.log(response);
+      // return;
       const { permissions, status, user_id }: any = response;
       if (status === 200) {
         const { Ok } = permissions;

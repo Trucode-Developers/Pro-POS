@@ -1,9 +1,10 @@
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use bcrypt::{hash, DEFAULT_COST};
+// use sqlx::pool;
 use tauri::State;
-use crate::db_connections::{DbPool, PoolType};
-
+use crate::{db_connections::{DbPool, PoolType}, routes::login::get_user_id};
+use uuid::Uuid;
 #[derive(Serialize, Deserialize, Debug, sqlx::FromRow)]
 pub struct User {
     pub id: Option<i32>,
@@ -29,15 +30,18 @@ pub async fn greet(name: String) -> String {
 #[tauri::command]
 pub async fn create(user: User, state: State<'_, DbPool>) -> Result<Value, Value> {
     let hashed_password = hash(user.password.clone(), DEFAULT_COST).unwrap();
+    let user_id = get_user_id(state.clone()).await;
     match &state.pool {
         PoolType::Postgres(pool) => {
-            let query = "INSERT INTO users (name, role, email, password, is_active) VALUES ($1, $2, $3, $4, $5) RETURNING id";
+            let query = "INSERT INTO users (serial_number,name, role, email, password, is_active,created_by) VALUES ($1, $2, $3, $4, $5,$6,$7) RETURNING id";
             let result = sqlx::query(query)
+                .bind(Uuid::new_v4())
                 .bind(&user.name)
                 .bind(&user.role)
                 .bind(&user.email)
                 .bind(&hashed_password)
                 .bind(&user.is_active)
+                .bind(user_id)
                 .fetch_one(pool)
                 .await;
 
@@ -60,8 +64,9 @@ pub async fn create(user: User, state: State<'_, DbPool>) -> Result<Value, Value
         }
         PoolType::SQLite(pool) => {
             let query =
-                "INSERT INTO users (name, role, email, password, is_active) VALUES (?, ?, ?, ?, ?)";
+                "INSERT INTO users (serial_number,name, role, email, password, is_active) VALUES (?,?, ?, ?, ?, ?)";
             let result = sqlx::query(query)
+                .bind(Uuid::new_v4())
                 .bind(&user.name)
                 .bind(&user.role)
                 .bind(&user.email)
