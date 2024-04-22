@@ -1,15 +1,24 @@
 CREATE TABLE users (
   id serial PRIMARY KEY,
   serial_number varchar(255) NOT NULL UNIQUE,
+  staff_number varchar(255) NOT NULL UNIQUE DEFAULT '000000', 
   name varchar(255) NOT NULL,
-  role int NOT NULL,
+  role int NULL,
   email varchar(255) NOT NULL UNIQUE,
   password varchar(255) NOT NULL,
   is_active boolean NOT NULL DEFAULT true,
-  created_by int  NULL,
+  created_by varchar(255)  NULL,
   created_at timestamp  NULL,
   updated_by int  NULL
 );
+
+CREATE TABLE sessions (
+  id serial PRIMARY KEY,
+  user_serial_number varchar(255) NOT NULL UNIQUE,
+  token varchar(255) NOT NULL,
+  created_at timestamp  NULL
+);
+
 
 CREATE TABLE roles (
   id serial PRIMARY KEY,

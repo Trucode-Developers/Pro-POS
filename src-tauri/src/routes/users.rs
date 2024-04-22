@@ -1,15 +1,19 @@
+use bcrypt::{hash, DEFAULT_COST};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
-use bcrypt::{hash, DEFAULT_COST};
 // use sqlx::pool;
+use crate::{
+    db_connections::{DbPool, PoolType},
+    routes::login::verify_session,
+};
 use tauri::State;
-use crate::{db_connections::{DbPool, PoolType}, routes::login::get_user_id};
 use uuid::Uuid;
 #[derive(Serialize, Deserialize, Debug, sqlx::FromRow)]
 pub struct User {
     pub id: Option<i32>,
     pub total_roles: Option<i32>,
     pub name: String,
+    pub staff_number: String,
     pub role: i32,
     pub email: String,
     pub password: String,
@@ -28,20 +32,32 @@ pub async fn greet(name: String) -> String {
 }
 
 #[tauri::command]
-pub async fn create(user: User, state: State<'_, DbPool>) -> Result<Value, Value> {
+pub async fn create(token: String, user: User, state: State<'_, DbPool>) -> Result<Value, Value> {
     let hashed_password = hash(user.password.clone(), DEFAULT_COST).unwrap();
-    let user_id = get_user_id(state.clone()).await;
+    let staff_number = verify_session(&token.clone(), state.clone()).await;
+    if staff_number.is_some() {
+        println!("Staff number: {}", staff_number.clone().unwrap());
+        // Continue with the rest of your code
+    } else {
+        println!("Invalid session or user not found");
+        // Handle the case where the staff number is not found
+        return Err(json!({
+            "status": 401,
+            "message":"Unauthorized: Invalid session or user not found"
+        }));
+    }
     match &state.pool {
         PoolType::Postgres(pool) => {
-            let query = "INSERT INTO users (serial_number,name, role, email, password, is_active,created_by) VALUES ($1, $2, $3, $4, $5,$6,$7) RETURNING id";
+            let query = "INSERT INTO users (serial_number,staff_number,name, role, email, password, is_active,created_by) VALUES ($1, $2, $3, $4, $5,$6,$7,$8) RETURNING id";
             let result = sqlx::query(query)
                 .bind(Uuid::new_v4())
+                .bind(&user.staff_number)
                 .bind(&user.name)
                 .bind(&user.role)
                 .bind(&user.email)
                 .bind(&hashed_password)
                 .bind(&user.is_active)
-                .bind(user_id)
+                .bind(staff_number)
                 .fetch_one(pool)
                 .await;
 
@@ -64,14 +80,16 @@ pub async fn create(user: User, state: State<'_, DbPool>) -> Result<Value, Value
         }
         PoolType::SQLite(pool) => {
             let query =
-                "INSERT INTO users (serial_number,name, role, email, password, is_active) VALUES (?,?, ?, ?, ?, ?)";
+                "INSERT INTO users (serial_number,staff_number,name, role, email, password, is_active,created_by) VALUES (?,?, ?, ?, ?, ?,?,?)";
             let result = sqlx::query(query)
                 .bind(Uuid::new_v4())
+                .bind(&user.staff_number)
                 .bind(&user.name)
                 .bind(&user.role)
                 .bind(&user.email)
                 .bind(&hashed_password)
                 .bind(&user.is_active)
+                .bind(staff_number)
                 .execute(pool)
                 .await;
 

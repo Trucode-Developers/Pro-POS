@@ -12,6 +12,7 @@ export const UserSchema = z
   .object({
     id: z.number().optional(),
     name: z.string().min(3, "Name must be at least 3 characters"),
+    staff_number: z.string().min(4, "Staff number must be at least 4 characters"),
     role: z.number(),
     email: z.string().email(),
     password: z.string().min(6, "Password must be at least 6 characters"),

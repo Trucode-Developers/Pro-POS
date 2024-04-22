@@ -1,12 +1,12 @@
 "use client";
 import Image from "next/image";
-import { Inter } from "next/font/google";
+// import { Inter } from "next/font/google";
 import { invoke } from "@tauri-apps/api/tauri";
 import Link from "next/link";
 import { VscAccount, VscGear, VscWorkspaceTrusted } from "react-icons/vsc";
 import { InitialSetUp } from "./initialSetUp";
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
 import { cn } from "@/lib/utils";
 import { useThemeStore } from "@/lib/store";
 import { useForm } from "react-hook-form";
@@ -40,14 +40,15 @@ export default function Page() {
     try {
       setError("");
       const response = await invoke("login", { credentials });
-      reset();
+      
       // console.log(response);
       // return;
-      const { permissions, status, user_id }: any = response;
+      const { permissions, status, serial_number }: any = response;
       if (status === 200) {
         const { Ok } = permissions;
         useThemeStore.setState({ permissions: Ok });
-        useThemeStore.setState({ token: user_id });
+        useThemeStore.setState({ token: serial_number });
+        reset();
         router.push("/admin/users");
       } else {
         setError("Invalid credentials!");
@@ -58,11 +59,8 @@ export default function Page() {
   };
 
   const permissions: string[] = useThemeStore((state) => state.permissions);
-  const user_id = useThemeStore((state) => state.token);
-  //console log type of permissions
-  // console.log(typeof permissions);
-  // console.log("permissions", permissions);
-  // console.log("user_id", user_id);
+  const token = useThemeStore((state) => state.token);
+
 
   const logOut = async () => {
     useThemeStore.setState({ permissions: [] });
@@ -91,7 +89,7 @@ export default function Page() {
         </div>
       </div>
       <div className="flex flex-col items-center justify-center gap-4 text-xl ">
-        {!user_id && (
+        {!token && (
           <div>
             <div>
               <h1 className="text-2xl md:text-4xl font-bold text-[var(--primary)] py-5">
@@ -101,10 +99,8 @@ export default function Page() {
             <div>
               <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="flex flex-col gap-4 w-full md:w-[350px] lg:w-[420px]
-         
-          "
-              >
+                className="flex flex-col gap-4 w-full md:w-[350px] lg:w-[420px]"
+                >
                 <div>
                   {error && (
                     <div className="font-bold text-center text-red-500 animate-bounce ">
@@ -157,7 +153,7 @@ export default function Page() {
           </div>
         )}
 
-        {user_id && (
+        {token && (
           <div>
             <button
               onClick={logOut}
@@ -167,10 +163,12 @@ export default function Page() {
             </button>
           </div>
         )}
+      <div>{token}</div>
       </div>
       <div className="absolute p-2 top-2 right-2">
         <InitialSetUp />
       </div>
+
     </main>
   );
 }

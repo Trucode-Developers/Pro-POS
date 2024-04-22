@@ -10,6 +10,9 @@ use std::path::{Path, PathBuf};
 use std::result::Result;
 
 use crate::routes::permissions::compare_and_add_permissions;
+use crate::routes::users::User;
+use bcrypt::{hash, DEFAULT_COST};
+use uuid::Uuid;
 pub struct DbPool {
     pub pool: PoolType,
 }
@@ -25,7 +28,7 @@ pub fn get_active_database_type(db_pool: &DbPool) -> &'static str {
         PoolType::SQLite(_) => "sqlite",
     }
 }
-pub fn set_active_db(db_pool: DbPool) -> DbPool {
+pub async fn set_active_db(db_pool: DbPool) -> DbPool {
     let content = get_active_database_type(&db_pool).to_string();
     // every time the file is written , the app re-renders and the active db is updated
     //so lets read and compare whats their and only write once to re-render this prevents loops
@@ -34,6 +37,8 @@ pub fn set_active_db(db_pool: DbPool) -> DbPool {
         //this allows the app to re-render only when active db has changed
         let _ = update_file(&content, 1);
     }
+    // println!("Active DB: {}", content);
+    seed_admin_user(&db_pool).await;
     db_pool
 }
 
@@ -54,7 +59,7 @@ pub async fn establish_database_connection(db_url: &str) -> DbPool {
     };
     // Call set_active_db with the DbPool object
     _ = compare_and_add_permissions(&db_pool).await;
-    set_active_db(db_pool)
+    set_active_db(db_pool).await
 }
 
 async fn establish_postgres_connection(db_url: &str) -> Result<PgPool, sqlx::Error> {
@@ -64,15 +69,6 @@ async fn establish_postgres_connection(db_url: &str) -> Result<PgPool, sqlx::Err
         .await
 }
 
-// async fn establish_sqlite_connection() -> Result<SqlitePool, sqlx::Error> {
-//     let db_url = String::from("sqlite://sqlite.db");
-//     if !Sqlite::database_exists(&db_url).await.unwrap() {
-//         Sqlite::create_database(&db_url).await.unwrap();
-//         let pool = SqlitePool::connect(&db_url).await.unwrap();
-//         let _ = sqlx::migrate!("./migrations").run(&pool).await;
-//     }
-//     Ok(SqlitePool::connect(&db_url).await?)
-// }
 async fn establish_sqlite_connection() -> Result<SqlitePool, sqlx::Error> {
     // Get the AppData directory
     let mut appdata_dir = match dirs::data_dir() {
@@ -133,34 +129,6 @@ async fn run_sqlite_migrations(pool: &SqlitePool) {
     }
 }
 
-// pub fn create_new() -> Result<String, Error> {
-//     let file_path = "local.txt";
-//     // Check if the file exists
-//     if !file_exists(&file_path)? {
-//         // File doesn't exist, create it and write default content
-//         let mut file = fs::File::create(&file_path)?;
-//         file.write_all(b"sqlite")?;
-//         file.write_all(b"\n")?; // Writing a newline character
-//         file.write_all(b"sqlite ")?;
-//         file.write_all(b"\n")?; // Writing a newline character
-//         file.write_all(b"third line")?;
-//         file.write_all(b"\n")?; // Writing a newline character
-//         file.write_all(b"fourth line")?;
-//         file.write_all(b"\n")?; // Writing a newline character
-//         file.write_all(b"fifth line")?;
-//         Ok("File created successfully".to_string())
-//     } else {
-//         // File exists, no need to update
-//         Ok("File already exists".to_string())
-//     }
-// }
-
-// fn file_exists(file_path: &str) -> Result<bool, Error> {
-//     match fs::metadata(file_path) {
-//         Ok(metadata) => Ok(metadata.is_file()),
-//         Err(_) => Ok(false), // File doesn't exist
-//     }
-// }
 pub fn create_new() -> Result<String, io::Error> {
     // Get the AppData directory
     let mut appdata_dir = match dirs::data_dir() {
@@ -266,4 +234,71 @@ pub fn read_specific_line(line_number: usize) -> Result<String, Error> {
         ErrorKind::InvalidInput,
         format!("Line {} not found", line_number),
     ))
+}
+
+pub async fn seed_admin_user(db_pool: &DbPool) {
+    match &db_pool.pool {
+        PoolType::Postgres(pool) => {
+            let count: (i64,) = sqlx::query_as("SELECT COUNT(*) FROM users")
+                .fetch_one(pool)
+                .await
+                .unwrap_or((0,));
+
+            if count.0 == 0 {
+                let user = User {
+                    id: Some(0),
+                    total_roles: Some(0),
+                    staff_number: "0000".to_string(),
+                    name: "admin".to_string(),
+                    role: 0,
+                    email: "admin@admin.com".to_string(),
+                    password: "admin".to_string(),
+                    is_active: true,
+                };
+
+                let hashed_password = hash(user.password.clone(), DEFAULT_COST).unwrap();
+
+                let _ = sqlx::query("INSERT INTO users (serial_number, name, role, email, password, is_active) VALUES ($1, $2, $3, $4, $5, $6)")
+                    .bind(Uuid::new_v4())
+                    .bind(&user.name)
+                    .bind(&user.role)
+                    .bind(&user.email)
+                    .bind(&hashed_password)
+                    .bind(&user.is_active)
+                    .execute(pool)
+                    .await;
+            }
+        }
+        PoolType::SQLite(pool) => {
+            let count: (i64,) = sqlx::query_as("SELECT COUNT(*) FROM users")
+                .fetch_one(pool)
+                .await
+                .unwrap_or((0,));
+
+            if count.0 == 0 {
+                let user = User {
+                    id: Some(0),
+                    total_roles: Some(0),
+                    staff_number: "0000".to_string(),
+                    name: "admin".to_string(),
+                    role: 0,
+                    email: "admin@admin.com".to_string(),
+                    password: "admin".to_string(),
+                    is_active: true,
+                };
+
+                let hashed_password = hash(user.password.clone(), DEFAULT_COST).unwrap();
+
+                let _ = sqlx::query("INSERT INTO users (serial_number, name, role, email, password, is_active) VALUES (?, ?, ?, ?, ?, ?)")
+                    .bind(Uuid::new_v4())
+                    .bind(&user.name)
+                    .bind(&user.role)
+                    .bind(&user.email)
+                    .bind(&hashed_password)
+                    .bind(&user.is_active)
+                    .execute(pool)
+                    .await;
+            }
+        }
+    }
 }

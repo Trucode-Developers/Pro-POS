@@ -18,6 +18,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function UserCrud({roles,allocatedRoles,setAllocatedRoles, user, get_all_users, active_id }: any) {
+  const token = useThemeStore((state) => state.token);
+
+
   const {
     register,
     handleSubmit,
@@ -38,12 +41,19 @@ export default function UserCrud({roles,allocatedRoles,setAllocatedRoles, user, 
       return;
     }
     let user = data; //as rust expects an object with a key of user
+    toast.success("User created successfully");
     try {
-      const response = await invoke("create", { user });
+      const response:any = await invoke("create", {token, user });
+      if (response.status === 200) {
+        toast.success("User created successfully");
+      } else {
+        console.error(response);
+      }
       reset();
       get_all_users();
-    } catch (error) {
-      console.error(error);
+    } catch (error:any) {
+      toast.error("User creation failed, check your inputs and try again");
+      console.error(error.message);
     }
   };
 
@@ -123,6 +133,15 @@ export default function UserCrud({roles,allocatedRoles,setAllocatedRoles, user, 
               // {...register("email")}  //has to be spread to the input element
               register={register("name")}
               error={errors.name}
+            />
+            <CustomInput
+              label="Staff Number"
+              type="text"
+              placeholder="staff001"
+              innerClass=""
+              outerClass=""
+              register={register("staff_number")}
+              error={errors.staff_number}
             />
 
             <CustomInput
