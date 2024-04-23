@@ -1,5 +1,5 @@
 // use bcrypt::{hash, verify, DEFAULT_COST};
-use crate::db_connections::{read_specific_line, update_file, DbPool, PoolType};
+use crate::db_connections::{update_file, DbPool, PoolType};
 use crate::routes::roles::get_allocated_permission_slugs;
 use bcrypt::verify;
 use serde::{Deserialize, Serialize};

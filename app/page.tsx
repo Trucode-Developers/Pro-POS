@@ -9,7 +9,7 @@ import logo from "@/public/pos.png";
 
 // const inter = Inter({ subsets: ["latin"] });
 import { cn } from "@/lib/utils";
-import { useThemeStore } from "@/lib/store";
+import { useThemeStore, logOut } from "@/lib/store";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginSchema, TypeLoginSchema } from "@/lib/types/users";
@@ -62,10 +62,10 @@ export default function Page() {
   const permissions: string[] = useThemeStore((state) => state.permissions);
   const token = useThemeStore((state) => state.token);
 
-  const logOut = async () => {
-    useThemeStore.setState({ permissions: [] });
-    useThemeStore.setState({ token: null });
-  };
+  // const logOut = async () => {
+  //   useThemeStore.setState({ permissions: [] });
+  //   useThemeStore.setState({ token: null });
+  // };
 
   return (
     <main className="relative grid min-h-screen md:grid-cols-2">
@@ -79,20 +79,20 @@ export default function Page() {
               style={{ objectFit: "contain" }}
             />
           </div>
-          <h1 className="text-2xl text-[var(--primary)]">Welcome back: </h1>
+          <h1 className="text-2xl text-[var(--primary)]">Welcome Back </h1>
           <h1 className="text-2xl text-red-500">Professional Point Of Sale</h1>
-          <h3 className={cn("text-center")} style={{ fontSize: `${font}px` }}>
-            Is committed to digitize your selling by increasing security and
-            efficiency {font}
+          <h3
+            className={cn("text-center px-5 md:px-10 lg:px-24 italic")}
+            style={{ fontSize: `${font}px` }}
+          >
+            We are committed to digitize your selling by increasing{" "}
+            <span className="font-bold text-blue-500 capitalize">security</span>{" "}
+            and {" "}
+            <span className="font-bold text-blue-500 capitalize">
+              efficiency
+            </span>
+            .
           </h3>
-        </div>
-        <div className="flex flex-wrap gap-4 text-2xl [&>*]:text-primary hover:[&>*]:text-secondary [&>*]:underline ">
-          <Link href="/admin"> Admin</Link>
-          <Link href="/cashier"> Sale</Link>
-          {permissions.includes("can-view-user") && (
-            <Link href="/admin/users">Users checked</Link>
-          )}
-          {/* <Link href="/admin/users"> Users</Link> */}
         </div>
       </div>
       <div className="flex flex-col items-center justify-center gap-4 text-xl ">
@@ -168,6 +168,13 @@ export default function Page() {
             >
               Logout
             </button>
+            <div className="flex flex-wrap gap-4 text-2xl [&>*]:text-primary hover:[&>*]:text-secondary [&>*]:underline ">
+              <Link href="/admin"> Admin</Link>
+              <Link href="/cashier"> Sale</Link>
+              {permissions.includes("can-view-user") && (
+                <Link href="/admin/users">Users checked</Link>
+              )}
+            </div>
           </div>
         )}
         <div>{token}</div>

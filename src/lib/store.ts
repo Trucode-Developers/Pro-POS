@@ -3,6 +3,7 @@ import { v4 as uuid } from "uuid";
 import { persist } from "zustand/middleware";
 
 export type ThemeState = {
+  token: string | null;
   activeDb: string;
   fontSize: number;
   tabsBgColor: string;
@@ -12,7 +13,6 @@ export type ThemeState = {
   adminSidebarSize: number[];
   adminPopUpSize: number[];
   isPopUpOpen: boolean;
-  token: number | null;
   permissions: string[];
 };
 
@@ -24,6 +24,7 @@ export type ThemeActions = {
 export const useThemeStore = create<ThemeState & ThemeActions>()(
   persist(
     (set) => ({
+      token: null, //currently token from user serial_number in the backend
       activeDb: "sqlite",
       fontSize: 12,
       tabsBgColor: "#1c1c1c",
@@ -33,7 +34,6 @@ export const useThemeStore = create<ThemeState & ThemeActions>()(
       adminSidebarSize: [20, 80],
       adminPopUpSize: [50, 50],
       isPopUpOpen: false,
-      token: null, //currently passing user_id
       permissions: [],
 
       darkMode: () =>
@@ -51,7 +51,10 @@ export const useThemeStore = create<ThemeState & ThemeActions>()(
           salesColor: "#000000",
         })),
     }),
-    { name: "theme-store", skipHydration: true }
+    {
+      name: "theme-store",
+      // skipHydration: true,
+    }
 
     // then  useThemeStore.persist.rehydrate(); in the app/initiator.tsx
   )
@@ -75,9 +78,12 @@ export const closePopUp = () => {
 export const openPopUp = () => {
   useThemeStore.setState({ isPopUpOpen: true });
 };
-
-
-
+export const logOut = () => {
+  useThemeStore.setState({ permissions: [] });
+  useThemeStore.setState({ token: null });
+  //hard refresh
+  window.location.reload();
+};
 
 
 

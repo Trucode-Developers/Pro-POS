@@ -5,9 +5,9 @@ import { HiMenuAlt3 } from "react-icons/hi";
 import { MdOutlineDashboard } from "react-icons/md";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { HiOutlineCog } from "react-icons/hi";
+import { HiOutlineCog, HiUser } from "react-icons/hi";
 import pos from "./pos.png";
-import { useThemeStore } from "@/lib/store";
+import { useThemeStore, logOut } from "@/lib/store";
 import CustomInput from "@/components/custom/input";
 
 export default function LeftMenu({ setVertical }: any) {
@@ -137,11 +137,12 @@ export default function LeftMenu({ setVertical }: any) {
         </div>
         {/* <div className="flex items-end cursor-pointer grow"> */}
         <div className="flex flex-wrap items-end cursor-pointer grow">
-          <Link href={"/Settings"}>
+          <div onClick={() => logOut()}
+           className="flex items-center   gap-3.5 font-medium py-2 hover:text-red-500 rounded-md ">
             <div
-              className={` group flex items-center text-sm  gap-3.5 font-medium p-2 hover:bg-[var(--hoverbg)] rounded-md `}
+              className={` group flex text-lg gap-2 font-medium p-2 `}
             >
-              <div>{React.createElement(HiOutlineCog, { size: "20" })}</div>
+              <div className="text-red-500">{React.createElement(HiUser, { size: "25" })}</div>
               <h2
                 style={{
                   transitionDelay: `${4}00ms`,
@@ -150,17 +151,17 @@ export default function LeftMenu({ setVertical }: any) {
                   !open && "opacity-0 translate-x-28 overflow-hidden"
                 }`}
               >
-                Settings
+                Logout
               </h2>
               <h2
                 className={`${
                   open && "hidden"
                 } absolute left-48 bg-white font-semibold whitespace-pre text-gray-900 rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit  `}
               >
-                Settings
+                Exit
               </h2>
             </div>
-          </Link>
+          </div>
         </div>
       </div>
     </section>
