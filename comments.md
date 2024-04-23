@@ -4,8 +4,6 @@
 ## END OF app/admin/branches/branchesCrud.tsx
 ## app/authLayout.tsx
 ## END OF app/authLayout.tsx
-## app/layout.tsx
-## END OF app/layout.tsx
 ## src-tauri/src/routes/auth.rs
 ## END OF src-tauri/src/routes/auth.rs
 ## src-tauri/src/routes/mod.rs
@@ -24,8 +22,6 @@
 ## END OF src-tauri/migrations/20230926202334_user_table.sql
 ## src-tauri/src/db_connections.rs
 ## END OF src-tauri/src/db_connections.rs
-## app/admin/users/userCrud.tsx
-## END OF app/admin/users/userCrud.tsx
 ## src-tauri/src/routes/users.rs
 ## END OF src-tauri/src/routes/users.rs
 ## src/components/custom/input.tsx
@@ -40,13 +36,29 @@
 ## END OF app/cashier/page.tsx
 ## src-tauri/src/routes/login.rs
 ## END OF src-tauri/src/routes/login.rs
-## app/initiator.tsx
-## END OF app/initiator.tsx
 ## src/lib/store.ts
 ## END OF src/lib/store.ts
 ## app/page.tsx
 ## END OF app/page.tsx
-
 ## app/admin/components/left-menu.tsx
-
 ## END OF app/admin/components/left-menu.tsx
+## app/initiator.tsx
+## END OF app/initiator.tsx
+## package.json
+## END OF package.json
+
+
+## src/components/error.tsx
+## END OF src/components/error.tsx
+## src/components/success.tsx
+## END OF src/components/success.tsx
+## src/components/info.tsx
+## END OF src/components/info.tsx
+## app/admin/dashboard.tsx
+## END OF app/admin/dashboard.tsx
+## app/admin/users/userCrud.tsx
+## END OF app/admin/users/userCrud.tsx
+
+## app/layout.tsx
+
+## END OF app/layout.tsx

@@ -13,20 +13,18 @@ export default function Initiator() {
   const [isLoading, setIsLoading] = useState(true);
   const [token, setToken] = useState("");
 
-
- const fetchToken = async () => {
-   try {
-     const tokenFromStore = useThemeStore.getState().token;
-     if (tokenFromStore !== null) {
-       setToken(tokenFromStore);
-     }
-     setIsLoading(false);
-   } catch (error) {
-     // console.error("Error fetching token:", error);
-     setIsLoading(false);
-   }
- };
-
+  const fetchToken = async () => {
+    try {
+      const tokenFromStore = useThemeStore.getState().token;
+      if (tokenFromStore !== null) {
+        setToken(tokenFromStore);
+      }
+      setIsLoading(false);
+    } catch (error) {
+      // console.error("Error fetching token:", error);
+      setIsLoading(false);
+    }
+  };
 
   // useEffect to call activeDb
   useEffect(() => {
@@ -36,7 +34,7 @@ export default function Initiator() {
     if (!token) {
       console.log("Token is null");
       router.push("/");
-    }else{
+    } else {
       //redrect to previous page
       router.push(path);
     }

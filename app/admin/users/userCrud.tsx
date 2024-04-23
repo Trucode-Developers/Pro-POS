@@ -12,10 +12,10 @@ import { Input } from "@/components/ui/input";
 import { closePopUp, openPopUp, useThemeStore } from "@/lib/store";
 import { invoke } from "@tauri-apps/api/tauri";
 import React, { useEffect } from "react";
-import CustomSelect from "@/components/custom/select";
 import Loading from "@/components/loading";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "sonner";
+import Info from "@/components/info";
+import Error from "@/components/error";
 
 export default function UserCrud({roles,allocatedRoles,setAllocatedRoles, user, get_all_users, active_id }: any) {
   const token = useThemeStore((state) => state.token);
@@ -41,7 +41,6 @@ export default function UserCrud({roles,allocatedRoles,setAllocatedRoles, user, 
       return;
     }
     let user = data; //as rust expects an object with a key of user
-    toast.success("User created successfully");
     try {
       const response:any = await invoke("create", {token, user });
       if (response.status === 200) {
@@ -52,8 +51,15 @@ export default function UserCrud({roles,allocatedRoles,setAllocatedRoles, user, 
       reset();
       get_all_users();
     } catch (error:any) {
-      toast.error("User creation failed, check your inputs and try again");
-      console.error(error.message);
+      // toast.error("User creation failed, check your inputs and try again");
+       toast.error(
+         <Error
+           title="Error!!!"
+           message={error.message}
+         />,
+         { duration: 10000, position: "top-right" }
+       );
+      // console.error(error.message);
     }
   };
 
