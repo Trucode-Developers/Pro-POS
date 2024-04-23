@@ -15,7 +15,7 @@ export default function Initiator() {
   const checkToken = () => {
     if (path != "/" && token === null) {
       // console.log("Path:", path, "Token:", token);
-      router.push("/");
+      // router.push("/");
     }
   };
 

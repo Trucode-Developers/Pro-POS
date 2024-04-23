@@ -28,6 +28,7 @@ import { TypeUserSchema } from "@/lib/types/users";
 const defaultUser = {
   id: 0,
   name: "",
+  staff_number: "",
   role: 1,
   email: "",
   password: "",
@@ -76,8 +77,8 @@ export default function Page() {
        .then((response: any) => {
          if (response.status === 200) {
            setRoles(response.data);
-           console.log(roles);
-           console.log(response.data);
+          //  console.log(roles);
+          //  console.log(response.data);
          }
        })
        .catch(console.error);

@@ -43,7 +43,7 @@ pub async fn create(token: String, user: User, state: State<'_, DbPool>) -> Resu
         // Handle the case where the staff number is not found
         return Err(json!({
             "status": 401,
-            "message":"Unauthorized: Invalid session or user not found"
+            "message":"Unauthorized: Invalid session, user not found"
         }));
     }
     match &state.pool {

@@ -5,6 +5,7 @@ import { invoke } from "@tauri-apps/api/tauri";
 import Link from "next/link";
 import { VscAccount, VscGear, VscWorkspaceTrusted } from "react-icons/vsc";
 import { InitialSetUp } from "./initialSetUp";
+import logo from "@/public/pos.png";
 
 // const inter = Inter({ subsets: ["latin"] });
 import { cn } from "@/lib/utils";
@@ -40,7 +41,7 @@ export default function Page() {
     try {
       setError("");
       const response = await invoke("login", { credentials });
-      
+
       // console.log(response);
       // return;
       const { permissions, status, serial_number }: any = response;
@@ -61,7 +62,6 @@ export default function Page() {
   const permissions: string[] = useThemeStore((state) => state.permissions);
   const token = useThemeStore((state) => state.token);
 
-
   const logOut = async () => {
     useThemeStore.setState({ permissions: [] });
     useThemeStore.setState({ token: null });
@@ -71,7 +71,14 @@ export default function Page() {
     <main className="relative grid min-h-screen md:grid-cols-2">
       <div className="flex-col items-center justify-center hidden gap-4 px-2 bg-gray-300 md:flex md:px-4">
         <div className="flex flex-col items-center">
-          <Image src="/pos.png" alt="main pic" width={180} height={200} />
+          <div className="relative w-20 h-20 md:h-40 md:w-40">
+            <Image
+              src={logo}
+              alt="main pic"
+              fill
+              style={{ objectFit: "contain" }}
+            />
+          </div>
           <h1 className="text-2xl text-[var(--primary)]">Welcome back: </h1>
           <h1 className="text-2xl text-red-500">Professional Point Of Sale</h1>
           <h3 className={cn("text-center")} style={{ fontSize: `${font}px` }}>
@@ -100,7 +107,7 @@ export default function Page() {
               <form
                 onSubmit={handleSubmit(onSubmit)}
                 className="flex flex-col gap-4 w-full md:w-[350px] lg:w-[420px]"
-                >
+              >
                 <div>
                   {error && (
                     <div className="font-bold text-center text-red-500 animate-bounce ">
@@ -163,12 +170,11 @@ export default function Page() {
             </button>
           </div>
         )}
-      <div>{token}</div>
+        <div>{token}</div>
       </div>
       <div className="absolute p-2 top-2 right-2">
         <InitialSetUp />
       </div>
-
     </main>
   );
 }

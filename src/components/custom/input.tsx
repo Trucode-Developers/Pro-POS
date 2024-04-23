@@ -43,10 +43,6 @@ export default function CustomInput({
           </span>
         )}
       </label>
-
-      {/* {error && (
-        <span className="text-red-500 animate-pulse"> {error.message} </span>
-      )} */}
     </div>
   );
 }

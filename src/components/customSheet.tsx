@@ -58,15 +58,6 @@ export default function CustomSheet({ title,children }: Props) {
 
   return (
     <AnimatePresence mode="wait">
-      {/* <div> */}
-      {/* this can be removed as we realise, once the sheet is imported into a page, it can be  opened using global state.
-      this makes it easy for us to design the button opeing and closing the page as we like, we can have images, icons , links e.t.c that opens the model */}
-      {/* <button
-        onClick={() => openModal()}
-        className="px-4 py-2 text-white bg-blue-700 border rounded-full"
-      >
-        {title}
-      </button> */}
       {open && (
         <motion.div
           key="main-modal"
@@ -88,9 +79,7 @@ export default function CustomSheet({ title,children }: Props) {
                 // Update adminPopUpSize with the new size
                 // setAdminPopUpSize([size, prevSize]);
               }}
-              // defaultSize={40}
               minSize={20}
-              // className="relative items-center justify-center min-h-full p-4 bg-gray-200 rounded-r-2xl"
             >
               <motion.div
                 key="inner-modal"
@@ -105,12 +94,7 @@ export default function CustomSheet({ title,children }: Props) {
                     <span className="text-white uppercase">{title}</span>
                   </div>
                   <div className="flex gap-4 px-2 py-2 text-white rounded-full hover:bg-red-500">
-                    {/* <div
-                      className="duration-500 ease-in-out cursor-pointer hover:scale-125 "
-                      onClick={toggleWidth}
-                    >
-                      <HiArrowsRightLeft />
-                    </div> */}
+                   
                     <div
                       className="font-bold duration-500 ease-in-out cursor-pointer hover:scale-125 "
                       onClick={handleCloseModal}
@@ -127,34 +111,15 @@ export default function CustomSheet({ title,children }: Props) {
               className="duration-500 ease-in-out bg-transparent border-none"
             />
             <ResizablePanel
-              // defaultSize={adminSidebarSize[0]}
-              // defaultSize={50}
               minSize={5}
-              // collapsible={true}
               onClick={handleCloseModal}
               className="transition-all duration-300 ease-in-out"
             >
-              {/* left side is totally transparent */}
             </ResizablePanel>
           </ResizablePanelGroup>
         </motion.div>
-        // <div
-        //   className="fixed inset-0 bg-[rgba(0,0,0,0.7)] z-[999]"
-        //   onClick={handleCloseModal}
-        // >
-        //   <div
-        //     ref={cartRef}
-        //     onClick={(e) => e.stopPropagation()}
-        //     className="w-[80vw] md:w-[80vw] h-full absolute right-0 overflow-y-scroll animate-fade-in "
-        //   >
-        //     <div className="grid h-full grid-cols-5">
-        //       <div>tile</div>
-        //       <div>{children}</div>
-        //     </div>
-        //   </div>
-        // </div>
+       
       )}
-      {/* </div> */}
     </AnimatePresence>
   );
 }

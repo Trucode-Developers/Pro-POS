@@ -78,7 +78,8 @@ export default function LeftMenu({ setVertical }: any) {
             value={search}
             onChange={(e: any) => setSearch(e.target.value)}
             className="w-full px-4 py-2 outline-none text-primary rounded-2xl "
-            register={"name"} //this should not be here but for code reuse it is here
+            // register={"name"} //this should not be here but for code reuse it is here
+            register={{ name: "searchInput" }} // Pass an object with the desired key-value pair
           />
           {/* <input
             type="search"
