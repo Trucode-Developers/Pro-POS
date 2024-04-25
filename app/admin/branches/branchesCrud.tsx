@@ -11,6 +11,12 @@ import React, { useEffect } from "react";
 import Loading from "@/components/loading";
 import { BranchSchema, TypeBranchSchema } from "@/lib/types/users";
 import { toast } from "sonner";
+import CustomTextarea from "@/components/custom/textarea";
+import CustomSelect from "@/components/custom/select";
+import CustomRadioGroup from "@/components/custom/radio";
+import { CustomSwitch } from "@/components/custom/switch";
+import Success from "@/components/success";
+import Error from "@/components/error";
 
 export default function BranchCrud({
   branch,
@@ -31,6 +37,8 @@ export default function BranchCrud({
     reset(branch); // Update the form values when `user` changes
   }, [branch, reset]);
 
+  // console.log(branch);
+
   const onSubmit = async (data: TypeBranchSchema) => {
     let branch = data;
     // console.log(branch);
@@ -43,15 +51,28 @@ export default function BranchCrud({
       if (response.status === 200) {
         reset();
         get_all_branches();
-        toast.success("Branch created successfully");
+        toast.success(
+          <Success title="Success!" message="Branch created successfully" />,
+          { duration: 5000, position: "top-right" }
+        );
       } else {
-        toast.error("Branch creation failed, check your inputs and try again");
+        toast.error(
+          <Error
+            title="Error!!!"
+            message="Branch creation failed, check your inputs and try again"
+          />,
+          { duration: 10000, position: "top-right" }
+        );
       }
     } catch (error: any) {
       // console.log(error);
       // toast.error(error);
       toast.error(
-        "Failed, check your inputs  ensure you have a unique branch code then try again"
+        <Error
+          title="Error!!!"
+          message="Branch creation failed, check your inputs and try again"
+        />,
+        { duration: 10000, position: "top-right" }
       );
     }
   };
@@ -63,9 +84,19 @@ export default function BranchCrud({
     await invoke("update_branch", { code, branch })
       .then((response: any) => {
         if (response.status === 200) {
-          toast.success("Branch updated successfully");
+          // toast.success("Branch updated successfully");
+          toast.success(
+            <Success title="Success!" message="Branch updated successfully" />,
+            { duration: 5000, position: "top-right" }
+          );
         } else {
-          toast.error("Branch update failed, check your inputs and try again");
+          toast.error(
+            <Error
+              title="Error!!!"
+              message="Branch update failed, check your inputs and try again!"
+            />,
+            { duration: 10000, position: "top-right" }
+          );
         }
         get_all_branches();
       })
@@ -84,9 +115,10 @@ export default function BranchCrud({
 
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 "> */}
-          <div className="grid gap-4 py-5">
+          <div className="flex flex-wrap items-end justify-center gap-4 py-5 space-y-2">
             {!active_code && (
               <CustomInput
+                isRequired
                 label="Branch Code"
                 type="text"
                 placeholder="e.g: Br01"
@@ -98,6 +130,7 @@ export default function BranchCrud({
             )}
 
             <CustomInput
+              isRequired
               label="Name"
               type="text"
               placeholder="branch name"
@@ -117,6 +150,7 @@ export default function BranchCrud({
               error={errors.address}
             />
             <CustomInput
+              isRequired
               label="Phone"
               type="string"
               placeholder="+254 ... ... .."
@@ -126,6 +160,7 @@ export default function BranchCrud({
               error={errors.phone}
             />
             <CustomInput
+              isRequired
               label="Branch Email"
               type="email"
               placeholder="branch email"
@@ -134,15 +169,46 @@ export default function BranchCrud({
               register={register("email")}
               error={errors.email}
             />
-            <div>
-              <label htmlFor="description">Description</label>
-              <textarea
-                className="w-full h-32 px-3 py-2 text-base text-gray-700 placeholder-gray-600 border border-b-2 border-gray-400 rounded focus:border-blue-600 focus:outline-none"
-                placeholder="more about the branch "
-                {...register("description")}
-              ></textarea>
-            </div>
-            <div>
+            <CustomTextarea
+              // isRequired
+              label="Description"
+              placeholder="more about the branch "
+              innerClass=""
+              outerClass=""
+              register={register("description")}
+              error={errors.description}
+            />
+            {/* <CustomSelect
+              label="Status"
+              register={register("status")}
+              options={[
+                { value: "1", label: "Active" },
+                { value: "0", label: "Inactive" },
+              ]}
+              error={errors.status}
+            /> */}
+            {/* <CustomRadioGroup
+              label="Status"
+              isRequired
+              placeholder="more about the branch "
+              innerClass=""
+              outerClass=""
+              options={[
+                { value: "1", label: "Active" },
+                { value: "0", label: "Inactive" },
+              ]}
+              register={register("status")}
+              error={errors.status}
+            /> */}
+
+            <CustomSwitch
+              isRequired
+              label="Status"
+              register={register("status")}
+              error={errors.status}
+            />
+
+            {/* <div className="w-[400px]">
               <label htmlFor="status">Status</label>
               <select {...register("status")} className="w-full">
                 <option value="1">Active</option>
@@ -151,13 +217,14 @@ export default function BranchCrud({
               {errors.status && (
                 <span className="text-red-500"> {errors.status.message} </span>
               )}
-            </div>
+            </div> */}
           </div>
           <div className="flex justify-center">
             <button
+              className="px-10 py-5 text-white duration-500 ease-in-out bg-blue-500 rounded-lg hover:bg-yellow-500 hover:shadow-lg "
               disabled={isSubmitting}
-              className="px-10 py-5 text-white duration-500 ease-in-out bg-blue-500 rounded-lg hover:bg-blue-800 hover:shadow-lg "
             >
+              {/* {isSubmitting ? <Loading color="#ffffff" width="30" /> : "Login"} */}
               {isSubmitting ? (
                 <Loading color="#ffffff" width="40" />
               ) : active_code ? (

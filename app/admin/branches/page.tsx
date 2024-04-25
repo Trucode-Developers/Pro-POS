@@ -222,9 +222,11 @@ export default function Page() {
               <TableCell className="lowercase">{branch.address}</TableCell>
               <TableCell className="w-{100px]">{branch.phone}</TableCell>
               <TableCell className="w-{100px]">{branch.email}</TableCell>
-              <TableCell className="">{branch.description}</TableCell>
+              <TableCell className="">
+                {branch.description}
+              </TableCell>
               <TableCell className="w-{100px]">
-                {branch.status ? (
+                {branch.status == "1" ? (
                   <div className="px-2 py-1 text-center text-white bg-green-500 rounded">
                     Active
                   </div>
@@ -233,6 +235,7 @@ export default function Page() {
                     Inactive
                   </div>
                 )}
+                {branch.status}
               </TableCell>
               <TableCell className="flex justify-end gap-2 text-sm lg:text-lg">
                 <div
