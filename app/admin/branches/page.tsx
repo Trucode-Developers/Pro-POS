@@ -30,8 +30,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Bounce, ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "sonner";
 
 const defaultBranch = {
   code: "",
@@ -105,7 +104,6 @@ export default function Page() {
 
   return (
     <div className="w-full h-full ">
-      <ToastContainer />
       <div className="flex items-center gap-2 pt-5 text-2xl font-bold lg:text-4xl">
         <div>
           <VscCircuitBoard />

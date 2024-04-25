@@ -41,9 +41,6 @@ export default function Page() {
     try {
       setError("");
       const response = await invoke("login", { credentials });
-
-      // console.log(response);
-      // return;
       const { permissions, status, serial_number }: any = response;
       if (status === 200) {
         const { Ok } = permissions;
@@ -53,6 +50,7 @@ export default function Page() {
         router.push("/admin/users");
       } else {
         setError("Invalid credentials!");
+        console.error(response);
       }
     } catch (error) {
       console.error(error);

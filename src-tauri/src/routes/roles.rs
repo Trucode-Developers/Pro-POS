@@ -113,7 +113,7 @@ async fn get_all_roles_postgres(pool: &PgPool) -> Result<Vec<Role>, Value> {
 
 async fn get_all_roles_sqlite(pool: &SqlitePool) -> Result<Vec<Role>, Value> {
     let query = "
-        SELECT roles.*, CAST(COUNT(role_permissions.*) AS INTEGER) AS total_permissions
+        SELECT roles.*, CAST(COUNT(role_permissions.id) AS INTEGER) AS total_permissions
         FROM roles
         LEFT JOIN role_permissions ON role_permissions.role_id = roles.id
         GROUP BY roles.id

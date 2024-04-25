@@ -102,7 +102,7 @@ async fn establish_sqlite_connection() -> Result<SqlitePool, sqlx::Error> {
     if !Sqlite::database_exists(&db_url).await.unwrap() {
         Sqlite::create_database(&db_url).await.unwrap();
         let pool = SqlitePool::connect(&db_url).await.unwrap();
-        let _ = sqlx::migrate!("./migrations").run(&pool).await;
+        let _ = sqlx::migrate!("./migrations/sqlite").run(&pool).await;
     }
 
     // Connect to the SQLite database
@@ -110,21 +110,21 @@ async fn establish_sqlite_connection() -> Result<SqlitePool, sqlx::Error> {
 }
 
 async fn run_postgres_migrations(pool: &PgPool) {
-    let _ = sqlx::migrate!("./migrations")
+    let _ = sqlx::migrate!("./migrations/postgres")
         .run(pool)
         .await
         .expect("PostgreSQL migration failed");
-    if let Err(err) = sqlx::migrate!("./migrations").run(pool).await {
+    if let Err(err) = sqlx::migrate!("./migrations/postgres").run(pool).await {
         eprintln!("PostgreSQL migration failed: {:?}", err);
     }
 }
 
 async fn run_sqlite_migrations(pool: &SqlitePool) {
-    let _ = sqlx::migrate!("./migrations")
+    let _ = sqlx::migrate!("./migrations/sqlite")
         .run(pool)
         .await
         .expect("SQLite migration failed");
-    if let Err(err) = sqlx::migrate!("./migrations").run(pool).await {
+    if let Err(err) = sqlx::migrate!("./migrations/sqlite").run(pool).await {
         eprintln!("SQLite migration failed: {:?}", err);
     }
 }
@@ -259,7 +259,7 @@ pub async fn seed_admin_user(db_pool: &DbPool) {
                 let hashed_password = hash(user.password.clone(), DEFAULT_COST).unwrap();
 
                 let _ = sqlx::query("INSERT INTO users (serial_number, name, role, email, password, is_active) VALUES ($1, $2, $3, $4, $5, $6)")
-                    .bind(Uuid::new_v4())
+                    .bind(Uuid::new_v4().to_string())
                     .bind(&user.name)
                     .bind(&user.role)
                     .bind(&user.email)
@@ -287,10 +287,12 @@ pub async fn seed_admin_user(db_pool: &DbPool) {
                     is_active: true,
                 };
 
+                // let serial_number = Uuid::new_v4().to_string();
+
                 let hashed_password = hash(user.password.clone(), DEFAULT_COST).unwrap();
 
                 let _ = sqlx::query("INSERT INTO users (serial_number, name, role, email, password, is_active) VALUES (?, ?, ?, ?, ?, ?)")
-                    .bind(Uuid::new_v4())
+                    .bind(Uuid::new_v4().to_string())
                     .bind(&user.name)
                     .bind(&user.role)
                     .bind(&user.email)

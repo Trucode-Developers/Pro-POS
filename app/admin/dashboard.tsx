@@ -10,8 +10,6 @@ import {
   HiOutlineExclamationTriangle,
   HiOutlineXMark,
 } from "react-icons/hi2";
-// import { toast, ToastContainer } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
 import { toast } from "sonner";
 
 export default function Dashboard() {

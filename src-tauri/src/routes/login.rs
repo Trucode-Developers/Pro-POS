@@ -2,10 +2,10 @@
 use crate::db_connections::{update_file, DbPool, PoolType};
 use crate::routes::roles::get_allocated_permission_slugs;
 use bcrypt::verify;
+use bcrypt::{hash, DEFAULT_COST};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use tauri::State;
-use bcrypt::{hash, DEFAULT_COST};
 
 #[derive(Serialize, Deserialize, Debug, sqlx::FromRow)]
 pub struct Credentials {
@@ -33,11 +33,11 @@ pub async fn login(credentials: Credentials, state: State<'_, DbPool>) -> Result
             match result {
                 Ok((serial_number, db_password)) => {
                     if verify(&password, &db_password).unwrap() {
-                        _= create_user_session(serial_number.clone(), state.clone()).await;
+                        _ = create_user_session(serial_number.clone(), state.clone()).await;
                         let permissions =
                             get_allocated_permission_slugs(serial_number.clone(), state.clone())
                                 .await;
-                            let _ = update_file(&serial_number.clone(), 2);
+                        let _ = update_file(&serial_number.clone(), 2);
                         let json = json!({ "status": 200, "serial_number": serial_number, "permissions": permissions });
                         Ok(json)
                     } else {
@@ -58,10 +58,12 @@ pub async fn login(credentials: Credentials, state: State<'_, DbPool>) -> Result
                 .bind(&email)
                 .fetch_one(pool)
                 .await;
+            println!("{:?}", result);
             match result {
                 Ok((serial_number, db_password)) => {
+                    println!("Serial Number: {}", serial_number);
                     if verify(&password, &db_password).unwrap() {
-                        _= create_user_session(serial_number.clone(), state.clone()).await;
+                        _ = create_user_session(serial_number.clone(), state.clone()).await;
                         let permissions =
                             get_allocated_permission_slugs(serial_number.clone(), state.clone())
                                 .await;
@@ -74,6 +76,8 @@ pub async fn login(credentials: Credentials, state: State<'_, DbPool>) -> Result
                     }
                 }
                 Err(_) => {
+                    let error = "User not found";
+                    println!("{:?}", error);
                     let json = json!({ "status": 201, "serial_number": null, "permissions": [] });
                     Ok(json)
                 }
@@ -82,18 +86,20 @@ pub async fn login(credentials: Credentials, state: State<'_, DbPool>) -> Result
     }
 }
 
-
-
-pub async fn create_user_session(serial_number: String, state: State<'_, DbPool>) -> Result<Value, Value> {
+pub async fn create_user_session(
+    serial_number: String,
+    state: State<'_, DbPool>,
+) -> Result<Value, Value> {
     let token = hash(serial_number.clone(), DEFAULT_COST).unwrap();
 
     match &state.pool {
         PoolType::Postgres(pool) => {
-            let count: (i64,) = sqlx::query_as("SELECT COUNT(*) FROM users WHERE serial_number = $1")
-                .bind(&serial_number)
-                .fetch_one(pool)
-                .await
-                .unwrap_or((0,));
+            let count: (i64,) =
+                sqlx::query_as("SELECT COUNT(*) FROM users WHERE serial_number = $1")
+                    .bind(&serial_number)
+                    .fetch_one(pool)
+                    .await
+                    .unwrap_or((0,));
 
             if count.0 > 0 {
                 let query = "INSERT INTO sessions (user_serial_number, token) VALUES ($1, $2) ON CONFLICT (user_serial_number) DO UPDATE SET token = $2";
@@ -109,14 +115,16 @@ pub async fn create_user_session(serial_number: String, state: State<'_, DbPool>
             }
         }
         PoolType::SQLite(pool) => {
-            let count: (i64,) = sqlx::query_as("SELECT COUNT(*) FROM users WHERE serial_number = ?")
-                .bind(&serial_number)
-                .fetch_one(pool)
-                .await
-                .unwrap_or((0,));
+            let count: (i64,) =
+                sqlx::query_as("SELECT COUNT(*) FROM users WHERE serial_number = ?")
+                    .bind(&serial_number)
+                    .fetch_one(pool)
+                    .await
+                    .unwrap_or((0,));
 
             if count.0 > 0 {
-                let query = "INSERT OR REPLACE INTO sessions (user_serial_number, token) VALUES (?, ?)";
+                let query =
+                    "INSERT OR REPLACE INTO sessions (user_serial_number, token) VALUES (?, ?)";
                 let _ = sqlx::query(query)
                     .bind(&serial_number)
                     .bind(&token)
@@ -130,8 +138,6 @@ pub async fn create_user_session(serial_number: String, state: State<'_, DbPool>
         }
     }
 }
-
-
 
 // pub async fn get_user_id(state: State<'_, DbPool>) -> i32 {
 //     let serial_number = read_specific_line(2).unwrap();
@@ -162,7 +168,6 @@ pub async fn create_user_session(serial_number: String, state: State<'_, DbPool>
 //         }
 //     }
 // }
-
 
 //token is passed here as serial_number which is the user's serial number stored in cookies and encrypted by bcrypt hash before storing to db
 pub async fn verify_session(serial_number: &str, state: State<'_, DbPool>) -> Option<String> {

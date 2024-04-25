@@ -10,8 +10,7 @@ import { invoke } from "@tauri-apps/api/tauri";
 import React, { useEffect } from "react";
 import Loading from "@/components/loading";
 import { BranchSchema, TypeBranchSchema } from "@/lib/types/users";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "sonner";
 
 export default function BranchCrud({
   branch,
@@ -49,7 +48,8 @@ export default function BranchCrud({
         toast.error("Branch creation failed, check your inputs and try again");
       }
     } catch (error: any) {
-      // toast.error(error.message);
+      // console.log(error);
+      // toast.error(error);
       toast.error(
         "Failed, check your inputs  ensure you have a unique branch code then try again"
       );

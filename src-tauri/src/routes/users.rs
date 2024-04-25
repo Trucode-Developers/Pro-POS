@@ -50,7 +50,7 @@ pub async fn create(token: String, user: User, state: State<'_, DbPool>) -> Resu
         PoolType::Postgres(pool) => {
             let query = "INSERT INTO users (serial_number,staff_number,name, role, email, password, is_active,created_by) VALUES ($1, $2, $3, $4, $5,$6,$7,$8) RETURNING id";
             let result = sqlx::query(query)
-                .bind(Uuid::new_v4())
+                .bind(Uuid::new_v4().to_string())
                 .bind(&user.staff_number)
                 .bind(&user.name)
                 .bind(&user.role)
@@ -82,7 +82,7 @@ pub async fn create(token: String, user: User, state: State<'_, DbPool>) -> Resu
             let query =
                 "INSERT INTO users (serial_number,staff_number,name, role, email, password, is_active,created_by) VALUES (?,?, ?, ?, ?, ?,?,?)";
             let result = sqlx::query(query)
-                .bind(Uuid::new_v4())
+                .bind(Uuid::new_v4().to_string())
                 .bind(&user.staff_number)
                 .bind(&user.name)
                 .bind(&user.role)
@@ -226,11 +226,12 @@ pub async fn get_all_users(state: State<'_, DbPool>) -> Result<Value, Value> {
         }
         PoolType::SQLite(pool) => {
             let query = "
-                SELECT users.*, CAST(COUNT(user_roles.*) AS INTEGER) AS total_roles
+                SELECT users.*, COUNT(user_roles.user_id) AS total_roles
                 FROM users
                 LEFT JOIN user_roles ON user_roles.user_id = users.id
                 GROUP BY users.id
                 ORDER BY users.id DESC";
+
             let result = sqlx::query_as::<_, User>(query).fetch_all(pool).await;
 
             match result {

@@ -1,7 +1,7 @@
 
 
 CREATE TABLE branches (
-  id serial PRIMARY KEY,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   code varchar(255) NOT NULL UNIQUE,
   name varchar(255) NOT NULL,
   address varchar(255) NULL,
@@ -12,6 +12,5 @@ CREATE TABLE branches (
   created_by int NULL,
   created_at timestamp NULL,
   FOREIGN KEY (created_by) REFERENCES users(id)
-
 );
 

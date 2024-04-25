@@ -1,7 +1,6 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { cn } from "@/lib/utils";
 import CustomInput from "@/components/custom/input";
 import CustomSheet from "@/components/customSheet";
@@ -10,8 +9,8 @@ import { invoke } from "@tauri-apps/api/tauri";
 import React, { useEffect, useState } from "react";
 import Loading from "@/components/loading";
 import { RoleSchema, TypeRoleSchema } from "@/lib/types/users";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "sonner";
+
 
 export default function RolesCrud({
   permissions,

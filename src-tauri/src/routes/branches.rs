@@ -50,7 +50,7 @@ pub async fn create_branch(branch: Branch, state: State<'_, DbPool>) -> Result<V
             }
         }
         PoolType::SQLite(pool) => {
-            let query = "INSERT INTO branches (code,name, address, phone, email, description,status) VALUES (?, ?, ?, ?, ?, ?)";
+            let query = "INSERT INTO branches (code,name, address, phone, email, description,status) VALUES (?, ?, ?, ?, ?, ?, ?)";
             let result = sqlx::query(query)
                 .bind(&branch.code)
                 .bind(&branch.name)
