@@ -9,6 +9,8 @@ import { HiOutlineCog, HiUser } from "react-icons/hi";
 import pos from "./pos.png";
 import { useThemeStore, logOut } from "@/lib/store";
 import CustomInput from "@/components/custom/input";
+import { CustomDropdown } from "@/components/custom/dropDown";
+import { Profile } from "./profile";
 
 export default function LeftMenu({ setVertical }: any) {
   const adminSidebarSize = useThemeStore((state) => state.adminSidebarSize);
@@ -137,12 +139,15 @@ export default function LeftMenu({ setVertical }: any) {
         </div>
         {/* <div className="flex items-end cursor-pointer grow"> */}
         <div className="flex flex-wrap items-end cursor-pointer grow">
-          <div onClick={() => logOut()}
-           className="flex items-center   gap-3.5 font-medium py-2 hover:text-red-500 rounded-md ">
-            <div
-              className={` group flex text-lg gap-2 font-medium p-2 `}
-            >
-              <div className="text-red-500">{React.createElement(HiUser, { size: "25" })}</div>
+          <Profile open={open} />
+          {/* <div
+            onClick={() => logOut()}
+            className="flex items-center   gap-3.5 font-medium py-2 hover:text-red-500 rounded-md "
+          >
+            <div className={` group flex text-lg gap-2 font-medium p-2 `}>
+              <div className="text-red-500">
+                {React.createElement(HiUser, { size: "25" })}
+              </div>
               <h2
                 style={{
                   transitionDelay: `${4}00ms`,
@@ -161,7 +166,7 @@ export default function LeftMenu({ setVertical }: any) {
                 Exit
               </h2>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </section>

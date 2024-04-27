@@ -20,8 +20,6 @@
 ## END OF app/cashier/page.tsx
 ## src/lib/store.ts
 ## END OF src/lib/store.ts
-## app/admin/components/left-menu.tsx
-## END OF app/admin/components/left-menu.tsx
 ## app/initiator.tsx
 ## END OF app/initiator.tsx
 ## package.json
@@ -78,13 +76,19 @@
 ## END OF src-tauri/src/routes/branches.rs
 ## src/lib/types/users.ts
 ## END OF src/lib/types/users.ts
-## app/admin/branches/page.tsx
-## END OF app/admin/branches/page.tsx
 ## src/components/custom/switch.tsx
 ## END OF src/components/custom/switch.tsx
 ## src/components/ui/switch.tsx
 ## END OF src/components/ui/switch.tsx
-
 ## app/admin/branches/branchesCrud.tsx
-
 ## END OF app/admin/branches/branchesCrud.tsx
+## app/admin/branches/page.tsx
+## END OF app/admin/branches/page.tsx
+## src/components/custom/dropDown.tsx
+## END OF src/components/custom/dropDown.tsx
+## app/admin/components/left-menu.tsx
+## END OF app/admin/components/left-menu.tsx
+
+## app/admin/components/profile.tsx
+
+## END OF app/admin/components/profile.tsx
