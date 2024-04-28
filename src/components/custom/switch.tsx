@@ -4,13 +4,13 @@ import { Switch } from "@/components/ui/switch";
 export function CustomSwitch({ register, label, error, ...props }: any) {
     const { isRequired = false, ...restProps } = props;
   return (
-    <div className="w-[400px]">
+    <div className="w-[400px] bg-gray-00 min-h-full p-2 flex flex-col justify-center">
       <span className="pb-1 text-gray-500">
         {label}
         {isRequired && <span className="text-red-500"> *</span>}
       </span>
       <div className="flex items-center space-x-2 ">
-        <Switch id="airplane-mode" />
+        <Switch id="airplane-mode" {...register} {...restProps} />
         <Label htmlFor="airplane-mode">Active?</Label>
       </div>
     </div>

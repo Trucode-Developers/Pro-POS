@@ -20,3 +20,49 @@ how local.txt handles static data via index
 0= postgres://postgres:Server@2244@localhost/pos // database url
 1= postgres //database type
 2= user_serial_number
+
+
+
+
+
+CONNECTING TWO LAPTOPS/COMPUTERS ON THE SAME NETWORK
+
+// connect botht the laptops/computers on the same network
+// remember we user 129.168.0.0 for wireless connection and 192.168.1.0 for wired connection. Though this ight change over time 
+
+Windows as the server
+//install the postgres, set password , get port and add db name eg: pos
+//our final target will be : postgres://postgres:Server@2244@192.168.0.105:5433/pos
+
+Configure PostgreSQL to allow remote connections
+// Open the PostgreSQL configuration file postgresql.conf. The default location is C:\Program Files\PostgreSQL\x.x\data\postgresql.conf (replace x.x with your PostgreSQL version).
+// find and edit: 
+listen_addresses = '*'
+
+
+Configure PostgreSQL to allow connections from other computers
+// Open the pg_hba.conf file. The default location is C:\Program Files\PostgreSQL\x.x\data\pg_hba.conf (replace x.x with your PostgreSQL version).
+// Find the line that starts with # IPv4 local connections:. 
+host    all             all             192.168.1.0/24            md5 // on enthernet connection
+host    all             all             192.168.0.0/24            md5 //under wifi
+
+
+Restart the PostgreSQL server:
+// Open the Services app (press the Windows key and search for "Services").
+// Find the "PostgreSQL" service in the list.
+// Right-click on the service and select "Restart".
+
+Allowing port through Windows defender, Open the PostgreSQL server's firewall:
+// Press the Windows key and search for "Windows Defender Firewall".
+// Open the "Windows Defender Firewall with Advanced Security" app.
+// In the left panel, click on "Inbound Rules".
+// Click on "New Rule" in the right panel.
+// Select "Port" as the rule type and click "Next".
+// Select "TCP" as the protocol, and enter "5432" in the "Specific local ports" field. This is the default port that PostgreSQL listens on.
+// Click "Next" and select "Allow the connection".
+// Click "Next" and ensure that the rule applies to all profiles (Domain, Private, and Public).
+// Provide a name for the rule, such as "PostgreSQL Server", and click "Finish".
+
+
+//The final expected outpu should be:
+postgres://postgres:Server@2244@192.168.0.105:5433/pos

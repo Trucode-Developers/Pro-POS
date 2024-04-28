@@ -235,7 +235,7 @@ export default function Page() {
                     Inactive
                   </div>
                 )}
-                {branch.status}
+                {/* {branch.status} */}
               </TableCell>
               <TableCell className="flex justify-end gap-2 text-sm lg:text-lg">
                 <div

@@ -28,11 +28,14 @@ export default function BranchCrud({
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
+    watch,
+    setValue,
   } = useForm<TypeBranchSchema>({
     resolver: zodResolver(BranchSchema),
     defaultValues: branch,
   });
 
+   const status = watch("status");
   useEffect(() => {
     reset(branch); // Update the form values when `user` changes
   }, [branch, reset]);
@@ -42,6 +45,7 @@ export default function BranchCrud({
   const onSubmit = async (data: TypeBranchSchema) => {
     let branch = data;
     // console.log(branch);
+    // return;
     try {
       if (active_code) {
         updateBranch(data);
@@ -115,7 +119,7 @@ export default function BranchCrud({
 
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 "> */}
-          <div className="flex flex-wrap items-end justify-center gap-4 py-5 space-y-2">
+          <div className="flex flex-wrap justify-center gap-4 py-5 space-y-2 items-justify">
             {!active_code && (
               <CustomInput
                 isRequired
@@ -206,6 +210,10 @@ export default function BranchCrud({
               label="Status"
               register={register("status")}
               error={errors.status}
+              checked={status}
+              onCheckedChange={(checked: any) => {
+                setValue("status", checked);
+              }}
             />
 
             {/* <div className="w-[400px]">

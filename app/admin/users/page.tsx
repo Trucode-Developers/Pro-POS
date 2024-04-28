@@ -23,8 +23,6 @@ import {
 } from "@/components/ui/table";
 import { TypeUserSchema } from "@/lib/types/users";
 
-
-
 const defaultUser = {
   id: 0,
   name: "",
@@ -40,12 +38,11 @@ export default function Page() {
   const [greeting, setGreeting] = useState("");
   const [users, setUsers] = useState({} as any);
   const [user, setUser] = useState<TypeUserSchema>(defaultUser);
-   const [allocatedRoles, setAllocatedRoles] = useState([] as any);
-   const [roles, setRoles] = useState([]);
+  const [allocatedRoles, setAllocatedRoles] = useState([] as any);
+  const [roles, setRoles] = useState([]);
 
   const [active_id, setActive_id] = useState("");
   const [search_value, setSearchValue] = useState("");
-
 
   //  const user_slugs = async (userId: number) => {
   //  const user_slugs = async () => {
@@ -67,42 +64,40 @@ export default function Page() {
         (error) => console.error(error)
       )
       .catch(console.error);
-      get_all_users();
-      get_all_roles();
+    get_all_users();
+    get_all_roles();
   }, []);
 
-   const get_all_roles = async () => {
-     closePopUp();
-     await invoke("get_all_roles")
-       .then((response: any) => {
-         if (response.status === 200) {
-           setRoles(response.data);
+  const get_all_roles = async () => {
+    closePopUp();
+    await invoke("get_all_roles")
+      .then((response: any) => {
+        if (response.status === 200) {
+          setRoles(response.data);
           //  console.log(roles);
           //  console.log(response.data);
-         }
-       })
-       .catch(console.error);
-   };
-   
-   const get_assigned_roles = async (userId: number) => {
-     await invoke("get_assigned_roles", { userId })
-       .then((response: any) => {
-         setAllocatedRoles(response.data);
-        //  console.log("assigned roles", response.data);
-       })
-       .catch(console.error);
-   };
+        }
+      })
+      .catch(console.error);
+  };
 
-  
+  const get_assigned_roles = async (userId: number) => {
+    await invoke("get_assigned_roles", { userId })
+      .then((response: any) => {
+        setAllocatedRoles(response.data);
+        //  console.log("assigned roles", response.data);
+      })
+      .catch(console.error);
+  };
 
   const get_all_users = async () => {
     closePopUp();
     await invoke("get_all_users")
-      .then((response:any) => {
+      .then((response: any) => {
         // console.log(response.data);
-          if (response.status === 200) {
-            setUsers(response.data);
-          }
+        if (response.status === 200) {
+          setUsers(response.data);
+        }
       })
       .catch(console.error);
   };
@@ -204,7 +199,15 @@ export default function Page() {
               <TableCell className="lowercase">{user.email}</TableCell>
               <TableCell className="w-{100px]">{user.total_roles}</TableCell>
               <TableCell className="w-{100px]">
-                {user.is_active ? "Yes" : "No"}
+                {user.is_active ? (
+                  <div className="px-2 py-1 text-center text-white bg-green-500 rounded-full">
+                    Active
+                  </div>
+                ) : (
+                  <div className="px-2 py-1 text-center text-white bg-red-500 rounded-full">
+                    Inactive
+                  </div>
+                )}
               </TableCell>
               <TableCell className="flex justify-end gap-2 text-sm lg:text-lg">
                 {" "}

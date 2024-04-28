@@ -6,16 +6,12 @@
 ## END OF src-tauri/src/routes/mod.rs
 ## src-tauri/Cargo.toml
 ## END OF src-tauri/Cargo.toml
-## guiding.txt
-## END OF guiding.txt
 ## src-tauri/src/main.rs
 ## END OF src-tauri/src/main.rs
 ## app/cashier/sale.tsx
 ## END OF app/cashier/sale.tsx
 ## src/components/customSheet.tsx
 ## END OF src/components/customSheet.tsx
-## app/admin/users/page.tsx
-## END OF app/admin/users/page.tsx
 ## app/cashier/page.tsx
 ## END OF app/cashier/page.tsx
 ## src/lib/store.ts
@@ -30,8 +26,6 @@
 ## END OF src/components/success.tsx
 ## src/components/info.tsx
 ## END OF src/components/info.tsx
-## app/admin/users/userCrud.tsx
-## END OF app/admin/users/userCrud.tsx
 ## app/layout.tsx
 ## END OF app/layout.tsx
 ## app/page.tsx
@@ -64,8 +58,6 @@
 ## END OF app/admin/roles/rolesCrud.tsx
 ## src-tauri/src/routes/roles.rs
 ## END OF src-tauri/src/routes/roles.rs
-## src/components/custom/input.tsx
-## END OF src/components/custom/input.tsx
 ## src/components/custom/select.tsx
 ## END OF src/components/custom/select.tsx
 ## src/components/custom/textarea.tsx
@@ -76,19 +68,29 @@
 ## END OF src-tauri/src/routes/branches.rs
 ## src/lib/types/users.ts
 ## END OF src/lib/types/users.ts
-## src/components/custom/switch.tsx
-## END OF src/components/custom/switch.tsx
 ## src/components/ui/switch.tsx
 ## END OF src/components/ui/switch.tsx
-## app/admin/branches/branchesCrud.tsx
-## END OF app/admin/branches/branchesCrud.tsx
-## app/admin/branches/page.tsx
-## END OF app/admin/branches/page.tsx
 ## src/components/custom/dropDown.tsx
 ## END OF src/components/custom/dropDown.tsx
 ## app/admin/components/left-menu.tsx
 ## END OF app/admin/components/left-menu.tsx
-
 ## app/admin/components/profile.tsx
-
 ## END OF app/admin/components/profile.tsx
+## app/initialSetUp.tsx
+## END OF app/initialSetUp.tsx
+## guiding.txt
+## END OF guiding.txt
+## src/components/custom/input.tsx
+## END OF src/components/custom/input.tsx
+## src/components/custom/switch.tsx
+## END OF src/components/custom/switch.tsx
+## app/admin/branches/branchesCrud.tsx
+## END OF app/admin/branches/branchesCrud.tsx
+## app/admin/users/userCrud.tsx
+## END OF app/admin/users/userCrud.tsx
+## app/admin/branches/page.tsx
+## END OF app/admin/branches/page.tsx
+
+## app/admin/users/page.tsx
+
+## END OF app/admin/users/page.tsx

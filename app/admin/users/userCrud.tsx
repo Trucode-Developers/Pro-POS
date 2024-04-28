@@ -16,6 +16,7 @@ import Loading from "@/components/loading";
 import { toast } from "sonner";
 import Info from "@/components/info";
 import Error from "@/components/error";
+import { CustomSwitch } from "@/components/custom/switch";
 
 export default function UserCrud({roles,allocatedRoles,setAllocatedRoles, user, get_all_users, active_id }: any) {
   const token = useThemeStore((state) => state.token);
@@ -26,10 +27,15 @@ export default function UserCrud({roles,allocatedRoles,setAllocatedRoles, user, 
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
+    watch,
+    setValue,
   } = useForm<TypeUserSchema>({
     resolver: zodResolver(UserSchema),
     defaultValues: user,
   });
+  const is_active = watch("is_active");
+
+  
 
   useEffect(() => {
     reset(user); // Update the form values when `user` changes
@@ -98,9 +104,9 @@ export default function UserCrud({roles,allocatedRoles,setAllocatedRoles, user, 
       <div className="p-4 m-auto max-w-7xl ">
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 "> */}
-          <div className="grid gap-4 ">
-            <div className="col-span-1">
-              <div>
+          <div className="flex flex-wrap justify-center gap-4 py-5 space-y-2 items-justify ">
+            <div>
+              <div className=" w-[400px]">
                 <label htmlFor="name">Upload Profile</label>
                 <div className="relative">
                   <label
@@ -177,9 +183,9 @@ export default function UserCrud({roles,allocatedRoles,setAllocatedRoles, user, 
               register={register("confirmPassword")}
               error={errors.confirmPassword}
             />
-            <select
+            {/* <select
               {...register("role", { valueAsNumber: true })}
-              className="w-full p-2 bg-transparent"
+              className="p-2 bg-transparent  w-[400px]"
             >
               <option value={1}>Admin</option>
               <option value={2}>Staff</option>
@@ -189,9 +195,20 @@ export default function UserCrud({roles,allocatedRoles,setAllocatedRoles, user, 
                 {" "}
                 {errors.role.message}{" "}
               </span>
-            )}
+            )} */}
 
-            <div className="flex items-center gap-2 py-2 pb-5 ">
+            <CustomSwitch
+              isRequired
+              label="Status"
+              register={register("is_active")}
+              error={errors.is_active}
+              checked={is_active}
+              onCheckedChange={(checked: any) => {
+                setValue("is_active", checked);
+              }}
+            />
+
+            {/* <div className="flex items-center gap-2 py-2 pb-5 ">
               <input
                 id="activeNess"
                 type="checkbox"
@@ -205,7 +222,7 @@ export default function UserCrud({roles,allocatedRoles,setAllocatedRoles, user, 
                   {errors.is_active.message}{" "}
                 </span>
               )}
-            </div>
+            </div> */}
           </div>
 
           <div className={`${!active_id ? "hidden" : ""} pb-5`}>

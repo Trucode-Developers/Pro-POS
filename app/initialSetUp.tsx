@@ -63,6 +63,7 @@ export function InitialSetUp() {
                 choosing the mode that suits your business.
               </DialogDescription>
               <p>postgres://postgres:Server@2244@localhost/pos</p>
+              <p>postgres://postgres:Server@2244@192.168.0.105:5433/pos</p>
             </div>
             <div className="min-w-[100px]">
               {activeDB === "postgres" ? (
