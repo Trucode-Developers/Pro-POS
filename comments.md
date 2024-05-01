@@ -10,10 +10,6 @@
 ## END OF src-tauri/src/main.rs
 ## app/cashier/sale.tsx
 ## END OF app/cashier/sale.tsx
-## src/components/customSheet.tsx
-## END OF src/components/customSheet.tsx
-## app/cashier/page.tsx
-## END OF app/cashier/page.tsx
 ## src/lib/store.ts
 ## END OF src/lib/store.ts
 ## app/initiator.tsx
@@ -26,8 +22,6 @@
 ## END OF src/components/success.tsx
 ## src/components/info.tsx
 ## END OF src/components/info.tsx
-## app/layout.tsx
-## END OF app/layout.tsx
 ## app/page.tsx
 ## END OF app/page.tsx
 ## src-tauri/src/routes/permissions.rs
@@ -66,16 +60,10 @@
 ## END OF src/components/custom/radio.tsx
 ## src-tauri/src/routes/branches.rs
 ## END OF src-tauri/src/routes/branches.rs
-## src/lib/types/users.ts
-## END OF src/lib/types/users.ts
 ## src/components/ui/switch.tsx
 ## END OF src/components/ui/switch.tsx
 ## src/components/custom/dropDown.tsx
 ## END OF src/components/custom/dropDown.tsx
-## app/admin/components/left-menu.tsx
-## END OF app/admin/components/left-menu.tsx
-## app/admin/components/profile.tsx
-## END OF app/admin/components/profile.tsx
 ## app/initialSetUp.tsx
 ## END OF app/initialSetUp.tsx
 ## guiding.txt
@@ -90,7 +78,29 @@
 ## END OF app/admin/users/userCrud.tsx
 ## app/admin/branches/page.tsx
 ## END OF app/admin/branches/page.tsx
-
+## app/layout.tsx
+## END OF app/layout.tsx
+## src/components/customSheet.tsx
+## END OF src/components/customSheet.tsx
+## app/custom.css
+## END OF app/custom.css
+## src/lib/types/users.ts
+## END OF src/lib/types/users.ts
+## app/cashier/page.tsx
+## END OF app/cashier/page.tsx
+## app/admin/layout.tsx
+## END OF app/admin/layout.tsx
+## src/components/zoom.tsx
+## END OF src/components/zoom.tsx
+## app/admin/components/services_data.tsx
+## END OF app/admin/components/services_data.tsx
+## tailwind.config.js
+## END OF tailwind.config.js
 ## app/admin/users/page.tsx
-
 ## END OF app/admin/users/page.tsx
+## app/admin/components/profile.tsx
+## END OF app/admin/components/profile.tsx
+
+## app/admin/components/left-menu.tsx
+
+## END OF app/admin/components/left-menu.tsx

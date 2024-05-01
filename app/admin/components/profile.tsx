@@ -42,16 +42,16 @@ export function Profile({open}:any) {
         {/* <Button variant="outline">Open</Button> */}
         <div
           // onClick={() => logOut()}
-          className="flex items-center   gap-3.5 font-medium py-2 hover:text-red-500 rounded-md "
+          className="flex items-center   gap-3.5 font-medium py-2 hover:text-primary rounded-md "
         >
           <div className={` group flex text-lg gap-2 font-medium p-2 `}>
-            <div className="text-red-500">
+            <div className="text-primary">
               {React.createElement(HiUser, { size: "25" })}
             </div>
             <h2
-              style={{
-                transitionDelay: `${4}00ms`,
-              }}
+              // style={{
+              //   transitionDelay: `${4}00ms`,
+              // }}
               className={`whitespace-pre duration-500 cursor-pointer ${
                 !open && "opacity-0 translate-x-28 overflow-hidden"
               }`}

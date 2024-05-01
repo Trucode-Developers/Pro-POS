@@ -11,6 +11,7 @@ import { useThemeStore, logOut } from "@/lib/store";
 import CustomInput from "@/components/custom/input";
 import { CustomDropdown } from "@/components/custom/dropDown";
 import { Profile } from "./profile";
+import Zoom from "@/components/zoom";
 
 export default function LeftMenu({ setVertical }: any) {
   const adminSidebarSize = useThemeStore((state) => state.adminSidebarSize);
@@ -50,7 +51,7 @@ export default function LeftMenu({ setVertical }: any) {
   }, [search, data]);
 
   return (
-    <section className="flex gap-6">
+    <section className="flex gap-6 bg-white select-none bg-opacity-20">
       <div
         className={` min-h-screen z-50 ${
           open ? "w-full" : "w-16"
@@ -62,15 +63,18 @@ export default function LeftMenu({ setVertical }: any) {
               <Image src={pos} width={50} height={50} alt="service image" />
             </Link>
           )}
-          <HiMenuAlt3
+          <div>
+            <Zoom className="flex items-center justify-center gap-4 text-xl" />
+          </div>
+          {/* <HiMenuAlt3
             size={26}
             className="cursor-pointer"
             onClick={() => setOpen(!open)}
-          />
+          /> */}
         </div>
-        <Link href="/" className="flex items-center justify-center p-2 ">
+        <div  className="flex items-center justify-center p-2 ">
           <div className="truncate ">Welcome UserName</div>
-        </Link>
+        </div>
 
         <div>
           <CustomInput
@@ -83,13 +87,6 @@ export default function LeftMenu({ setVertical }: any) {
             // register={"name"} //this should not be here but for code reuse it is here
             register={{ name: "searchInput" }} // Pass an object with the desired key-value pair
           />
-          {/* <input
-            type="search"
-            placeholder="search"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full px-4 py-2 outline-none text-primary rounded-2xl "
-          /> */}
         </div>
         <div className="mt-4 flex flex-col gap-4 relative overflow-y-auto overflow-x-hidden max-h-[80vh]">
           {filteredData?.map(
@@ -103,7 +100,7 @@ export default function LeftMenu({ setVertical }: any) {
                     <Link
                       key={sub.id}
                       href={sub.link}
-                      className={` group flex items-center text-sm  gap-3.5 font-medium px-2 py-2 my-1 hover:bg-gray-400 rounded-md ${
+                      className={` group flex items-center text-  gap-2.5 font-medium px-2 py-1 my-1 hover:bg-gray-400 rounded-md ${
                         pathname === sub.link ? "bg-gray-300" : ""
                       }`}
                     >
@@ -115,11 +112,16 @@ export default function LeftMenu({ setVertical }: any) {
                         )}
                       </div>
                       <h2
-                        style={{
-                          transitionDelay: `${sub.id + 3}00ms`,
-                        }}
-                        className={`whitespace-pre duration-500 cursor-pointer ${
-                          !open && "opacity-0 translate-x-28 overflow-hidden"
+                        style={
+                          {
+                            // transitionDelay: `${sub.id + 3}00ms`,
+                          }
+                        }
+                        // className={`whitespace-pre duration-500 cursor-pointer ${
+                        //   !open && "opacity-0 translate-x-28 overflow-hidden"
+                        // }`}
+                        className={`whitespace-pre  cursor-pointer ${
+                          !open && "opacity-0  overflow-hidden"
                         }`}
                       >
                         {sub?.title}
@@ -140,33 +142,6 @@ export default function LeftMenu({ setVertical }: any) {
         {/* <div className="flex items-end cursor-pointer grow"> */}
         <div className="flex flex-wrap items-end cursor-pointer grow">
           <Profile open={open} />
-          {/* <div
-            onClick={() => logOut()}
-            className="flex items-center   gap-3.5 font-medium py-2 hover:text-red-500 rounded-md "
-          >
-            <div className={` group flex text-lg gap-2 font-medium p-2 `}>
-              <div className="text-red-500">
-                {React.createElement(HiUser, { size: "25" })}
-              </div>
-              <h2
-                style={{
-                  transitionDelay: `${4}00ms`,
-                }}
-                className={`whitespace-pre duration-500 cursor-pointer ${
-                  !open && "opacity-0 translate-x-28 overflow-hidden"
-                }`}
-              >
-                Logout
-              </h2>
-              <h2
-                className={`${
-                  open && "hidden"
-                } absolute left-48 bg-white font-semibold whitespace-pre text-gray-900 rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit  `}
-              >
-                Exit
-              </h2>
-            </div>
-          </div> */}
         </div>
       </div>
     </section>

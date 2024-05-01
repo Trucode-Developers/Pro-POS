@@ -10,10 +10,13 @@ export default function RootLayout({
   //check Initiator to check token
   return (
     <html lang="en">
-      <body>
-        <Initiator />
-        <Toaster richColors />
-        <div>{children}</div>
+      <body className="relative">
+        <div className="min-h-screen mainBgImage" />
+        <div className="absolute top-0 z-10 w-full text-black">
+          <Initiator />
+          <Toaster richColors />
+          <div>{children}</div>
+        </div>
       </body>
     </html>
   );

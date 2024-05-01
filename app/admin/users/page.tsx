@@ -161,7 +161,7 @@ export default function Page() {
             placeholder={"Search by name, email, Id ..."}
           />
           <div>
-            <Button className="bg-green-500 hover:bg-black" onClick={newUser}>
+            <Button className="text-white bg-primary" onClick={newUser}>
               New User
             </Button>
           </div>
@@ -200,11 +200,11 @@ export default function Page() {
               <TableCell className="w-{100px]">{user.total_roles}</TableCell>
               <TableCell className="w-{100px]">
                 {user.is_active ? (
-                  <div className="px-2 py-1 text-center text-white bg-green-500 rounded-full">
+                  <div className="px-2 py-1 text-center text-white  rounded-full bg-success">
                     Active
                   </div>
                 ) : (
-                  <div className="px-2 py-1 text-center text-white bg-red-500 rounded-full">
+                  <div className="px-2 py-1 text-center text-white rounded-full bg-error">
                     Inactive
                   </div>
                 )}

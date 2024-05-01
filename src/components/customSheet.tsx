@@ -87,14 +87,13 @@ export default function CustomSheet({ title,children }: Props) {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 1.5, type: "spring" }}
                 exit={{ opacity: 0 }}
-                className="relative h-screen min-h-full overflow-auto bg-white border-r rounded-r-2xl"
+                className="relative h-screen min-h-full overflow-auto border-r modalBgImage rounded-r-2xl"
               >
                 <div className="sticky top-0 right-0 z-20 flex items-center justify-between gap-5 px-4 py-2 text-xl font-bold bg-gray-500 ">
                   <div>
                     <span className="text-white uppercase">{title}</span>
                   </div>
                   <div className="flex gap-4 px-2 py-2 text-white rounded-full hover:bg-red-500">
-                   
                     <div
                       className="font-bold duration-500 ease-in-out cursor-pointer hover:scale-125 "
                       onClick={handleCloseModal}
@@ -114,11 +113,9 @@ export default function CustomSheet({ title,children }: Props) {
               minSize={5}
               onClick={handleCloseModal}
               className="transition-all duration-300 ease-in-out"
-            >
-            </ResizablePanel>
+            ></ResizablePanel>
           </ResizablePanelGroup>
         </motion.div>
-       
       )}
     </AnimatePresence>
   );

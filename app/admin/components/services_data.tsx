@@ -1,5 +1,15 @@
+import {
+  HiBuildingLibrary,
+  HiClipboardDocumentList,
+  HiCpuChip,
+  HiGiftTop,
+  HiIdentification,
+  HiInboxArrowDown,
+  HiNewspaper,
+  
+} from "react-icons/hi2";
 import img from "./report.png";
-import {  MdCastForEducation, MdCreateNewFolder, MdDeviceHub, MdDriveFileRenameOutline, MdFactCheck, MdHome, MdInsertEmoticon, MdOutlineDashboard, MdPaid, MdSwapHorizontalCircle, MdTableView } from "react-icons/md";
+import {  MdCastForEducation, MdDeviceHub } from "react-icons/md";
 import {VscCircuitBoard, VscKey, VscOrganization } from "react-icons/vsc";
 export const data = [
   {
@@ -12,52 +22,44 @@ export const data = [
       {
         id: 0,
         title: "Dashboard",
-        //description: "View order, sales and usage reports",
         link: "/admin",
-        // link: "/admin/dashboard",
-        image: MdHome,
+        icon: HiBuildingLibrary,
       },
       {
         id: 1,
         title: "Customer Orders",
-        //description: "View order, sales and usage reports",
         link: "/admin/customer-orders",
-        image: MdFactCheck,
+        icon: HiClipboardDocumentList,
       },
       {
         id: 2,
         title: "Make a Sale",
-        //description: "View order, sales and usage reports",
         link: "/admin/make-a-sale",
-        image: MdSwapHorizontalCircle,
+        icon: HiCpuChip,
       },
       {
         id: 3,
         title: "Sale History",
-        //description: "View order, sales and usage reports",
         link: "/admin/sale-history",
-        image: MdTableView,
+        icon: HiGiftTop,
       },
       {
         id: 4,
         title: "Customer List",
-        //description: "View order, sales and usage reports",
         link: "/admin/customer-list",
-        image: MdInsertEmoticon,
+        icon: HiIdentification,
       },
       {
         id: 5,
         title: "Order List",
-        //description: "View order, sales and usage reports",
         link: "/admin/order-list",
-        image: MdCreateNewFolder,
+        icon: HiInboxArrowDown,
       },
       {
         id: 6,
         title: "Held Receipts",
-        //description: "View order, sales and usage reports",
         link: "/admin/held-receipts",
-        image: MdDriveFileRenameOutline,
+        icon: HiNewspaper,
       },
       {
         id: 7,
@@ -85,16 +87,14 @@ export const data = [
       {
         id: 1,
         title: "Sale History",
-        //description: "View order, sales and usage reports",
         link: "/admin/sale-history",
-        image: MdOutlineDashboard,
+        icon: HiClipboardDocumentList,
       },
       {
         id: 2,
         title: "Point of Sale",
-        //description: "View order, sales and usage reports",
         link: "/admin/reports",
-        image: MdOutlineDashboard,
+        icon: HiCpuChip,
       },
     ],
   },
@@ -107,24 +107,21 @@ export const data = [
     children: [
       {
         id: 1,
-        title: "Users",
-        // icon: VscOrganization,
+        title: "Staff",
         link: "/admin/users",
-        image: MdOutlineDashboard,
+        icon: HiCpuChip,
       },
       {
         id: 2,
         title: "Branches",
         icon: VscCircuitBoard,
         link: "/admin/branches",
-        image: MdOutlineDashboard,
       },
       {
         id: 3,
         title: "Roles",
         icon: VscKey,
         link: "/admin/roles",
-        image: MdOutlineDashboard,
       },
     ],
   },

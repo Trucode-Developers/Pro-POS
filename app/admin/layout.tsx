@@ -17,7 +17,7 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
     const adminSidebarSize = useThemeStore((state) => state.adminSidebarSize);
-
+ const font = useThemeStore((state) => state.fontSize);
 
    const onLayout = (sizes: number[]) => {
     // console.log(sizes);
@@ -29,20 +29,26 @@ export default function Layout({ children }: LayoutProps) {
       <ResizablePanelGroup
         onLayout={onLayout}
         direction="horizontal"
-        className="h-screen min-h-screen bg-gradient-to-b from-primary via-gray-400 to-primary"
+        style={{ fontSize: `${font}px` }}
+        // className="h-screen min-h-screen bg-gradient-to-b from-primary via-gray-400 to-primary "
       >
         <ResizablePanel
           defaultSize={adminSidebarSize[0]}
           minSize={4}
           collapsible={true}
+          className="sidebarBgImage"
         >
-          <LeftMenu  />
+          <LeftMenu />
         </ResizablePanel>
-        <ResizableHandle withHandle className="bg-transparent border-none" />
+        <ResizableHandle
+          withHandle
+          className="bg-transparent border border-gray-400"
+        />
         <ResizablePanel
           defaultSize={adminSidebarSize[1]}
           minSize={60}
-          className="items-center justify-center min-h-full p-4 bg-gray-200 rounded-l-3xl"
+          // className="items-center justify-center min-h-full p-4 bg-gray-200 rounded-l-3xl "
+          className="items-center justify-center min-h-full p-4 rounded-l-3xl bg-trasparent"
         >
           <div>{children}</div>
         </ResizablePanel>

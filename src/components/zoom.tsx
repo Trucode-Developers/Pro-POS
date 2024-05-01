@@ -12,10 +12,10 @@ import { useThemeStore } from "@/lib/store";
 
 export default function Zoom({ className }: any) {
   const { darkMode, lightMode } = useThemeStore.getState();
-    
+
   // const theme: any = useContext(ThemeContext);
   const font = useThemeStore((state) => state.fontSize);
-  
+
   const handleZoomIn = () => {
     if (font < 50) {
       useThemeStore.setState({ fontSize: font + 1 });
@@ -27,35 +27,31 @@ export default function Zoom({ className }: any) {
     }
   };
 
-  const setDarkMode =() => {
+  const setDarkMode = () => {
     darkMode();
-  }
-  
-  const setLightMode =() => {
+  };
+
+  const setLightMode = () => {
     lightMode();
-  }
+  };
 
   return (
-    <div className={`uppercase px-2 ${className}`}>
+    <div
+      className={`uppercase px-2 ${className}`}
+      style={{ fontSize: `${font}px` }}
+    >
       <div
         className="cursor-pointer hover:text-yellow-500"
         onClick={handleZoomOut}
       >
         <VscZoomOut />
       </div>
+      <div>{font}</div>
       <div
         className="cursor-pointer hover:text-yellow-500"
         onClick={handleZoomIn}
       >
         <VscZoomIn />
-      </div>
-      <div style={{ fontSize: `${font}px` }}>
-        {font}
-      </div>
-
-      <div>
-        <Button onClick={setDarkMode}>Dark</Button>
-        <Button onClick={setLightMode}>Light</Button>
       </div>
 
       {/* <TooltipProvider>
