@@ -23,7 +23,7 @@ export default function Error({
           () => reset()
         }
       >
-        Try again
+        Try again!
       </Button>
       <Button className="bg-blue-500 hover:bg-blue-600"
       >

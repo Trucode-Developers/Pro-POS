@@ -100,7 +100,9 @@
 ## END OF app/admin/users/page.tsx
 ## app/admin/components/profile.tsx
 ## END OF app/admin/components/profile.tsx
-
 ## app/admin/components/left-menu.tsx
-
 ## END OF app/admin/components/left-menu.tsx
+
+## app/error.tsx
+
+## END OF app/error.tsx
