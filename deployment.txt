@@ -1,5 +1,5 @@
 After successful building of app and ready to build using github actions CI/CD:
-Do the flloowinf to trigger github workflow set:
+Do the flloowinf to trigger github workflow set: 
      git tag v1.0.0
      git push --tags
     or push and manually trigger github workflow
