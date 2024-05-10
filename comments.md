@@ -2,16 +2,8 @@
 ## END OF app/authLayout.tsx
 ## src-tauri/src/routes/auth.rs
 ## END OF src-tauri/src/routes/auth.rs
-## src-tauri/src/routes/mod.rs
-## END OF src-tauri/src/routes/mod.rs
-## src-tauri/Cargo.toml
-## END OF src-tauri/Cargo.toml
-## src-tauri/src/main.rs
-## END OF src-tauri/src/main.rs
 ## app/cashier/sale.tsx
 ## END OF app/cashier/sale.tsx
-## src/lib/store.ts
-## END OF src/lib/store.ts
 ## app/initiator.tsx
 ## END OF app/initiator.tsx
 ## package.json
@@ -22,8 +14,6 @@
 ## END OF src/components/success.tsx
 ## src/components/info.tsx
 ## END OF src/components/info.tsx
-## app/page.tsx
-## END OF app/page.tsx
 ## src-tauri/src/routes/permissions.rs
 ## END OF src-tauri/src/routes/permissions.rs
 ## src-tauri/src/routes/login.rs
@@ -64,18 +54,12 @@
 ## END OF src/components/ui/switch.tsx
 ## src/components/custom/dropDown.tsx
 ## END OF src/components/custom/dropDown.tsx
-## app/initialSetUp.tsx
-## END OF app/initialSetUp.tsx
-## guiding.txt
-## END OF guiding.txt
 ## src/components/custom/input.tsx
 ## END OF src/components/custom/input.tsx
 ## src/components/custom/switch.tsx
 ## END OF src/components/custom/switch.tsx
 ## app/admin/branches/branchesCrud.tsx
 ## END OF app/admin/branches/branchesCrud.tsx
-## app/admin/users/userCrud.tsx
-## END OF app/admin/users/userCrud.tsx
 ## app/admin/branches/page.tsx
 ## END OF app/admin/branches/page.tsx
 ## app/layout.tsx
@@ -84,8 +68,6 @@
 ## END OF src/components/customSheet.tsx
 ## app/custom.css
 ## END OF app/custom.css
-## src/lib/types/users.ts
-## END OF src/lib/types/users.ts
 ## app/cashier/page.tsx
 ## END OF app/cashier/page.tsx
 ## app/admin/layout.tsx
@@ -96,8 +78,6 @@
 ## END OF app/admin/components/services_data.tsx
 ## tailwind.config.js
 ## END OF tailwind.config.js
-## app/admin/users/page.tsx
-## END OF app/admin/users/page.tsx
 ## app/admin/components/profile.tsx
 ## END OF app/admin/components/profile.tsx
 ## app/admin/components/left-menu.tsx
@@ -106,7 +86,33 @@
 ## END OF app/error.tsx
 ## .github/workflows/main.yml
 ## END OF .github/workflows/main.yml
-
+## src-tauri/src/routes/mod.rs
+## END OF src-tauri/src/routes/mod.rs
+## app/admin/users/userCrud.tsx
+## END OF app/admin/users/userCrud.tsx
+## src-tauri/Cargo.toml
+## END OF src-tauri/Cargo.toml
+## app/admin/users/page.tsx
+## END OF app/admin/users/page.tsx
+## app/page.tsx
+## END OF app/page.tsx
+## src/lib/types/users.ts
+## END OF src/lib/types/users.ts
+## app/admin/users/upload.tsx
+## END OF app/admin/users/upload.tsx
+## /Users/silomalo/.cargo/registry/src/index.crates.io-6f17d22bba15001f/base64-0.22.1/src/lib.rs
+## END OF /Users/silomalo/.cargo/registry/src/index.crates.io-6f17d22bba15001f/base64-0.22.1/src/lib.rs
 ## deployment.txt
-
 ## END OF deployment.txt
+## guiding.txt
+## END OF guiding.txt
+## src-tauri/src/main.rs
+## END OF src-tauri/src/main.rs
+## src/lib/store.ts
+## END OF src/lib/store.ts
+## app/initialSetUp.tsx
+## END OF app/initialSetUp.tsx
+
+## src-tauri/src/routes/global.rs
+
+## END OF src-tauri/src/routes/global.rs

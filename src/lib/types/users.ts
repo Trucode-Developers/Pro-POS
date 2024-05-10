@@ -16,6 +16,7 @@ export type TypeLoginSchema = z.infer<typeof LoginSchema>;
 export const UserSchema = z
   .object({
     id: z.number().optional(),
+    logo: z.string().optional(),
     name: z.string().min(3, " must be at least 3 characters"),
     staff_number: z.string().min(4, " number must be at least 4 characters"),
     role: z.number(),
@@ -54,3 +55,16 @@ export const RoleSchema = z.object({
   name: z.string().min(5, " name must be at least 5 characters"),
 });
 export type TypeRoleSchema = z.infer<typeof RoleSchema>;
+
+
+//files storage
+export const FileSchema = z.object({
+  file: z.object({}).optional(),
+  // file: z.object({
+  //   name: z.string().min(3, " must be at least 3 characters"),
+  //   path: z.string().min(5, " name must be at least 5 characters"),
+  //   mime_type: z.string().min(5, " name must be at least 5 characters"),
+  // }),
+  name: z.string().min(5, " name must be at least 5 characters"),
+});
+export type TypeFileSchema = z.infer<typeof FileSchema>;

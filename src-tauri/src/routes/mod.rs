@@ -3,3 +3,4 @@ pub mod login;
 pub mod branches;
 pub mod roles;
 pub mod permissions;
+pub mod global;

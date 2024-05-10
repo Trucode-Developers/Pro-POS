@@ -7,6 +7,7 @@ use routes::roles::{create_role,delete_role,get_all_roles,update_role,get_role_p
 use routes::users::{create, delete_user, get_all_users, get_user, greet, update_user};
 use routes::permissions::get_all_permissions;
 use routes::login::login;
+use routes::global::{upload_file,update_storage_path};
 pub mod db_connections;
 use db_connections::{ create_new, establish_database_connection, read_specific_line, update_file};
 
@@ -57,6 +58,9 @@ async fn main() {
             get_role_permissions,
             get_allocated_permission_slugs,
             get_assigned_roles,
+
+            upload_file,
+            update_storage_path,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

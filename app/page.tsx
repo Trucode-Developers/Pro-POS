@@ -17,6 +17,7 @@ import CustomInput from "@/components/custom/input";
 import { useRouter } from "next/navigation";
 import Loading from "@/components/loading";
 import { useState } from "react";
+import Upload from "./admin/users/upload";
 
 export default function Page() {
   const font = useThemeStore((state) => state.fontSize);
@@ -85,12 +86,14 @@ export default function Page() {
           >
             We are committed to digitize your selling by increasing{" "}
             <span className="font-bold text-blue-500 capitalize">security</span>{" "}
-            and {" "}
+            and{" "}
             <span className="font-bold text-blue-500 capitalize">
               efficiency
             </span>
             .
           </h3>
+
+          <Upload />
         </div>
       </div>
       <div className="flex flex-col items-center justify-center gap-4 text-xl ">

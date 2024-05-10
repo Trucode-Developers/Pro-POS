@@ -20,6 +20,7 @@ how local.txt handles static data via index
 0= postgres://postgres:Server@2244@localhost/pos // database url
 1= postgres //database type
 2= user_serial_number
+3= storage_location
 
 
 

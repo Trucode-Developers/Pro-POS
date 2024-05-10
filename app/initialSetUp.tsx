@@ -18,10 +18,40 @@ import { useContext, useState } from "react";
 import { Triangle, Bars } from "react-loader-spinner";
 import { relaunch } from "@tauri-apps/api/process";
 import { useThemeStore } from "@/lib/store";
+import { toast } from "sonner";
+import Success from "@/components/success";
 
 export function InitialSetUp() {
-   const activeDB = useThemeStore((state) => state.activeDb);
+  const activeDB = useThemeStore((state) => state.activeDb);
+  const file_storage = useThemeStore((state) => state.storage);
+
+  const [open, setOpen] = useState(false);
   const [url, setUrl] = useState("");
+  const [path, setFilePath] = useState("");
+
+  const updateStoragePath = async () => {
+
+    if (path === "") {
+      setFilePath("local-storage");
+    }
+    console.log("js path", path);
+    useThemeStore.setState({ storage: path });
+    await invoke("update_storage_path", { path })
+      .then(
+        (response) => (
+          //close the dialog
+          setOpen(false),
+          toast.success(
+            <Success
+              title="Success!"
+              message="Storage path updated successfully"
+            />,
+            { duration: 10000, position: "top-right" }
+          )
+        )
+      )
+      .catch(console.error);
+  };
 
   const changeDatabase = async () => {
     await invoke("change_db", { url })
@@ -39,11 +69,10 @@ export function InitialSetUp() {
   const refresh_page = async () => {
     await relaunch();
     // console.log("Relaunched");
-  }
-  
+  };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
           //   variant="outline"
@@ -110,7 +139,7 @@ export function InitialSetUp() {
             />
           </div>
         </div>
-        <div className="flex justify-between gap-8 ">
+        <div className="flex justify-center gap-8 ">
           {activeDB === "postgres" && (
             <button
               type="button"
@@ -126,6 +155,45 @@ export function InitialSetUp() {
             className="px-4 py-2 text-white bg-blue-900 rounded"
           >
             Save changes
+          </button>
+        </div>
+
+        <div className="grid gap-4 py-4">
+          <div className="grid items-center grid-cols-4 gap-4">
+            <Label htmlFor="name" className="text-right">
+              File storage:
+            </Label>
+            <div className="flex flex-wrap items-center col-span-3 gap-2 ">
+              <div className="capitalize ">
+                {file_storage != "local-storage"
+                  ? file_storage
+                  : "Local storage mode"}
+              </div>{" "}
+              <br />
+              <div className="text-sm italic text-primary">
+                Leave empty and save to default to local
+              </div>
+            </div>
+          </div>
+          <div className="grid items-center grid-cols-4 gap-4">
+            <Label htmlFor="username" className="text-right">
+              Path
+            </Label>
+            <Input
+              placeholder="Storage Path"
+              className="col-span-3"
+              onChange={(e) => setFilePath(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="flex justify-center gap-8 ">
+          <button
+            type="submit"
+            onClick={updateStoragePath}
+            className="px-4 py-2 text-white bg-blue-900 rounded"
+          >
+            Update path
           </button>
         </div>
       </DialogContent>
