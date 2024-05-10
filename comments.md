@@ -86,33 +86,35 @@
 ## END OF app/error.tsx
 ## .github/workflows/main.yml
 ## END OF .github/workflows/main.yml
-## src-tauri/src/routes/mod.rs
-## END OF src-tauri/src/routes/mod.rs
 ## app/admin/users/userCrud.tsx
 ## END OF app/admin/users/userCrud.tsx
-## src-tauri/Cargo.toml
-## END OF src-tauri/Cargo.toml
 ## app/admin/users/page.tsx
 ## END OF app/admin/users/page.tsx
 ## app/page.tsx
 ## END OF app/page.tsx
 ## src/lib/types/users.ts
 ## END OF src/lib/types/users.ts
-## app/admin/users/upload.tsx
-## END OF app/admin/users/upload.tsx
 ## /Users/silomalo/.cargo/registry/src/index.crates.io-6f17d22bba15001f/base64-0.22.1/src/lib.rs
 ## END OF /Users/silomalo/.cargo/registry/src/index.crates.io-6f17d22bba15001f/base64-0.22.1/src/lib.rs
 ## deployment.txt
 ## END OF deployment.txt
 ## guiding.txt
 ## END OF guiding.txt
-## src-tauri/src/main.rs
-## END OF src-tauri/src/main.rs
+## src-tauri/Cargo.toml
+## END OF src-tauri/Cargo.toml
+## app/admin/users/upload.tsx
+## END OF app/admin/users/upload.tsx
 ## src/lib/store.ts
 ## END OF src/lib/store.ts
-## app/initialSetUp.tsx
-## END OF app/initialSetUp.tsx
-
 ## src-tauri/src/routes/global.rs
-
 ## END OF src-tauri/src/routes/global.rs
+## src-tauri/src/routes/mod.rs
+## END OF src-tauri/src/routes/mod.rs
+## src-tauri/src/settings/mod.rs
+## END OF src-tauri/src/settings/mod.rs
+## src-tauri/src/main.rs
+## END OF src-tauri/src/main.rs
+
+## app/initialSetUp.tsx
+
+## END OF app/initialSetUp.tsx

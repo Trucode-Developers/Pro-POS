@@ -32,26 +32,25 @@ export default function Upload() {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => {
-       if (reader.result) {
-         resolve((reader.result as string).split(",")[1]);
-       } else {
-         reject("No result found");
-       }
+        if (reader.result) {
+          resolve((reader.result as string).split(",")[1]);
+        } else {
+          reject("No result found");
+        }
       };
       reader.onerror = (error) => reject(error);
       reader.readAsDataURL(file);
     });
   };
 
-// const convertToBase64 = async (file:any) => {
-//   return new Promise((resolve, reject) => {
-//     const reader = new FileReader();
-//     reader.onload = () => resolve(reader.result.split(",")[1]);
-//     reader.onerror = (error) => reject(error);
-//     reader.readAsDataURL(file);
-//   });
-// };
-
+  // const convertToBase64 = async (file:any) => {
+  //   return new Promise((resolve, reject) => {
+  //     const reader = new FileReader();
+  //     reader.onload = () => resolve(reader.result.split(",")[1]);
+  //     reader.onerror = (error) => reject(error);
+  //     reader.readAsDataURL(file);
+  //   });
+  // };
 
   const onSubmit = async (data: TypeFileSchema) => {
     console.log("data", data);
@@ -68,20 +67,65 @@ export default function Upload() {
     }
   };
 
+  const key = "db-edited";
+  const value = "localhost";
+
+  const keyValue = async () => {
+    try {
+      const response: any = await invoke("save_store_value", { key, value });
+      toast.success("Successfully");
+    } catch (error: any) {
+      toast.error("Creation failed, check your inputs and try again");
+    }
+  };
+
+  const getValue = async () => {
+    try {
+      const response: any = await invoke("get_store_value", { key });
+      toast.success(response);
+    } catch (error: any) {
+      toast.error("Creation failed, check your inputs and try again");
+    }
+  };
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="p-5 m-2 bg-white rounded">
-        <h1>Upload File</h1>
-        <input
-          type="file"
-          onChange={(event) => {
-            const file = event.target.files?.[0];
-            if (file) {
-              uploadFile(file);
-            }
-          }}
-        />
+    <div>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="p-5 m-2 bg-white rounded">
+          <h1>Upload File</h1>
+          <input
+            type="file"
+            onChange={(event) => {
+              const file = event.target.files?.[0];
+              if (file) {
+                uploadFile(file);
+              }
+            }}
+          />
+        </div>
+        <h1>Preview</h1>
+        {image && (
+          <img
+            src={URL.createObjectURL(image)}
+            alt="preview"
+            className="w-1/4 h-1/4"
+          />
+        )}
+      </form>
+      <div className="flex justify-between gap-4">
+        <button
+          onClick={keyValue}
+          className="p-2 m-2 text-white bg-blue-500 rounded"
+        >
+          Push
+        </button>
+        <button
+          onClick={getValue}
+          className="p-2 m-2 text-white bg-blue-500 rounded"
+        >
+          Get Value
+        </button>
       </div>
-    </form>
+    </div>
   );
 }

@@ -30,23 +30,20 @@ export function InitialSetUp() {
   const [path, setFilePath] = useState("");
 
   const updateStoragePath = async () => {
-
-    if (path === "") {
-      setFilePath("local-storage");
-    }
-    console.log("js path", path);
-    useThemeStore.setState({ storage: path });
     await invoke("update_storage_path", { path })
       .then(
-        (response) => (
-          //close the dialog
-          setOpen(false),
+        (response: any) => (
+          setOpen(false), //close the dialog
+          useThemeStore.setState({ storage: response }),
           toast.success(
             <Success
               title="Success!"
-              message="Storage path updated successfully"
+              message={"Storage Path Updated Successfully "}
             />,
-            { duration: 10000, position: "top-right" }
+            {
+              duration: 10000,
+              position: "top-right",
+            }
           )
         )
       )
@@ -163,21 +160,16 @@ export function InitialSetUp() {
             <Label htmlFor="name" className="text-right">
               File storage:
             </Label>
-            <div className="flex flex-wrap items-center col-span-3 gap-2 ">
-              <div className="capitalize ">
-                {file_storage != "local-storage"
-                  ? file_storage
-                  : "Local storage mode"}
-              </div>{" "}
-              <br />
+            <div className="flex flex-wrap items-center col-span-3 gap-2 cursor-default select-none ">
+              <div className="font-bold opacity-30">{file_storage} </div>
               <div className="text-sm italic text-primary">
-                Leave empty and save to default to local
+                (Leave empty and save to default to local)
               </div>
             </div>
           </div>
           <div className="grid items-center grid-cols-4 gap-4">
             <Label htmlFor="username" className="text-right">
-              Path
+              Set Path:
             </Label>
             <Input
               placeholder="Storage Path"

@@ -36,7 +36,7 @@ export const useThemeStore = create<ThemeState & ThemeActions>()(
       adminPopUpSize: [50, 50],
       isPopUpOpen: false,
       permissions: [],
-      storage: "local-storage",
+      storage: "",
 
       darkMode: () =>
         set((state) => ({
