@@ -1,6 +1,7 @@
 // use bcrypt::{hash, verify, DEFAULT_COST};
-use crate::db_connections::{update_file, DbPool, PoolType};
+use crate::db_connections::{DbPool, PoolType};
 use crate::routes::roles::get_allocated_permission_slugs;
+use crate::settings::global::save_store_value;
 use bcrypt::verify;
 use bcrypt::{hash, DEFAULT_COST};
 use serde::{Deserialize, Serialize};
@@ -37,7 +38,11 @@ pub async fn login(credentials: Credentials, state: State<'_, DbPool>) -> Result
                         let permissions =
                             get_allocated_permission_slugs(serial_number.clone(), state.clone())
                                 .await;
-                        let _ = update_file(&serial_number.clone(), 2);
+                        // let _ = update_file(&serial_number.clone(), 2);
+                        let _ = save_store_value(
+                            "user_serial_number".to_string(),
+                            serial_number.clone(),
+                        );
                         let json = json!({ "status": 200, "serial_number": serial_number, "permissions": permissions });
                         Ok(json)
                     } else {
@@ -67,6 +72,10 @@ pub async fn login(credentials: Credentials, state: State<'_, DbPool>) -> Result
                         let permissions =
                             get_allocated_permission_slugs(serial_number.clone(), state.clone())
                                 .await;
+                        let _ = save_store_value(
+                            "user_serial_number".to_string(),
+                            serial_number.clone(),
+                        );
                         let json = json!({ "status": 200, "serial_number": serial_number, "permissions": permissions });
                         Ok(json)
                     } else {

@@ -36,13 +36,13 @@ pub fn upload_file(file_data: String, name: String) -> Result<String, String> {
 pub fn get_path(path: &str) -> PathBuf {
     let set_path = get_store_value("storage_path".to_string()).unwrap_or_default();
     if set_path.is_empty() || set_path == "" || set_path == " " {
-        let uploads_dir = local_path().join(path);
+        let uploads_dir = local_home_path().join(path);
         uploads_dir
     } else {
         PathBuf::from(set_path).join(path)
     }
 }
-pub fn local_path() -> PathBuf {
+pub fn local_home_path() -> PathBuf {
     let home_dir = home_dir().unwrap_or_else(|| PathBuf::from("."));
     let default_dir = home_dir.join("truepos/");
     default_dir
@@ -52,8 +52,8 @@ pub fn local_path() -> PathBuf {
 #[tauri::command]
 pub async fn update_storage_path(path: String) -> Result<String, String> {
     if path.is_empty() || path == "" || path == " " {
-       let _ = save_store_value("storage_path".to_string(), local_path().to_string_lossy().to_string());
-         Ok(local_path().to_string_lossy().to_string())
+       let _ = save_store_value("storage_path".to_string(), local_home_path().to_string_lossy().to_string());
+         Ok(local_home_path().to_string_lossy().to_string())
     }else{
         let _ = save_store_value("storage_path".to_string(), path.clone());
         Ok(path)
@@ -82,13 +82,19 @@ pub fn get_store_value(key: String) -> Option<String> {
     let x = store.lock().unwrap().0.get(&key).cloned();
     x
 }
-fn get_store_file_path() -> PathBuf {
-    // use data_dir() instead of home_dir() to get the data directory for the current user
-    let data_dir = data_dir().unwrap_or_else(|| PathBuf::from("."));
-    let files_dir = data_dir.join("truepos/");
+
+#[tauri::command]
+pub fn get_store_file_path() -> PathBuf {
+    let files_dir = local_data_path();
     std::fs::create_dir_all(&files_dir).unwrap_or_default(); // create the directory if it doesn't exist
     let file_name = "store.tr";
     files_dir.join(file_name)
+}
+
+pub fn local_data_path() -> PathBuf {
+    let data_dir = data_dir().unwrap_or_else(|| PathBuf::from("."));
+    let data_dir_path = data_dir.join("truepos/");
+    data_dir_path
 }
 
 fn load_store() -> Store {

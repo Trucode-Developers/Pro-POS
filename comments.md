@@ -16,8 +16,6 @@
 ## END OF src/components/info.tsx
 ## src-tauri/src/routes/permissions.rs
 ## END OF src-tauri/src/routes/permissions.rs
-## src-tauri/src/routes/login.rs
-## END OF src-tauri/src/routes/login.rs
 ## src-tauri/migrations/20240320202335_branches_table.sql
 ## END OF src-tauri/migrations/20240320202335_branches_table.sql
 ## src-tauri/migrations/20230926202334_user_table.sql
@@ -30,8 +28,6 @@
 ## END OF src-tauri/migrations/postgres/0002_branches_table.sql
 ## src-tauri/migrations/sqlite/0002_branches_table.sql
 ## END OF src-tauri/migrations/sqlite/0002_branches_table.sql
-## src-tauri/src/db_connections.rs
-## END OF src-tauri/src/db_connections.rs
 ## src-tauri/src/routes/users.rs
 ## END OF src-tauri/src/routes/users.rs
 ## app/admin/dashboard.tsx
@@ -102,8 +98,6 @@
 ## END OF guiding.txt
 ## src-tauri/Cargo.toml
 ## END OF src-tauri/Cargo.toml
-## app/admin/users/upload.tsx
-## END OF app/admin/users/upload.tsx
 ## src/lib/store.ts
 ## END OF src/lib/store.ts
 ## src-tauri/src/routes/global.rs
@@ -112,9 +106,17 @@
 ## END OF src-tauri/src/routes/mod.rs
 ## src-tauri/src/settings/mod.rs
 ## END OF src-tauri/src/settings/mod.rs
+## app/initialSetUp.tsx
+## END OF app/initialSetUp.tsx
+## src-tauri/src/settings/global.rs
+## END OF src-tauri/src/settings/global.rs
+## src-tauri/src/routes/login.rs
+## END OF src-tauri/src/routes/login.rs
 ## src-tauri/src/main.rs
 ## END OF src-tauri/src/main.rs
+## app/admin/users/upload.tsx
+## END OF app/admin/users/upload.tsx
 
-## app/initialSetUp.tsx
+## src-tauri/src/db_connections.rs
 
-## END OF app/initialSetUp.tsx
+## END OF src-tauri/src/db_connections.rs

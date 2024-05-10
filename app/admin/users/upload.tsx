@@ -67,26 +67,26 @@ export default function Upload() {
     }
   };
 
-  const key = "db-edited";
-  const value = "localhost";
+  // const key = "db-edited";
+  // const value = "localhost";
 
-  const keyValue = async () => {
-    try {
-      const response: any = await invoke("save_store_value", { key, value });
-      toast.success("Successfully");
-    } catch (error: any) {
-      toast.error("Creation failed, check your inputs and try again");
-    }
-  };
+  // const keyValue = async () => {
+  //   try {
+  //     const response: any = await invoke("save_store_value", { key, value });
+  //     toast.success("Successfully");
+  //   } catch (error: any) {
+  //     toast.error("Creation failed, check your inputs and try again");
+  //   }
+  // };
 
-  const getValue = async () => {
-    try {
-      const response: any = await invoke("get_store_value", { key });
-      toast.success(response);
-    } catch (error: any) {
-      toast.error("Creation failed, check your inputs and try again");
-    }
-  };
+  // const getValue = async () => {
+  //   try {
+  //     const response: any = await invoke("get_store_value", { key });
+  //     toast.success(response);
+  //   } catch (error: any) {
+  //     toast.error("Creation failed, check your inputs and try again");
+  //   }
+  // };
 
   return (
     <div>
@@ -112,7 +112,7 @@ export default function Upload() {
           />
         )}
       </form>
-      <div className="flex justify-between gap-4">
+      {/* <div className="flex justify-between gap-4">
         <button
           onClick={keyValue}
           className="p-2 m-2 text-white bg-blue-500 rounded"
@@ -125,7 +125,7 @@ export default function Upload() {
         >
           Get Value
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }
