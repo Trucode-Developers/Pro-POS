@@ -86,8 +86,6 @@
 ## END OF app/admin/users/userCrud.tsx
 ## app/admin/users/page.tsx
 ## END OF app/admin/users/page.tsx
-## app/page.tsx
-## END OF app/page.tsx
 ## src/lib/types/users.ts
 ## END OF src/lib/types/users.ts
 ## /Users/silomalo/.cargo/registry/src/index.crates.io-6f17d22bba15001f/base64-0.22.1/src/lib.rs
@@ -96,27 +94,19 @@
 ## END OF deployment.txt
 ## guiding.txt
 ## END OF guiding.txt
-## src-tauri/Cargo.toml
-## END OF src-tauri/Cargo.toml
 ## src/lib/store.ts
 ## END OF src/lib/store.ts
 ## src-tauri/src/routes/global.rs
 ## END OF src-tauri/src/routes/global.rs
 ## src-tauri/src/routes/mod.rs
 ## END OF src-tauri/src/routes/mod.rs
-## src-tauri/src/settings/mod.rs
-## END OF src-tauri/src/settings/mod.rs
 ## app/initialSetUp.tsx
 ## END OF app/initialSetUp.tsx
-## src-tauri/src/settings/global.rs
-## END OF src-tauri/src/settings/global.rs
 ## src-tauri/src/routes/login.rs
 ## END OF src-tauri/src/routes/login.rs
-## src-tauri/src/main.rs
-## END OF src-tauri/src/main.rs
 ## app/admin/users/upload.tsx
 ## END OF app/admin/users/upload.tsx
-
 ## src-tauri/src/db_connections.rs
-
 ## END OF src-tauri/src/db_connections.rs
+## src-tauri/src/settings/global.rs
+## END OF src-tauri/src/settings/global.rs

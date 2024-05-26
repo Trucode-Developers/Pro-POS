@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import Loading from "@/components/loading";
 import { useState } from "react";
 import Upload from "./admin/users/upload";
+import Connector from "./connector";
 
 export default function Page() {
   const font = useThemeStore((state) => state.fontSize);
@@ -94,6 +95,10 @@ export default function Page() {
           </h3>
 
           <Upload />
+<Connector />
+
+
+          
         </div>
       </div>
       <div className="flex flex-col items-center justify-center gap-4 text-xl ">

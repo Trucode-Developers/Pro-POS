@@ -16,7 +16,7 @@ use std::sync::{Arc, Mutex};
 
 #[tauri::command]
 pub fn upload_file(file_data: String, name: String) -> Result<String, String> {
-    let uploads_dir = get_path("user/folder");
+    let uploads_dir = get_path("user/donald");
 
     std::fs::create_dir_all(&uploads_dir).map_err(|err| err.to_string())?;
 
