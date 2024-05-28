@@ -4,8 +4,6 @@
 ## END OF src-tauri/src/routes/auth.rs
 ## app/cashier/sale.tsx
 ## END OF app/cashier/sale.tsx
-## app/initiator.tsx
-## END OF app/initiator.tsx
 ## package.json
 ## END OF package.json
 ## src/components/error.tsx
@@ -90,10 +88,6 @@
 ## END OF src/lib/types/users.ts
 ## /Users/silomalo/.cargo/registry/src/index.crates.io-6f17d22bba15001f/base64-0.22.1/src/lib.rs
 ## END OF /Users/silomalo/.cargo/registry/src/index.crates.io-6f17d22bba15001f/base64-0.22.1/src/lib.rs
-## deployment.txt
-## END OF deployment.txt
-## guiding.txt
-## END OF guiding.txt
 ## src/lib/store.ts
 ## END OF src/lib/store.ts
 ## src-tauri/src/routes/global.rs
@@ -108,5 +102,3 @@
 ## END OF app/admin/users/upload.tsx
 ## src-tauri/src/db_connections.rs
 ## END OF src-tauri/src/db_connections.rs
-## src-tauri/src/settings/global.rs
-## END OF src-tauri/src/settings/global.rs

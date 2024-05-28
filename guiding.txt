@@ -28,7 +28,7 @@ how local.txt handles static data via index
 
 CONNECTING TWO LAPTOPS/COMPUTERS ON THE SAME NETWORK
 
-// connect botht the laptops/computers on the same network
+// connect both the laptops/computers on the same network
 // remember we user 129.168.0.0 for wireless connection and 192.168.1.0 for wired connection. Though this ight change over time 
 
 Windows as the server
@@ -65,5 +65,5 @@ Allowing port through Windows defender, Open the PostgreSQL server's firewall:
 // Provide a name for the rule, such as "PostgreSQL Server", and click "Finish".
 
 
-//The final expected outpu should be:
+//The final expected output should be:
 postgres://postgres:Server@2244@192.168.0.105:5433/pos

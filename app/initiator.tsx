@@ -45,6 +45,7 @@ export default function Initiator() {
     try {
       const response = await invoke("current_active_db");
       if (typeof response === "string") {
+        console.error("Response is a string:", response);
         useThemeStore.setState({ activeDb: response });
       } else {
         // console.error("Response is not a string:", response);

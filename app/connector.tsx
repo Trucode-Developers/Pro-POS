@@ -1,58 +1,55 @@
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 
-
-
 const Connector = () => {
   const [isServer, setIsServer] = useState(true);
-    const [serverPort, setServerAddr] = useState("");
-    
+  const [serverPort, setServerAddr] = useState("");
 
-    async function broadcastService() {
-      const dbUrl = "postgresql://username:password@localhost:5432/database";
-      const storagePath = "/path/to/shared/folder";
-      const address:string = await invoke("start_server", { dbUrl, storagePath });
-      console.log("Server started at:", address);
-      setServerAddr(address);
-    }
-    async function stopbroadcastService() {
-      const address: string = await invoke("stop_broadcast");
-      console.log("Server stopped at:", address);
+  async function broadcastService() {
+    const address: string = await invoke("start_server");
+    console.log("Server started at:", address);
+    setServerAddr(address);
+  }
+  async function stopbroadcastService() {
+    const address: string = await invoke("stop_broadcast");
+    console.log("Server stopped at:", address);
+  }
+
+  async function scanService() {
+    //example serverPort only
+    let port = serverPort.split(":")[1];
+    let ip = serverPort.split(":")[0];
+    //convert to number
+    let broadcastPort = parseInt(port);
+    console.log("Scanning for servers on port:", broadcastPort);
+    console.log("Scanning for servers on ip:", ip);
+    // const availableServers: any = await invoke("scan_for_servers", {
+    //   broadcastPort,
+    // });
+    const availableServers: any = await invoke("scan_for_servers", {
+      ip,
+      broadcastPort,
+    });
+
+    // If availableServers is null
+    if (!availableServers) {
+      console.log("No servers found");
+      return;
     }
 
-    async function scanService() {
-      //example serverPort only
-      let port = serverPort.split(":")[1];
-      let ip = serverPort.split(":")[0];
-      //convert to number
-      let broadcastPort = parseInt(port);
-      console.log("Scanning for servers on port:", broadcastPort);
-      console.log("Scanning for servers on ip:", ip);
-      // const availableServers: any = await invoke("scan_for_servers", {
-      //   broadcastPort,
-      // });
-      const availableServers: any = await invoke("scan_for_servers", {
-        ip,broadcastPort
-      });
-      //if availableServers is null
-      if (!availableServers) {
-        console.log("No servers found");
-        return;
-      }
-      if (availableServers.length > 0) {
-        console.log("Available servers:");
-        availableServers.forEach((server: [string, string, string]) => {
-          const [serverAddr, dbUrl, storagePath] = server;
-          console.log("Server Address:", serverAddr);
-          console.log("Database URL:", dbUrl);
-          console.log("Storage Path:", storagePath);
-          console.log("---");
-        });
-      } else {
-        console.log("No servers found");
-      }
+    console.log("response json:", availableServers);
+
+    // Extract db_url and storage_path
+    const { db_url, storage_path } = availableServers;
+
+    if (db_url && storage_path) {
+      console.log("Database URL:", db_url);
+      console.log("Storage Path:", storage_path);
+    } else {
+      console.log("Required data not found in the response");
     }
-    
+  }
+
   return (
     <div>
       <h1>{isServer ? "Server Mode" : "Client Mode"}</h1>
@@ -69,7 +66,7 @@ const Connector = () => {
           className="p-4 text-white bg-red-500 rounded"
           onClick={stopbroadcastService}
         >
-         Stop Broadcasting
+          Stop Broadcasting
         </button>
       </div>
     </div>

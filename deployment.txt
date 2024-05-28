@@ -4,4 +4,12 @@ Do the flloowinf to trigger github workflow set:
      git push --tags
     or push and manually trigger github workflow
 
+//progress
+I have been  able to create a secure encrypted store.tr
+Used rpc to get server details and send to client
 
+//next
+create a good interface to switch between single node and multi node using trpc
+create a interface to start, load server and stop server and get port number $ip
+add role for initiating server
+create interface to scan as client 
