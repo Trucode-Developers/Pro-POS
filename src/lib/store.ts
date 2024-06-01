@@ -15,6 +15,7 @@ export type ThemeState = {
   isPopUpOpen: boolean;
   permissions: string[];
   storage: string;
+  server_running: string;
 };
 
 export type ThemeActions = {
@@ -37,6 +38,7 @@ export const useThemeStore = create<ThemeState & ThemeActions>()(
       isPopUpOpen: false,
       permissions: [],
       storage: "",
+      server_running: "",
 
       darkMode: () =>
         set((state) => ({

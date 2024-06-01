@@ -6,11 +6,15 @@ import {
   HiIdentification,
   HiInboxArrowDown,
   HiNewspaper,
-  
 } from "react-icons/hi2";
 import img from "./report.png";
-import {  MdCastForEducation, MdDeviceHub } from "react-icons/md";
-import {VscCircuitBoard, VscKey, VscOrganization } from "react-icons/vsc";
+import { MdCastForEducation, MdDeviceHub } from "react-icons/md";
+import {
+  VscCircuitBoard,
+  VscKey,
+  VscOrganization,
+  VscSettingsGear,
+} from "react-icons/vsc";
 export const data = [
   {
     id: 1,
@@ -122,6 +126,12 @@ export const data = [
         title: "Roles",
         icon: VscKey,
         link: "/admin/roles",
+      },
+      {
+        id: 4,
+        title: "Settings",
+        icon: VscSettingsGear,
+        link: "/admin/settings",
       },
     ],
   },

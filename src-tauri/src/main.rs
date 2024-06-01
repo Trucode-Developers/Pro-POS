@@ -2,7 +2,7 @@
 
 mod routes;
 use routes::branches::{create_branch, delete_branch, get_all_branches, update_branch};
-use routes::login::login;
+use routes::login::{login, unload_resources};
 use routes::permissions::get_all_permissions;
 use routes::roles::{
     create_role, delete_role, get_all_roles, get_allocated_permission_slugs, get_assigned_roles,
@@ -15,6 +15,7 @@ use settings::server::{scan_for_servers, start_server, stop_broadcast};
 
 pub mod db_connections;
 use db_connections::establish_database_connection;
+
 
 #[tauri::command]
 async fn change_db(url: String) -> String {
@@ -68,7 +69,22 @@ async fn main() {
             start_server,
             scan_for_servers, //pass the ip and port to scan for servers
             stop_broadcast,
+            unload_resources,
         ])
+           .on_window_event(|event| {
+            if let tauri::WindowEvent::CloseRequested { api, .. } = event.event() {
+                api.prevent_close();
+                let window = event.window().clone();
+                std::thread::spawn(move || {
+                    // Call the unload_resources function here
+                    window.emit("before-close", {}).unwrap();
+                    // Delay for a short period to ensure resources are unloaded
+                    std::thread::sleep(std::time::Duration::from_millis(100));
+                    window.close().unwrap();
+                });
+            }
+        })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
+

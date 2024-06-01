@@ -4,8 +4,9 @@ import Image from "next/image";
 import { invoke } from "@tauri-apps/api/tauri";
 import Link from "next/link";
 import { VscAccount, VscGear, VscWorkspaceTrusted } from "react-icons/vsc";
-import { InitialSetUp } from "./initialSetUp";
+import InitialSetUp from "./initialSetUp";
 import logo from "@/public/pos.png";
+import { listen } from "@tauri-apps/api/event";
 
 // const inter = Inter({ subsets: ["latin"] });
 import { cn } from "@/lib/utils";
@@ -16,9 +17,9 @@ import { LoginSchema, TypeLoginSchema } from "@/lib/types/users";
 import CustomInput from "@/components/custom/input";
 import { useRouter } from "next/navigation";
 import Loading from "@/components/loading";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Upload from "./admin/users/upload";
-import Connector from "./connector";
+// import Connector from "./admin/settings/server";
 
 export default function Page() {
   const font = useThemeStore((state) => state.fontSize);
@@ -67,6 +68,30 @@ export default function Page() {
   //   useThemeStore.setState({ token: null });
   // };
 
+
+  //very important to unload resources before closing the app
+     useEffect(() => {
+       const setupBeforeCloseListener = async () => {
+         console.log("Setting up before-close listener");
+
+         const unlisten = await listen("before-close", async () => {
+           console.log("Before-close event triggered");
+           // Place your resource unloading logic here
+           useThemeStore.setState({ server_running: "" });
+           useThemeStore.setState({ permissions: [] });
+           useThemeStore.setState({ token: null });
+
+           await invoke("unload_resources");
+         });
+
+         return () => {
+           unlisten();
+         };
+       };
+
+       setupBeforeCloseListener();
+     }, []);
+
   return (
     <main className="relative grid min-h-screen md:grid-cols-2">
       <div className="flex-col items-center justify-center hidden gap-4 px-2 bg-gray-300 md:flex md:px-4">
@@ -95,10 +120,7 @@ export default function Page() {
           </h3>
 
           <Upload />
-<Connector />
-
-
-          
+          {/* <Connector /> */}
         </div>
       </div>
       <div className="flex flex-col items-center justify-center gap-4 text-xl ">

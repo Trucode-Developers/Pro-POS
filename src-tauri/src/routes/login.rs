@@ -233,3 +233,10 @@ pub async fn verify_session(serial_number: &str, state: State<'_, DbPool>) -> Op
 // fn verify(serial_number: &str, token: &str) -> Result<bool, bcrypt::BcryptError> {
 //     verify(serial_number, token)
 // }
+
+#[tauri::command]
+pub fn unload_resources() {
+    // remove the user_serial_number(token) from the store
+    let _ = save_store_value("user_serial_number".to_string(), "".to_string());
+    println!("Unloading resources...");
+}

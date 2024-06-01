@@ -124,7 +124,7 @@ fn save_store(store: &StoreData) {
             .open(get_store_file_path())
             .unwrap(),
     );
-    println!("store");
+    // println!("store");
     serde_json::to_writer(&mut file, store).unwrap();
 }
 

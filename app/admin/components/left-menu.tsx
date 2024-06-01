@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { data } from "./services_data";
+import { data } from "./menu_data";
 import Image from "next/image";
 import { HiMenuAlt3 } from "react-icons/hi";
 import { MdOutlineDashboard } from "react-icons/md";

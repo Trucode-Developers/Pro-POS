@@ -56,8 +56,6 @@
 ## END OF app/admin/branches/branchesCrud.tsx
 ## app/admin/branches/page.tsx
 ## END OF app/admin/branches/page.tsx
-## app/layout.tsx
-## END OF app/layout.tsx
 ## src/components/customSheet.tsx
 ## END OF src/components/customSheet.tsx
 ## app/custom.css
@@ -68,14 +66,10 @@
 ## END OF app/admin/layout.tsx
 ## src/components/zoom.tsx
 ## END OF src/components/zoom.tsx
-## app/admin/components/services_data.tsx
-## END OF app/admin/components/services_data.tsx
 ## tailwind.config.js
 ## END OF tailwind.config.js
 ## app/admin/components/profile.tsx
 ## END OF app/admin/components/profile.tsx
-## app/admin/components/left-menu.tsx
-## END OF app/admin/components/left-menu.tsx
 ## app/error.tsx
 ## END OF app/error.tsx
 ## .github/workflows/main.yml
@@ -88,16 +82,10 @@
 ## END OF src/lib/types/users.ts
 ## /Users/silomalo/.cargo/registry/src/index.crates.io-6f17d22bba15001f/base64-0.22.1/src/lib.rs
 ## END OF /Users/silomalo/.cargo/registry/src/index.crates.io-6f17d22bba15001f/base64-0.22.1/src/lib.rs
-## src/lib/store.ts
-## END OF src/lib/store.ts
 ## src-tauri/src/routes/global.rs
 ## END OF src-tauri/src/routes/global.rs
 ## src-tauri/src/routes/mod.rs
 ## END OF src-tauri/src/routes/mod.rs
-## app/initialSetUp.tsx
-## END OF app/initialSetUp.tsx
-## src-tauri/src/routes/login.rs
-## END OF src-tauri/src/routes/login.rs
 ## app/admin/users/upload.tsx
 ## END OF app/admin/users/upload.tsx
 ## src-tauri/src/db_connections.rs
