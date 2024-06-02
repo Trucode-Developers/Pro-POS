@@ -20,32 +20,23 @@ pub struct User {
     pub is_active: bool,
 }
 
-// #[derive(Error, Serialize, Debug)]
-// pub enum CustomError {
-//     #[error("An error occurred")]
-//     GenericError,
-// }
-
 #[tauri::command]
 pub async fn greet(name: String) -> String {
     format!("Hello, {}!", name)
 }
 
 #[tauri::command]
-pub async fn create(token: String, user: User, state: State<'_, DbPool>) -> Result<Value, Value> {
+pub async fn create(user: User, state: State<'_, DbPool>) -> Result<Value, Value> {
+    let staff_number = verify_session(state.clone()).await;
     let hashed_password = hash(user.password.clone(), DEFAULT_COST).unwrap();
-    let staff_number = verify_session(&token.clone(), state.clone()).await;
-    if staff_number.is_some() {
-        println!("Staff number: {}", staff_number.clone().unwrap());
-        // Continue with the rest of your code
-    } else {
-        println!("Invalid session or user not found");
-        // Handle the case where the staff number is not found
+
+    if staff_number.clone() == "not-authed" {
         return Err(json!({
             "status": 401,
-            "message":"Unauthorized: Invalid session, user not found"
+            "message":"Unauthorized: Invalid session, Kindly login again"
         }));
     }
+
     match &state.pool {
         PoolType::Postgres(pool) => {
             let query = "INSERT INTO users (serial_number,staff_number,name, role, email, password, is_active,created_by) VALUES ($1, $2, $3, $4, $5,$6,$7,$8) RETURNING id";

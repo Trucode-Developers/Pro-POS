@@ -1,7 +1,9 @@
+use sqlx::Error;
+
 // use bcrypt::{hash, verify, DEFAULT_COST};
 use crate::db_connections::{DbPool, PoolType};
 use crate::routes::roles::get_allocated_permission_slugs;
-use crate::settings::global::save_store_value;
+use crate::settings::global::{get_store_value, save_store_value};
 use bcrypt::verify;
 use bcrypt::{hash, DEFAULT_COST};
 use serde::{Deserialize, Serialize};
@@ -34,15 +36,22 @@ pub async fn login(credentials: Credentials, state: State<'_, DbPool>) -> Result
             match result {
                 Ok((serial_number, db_password)) => {
                     if verify(&password, &db_password).unwrap() {
-                        _ = create_user_session(serial_number.clone(), state.clone()).await;
+                        let token = hash(serial_number.clone(), DEFAULT_COST).unwrap();
+                        _ = create_user_session(
+                            serial_number.clone(),
+                            token.clone(),
+                            state.clone(),
+                        )
+                        .await;
                         let permissions =
                             get_allocated_permission_slugs(serial_number.clone(), state.clone())
                                 .await;
-                        // let _ = update_file(&serial_number.clone(), 2);
+                        let _ = save_store_value("user_hashed_token".to_string(), token.clone());
                         let _ = save_store_value(
                             "user_serial_number".to_string(),
                             serial_number.clone(),
                         );
+
                         let json = json!({ "status": 200, "serial_number": serial_number, "permissions": permissions });
                         Ok(json)
                     } else {
@@ -66,12 +75,19 @@ pub async fn login(credentials: Credentials, state: State<'_, DbPool>) -> Result
             println!("{:?}", result);
             match result {
                 Ok((serial_number, db_password)) => {
-                    println!("Serial Number: {}", serial_number);
+                    // println!("Serial Number: {}", serial_number);
                     if verify(&password, &db_password).unwrap() {
-                        _ = create_user_session(serial_number.clone(), state.clone()).await;
+                        let token = hash(serial_number.clone(), DEFAULT_COST).unwrap();
+                        _ = create_user_session(
+                            serial_number.clone(),
+                            token.clone(),
+                            state.clone(),
+                        )
+                        .await;
                         let permissions =
                             get_allocated_permission_slugs(serial_number.clone(), state.clone())
                                 .await;
+                        let _ = save_store_value("user_hashed_token".to_string(), token.clone());
                         let _ = save_store_value(
                             "user_serial_number".to_string(),
                             serial_number.clone(),
@@ -97,10 +113,9 @@ pub async fn login(credentials: Credentials, state: State<'_, DbPool>) -> Result
 
 pub async fn create_user_session(
     serial_number: String,
+    token: String,
     state: State<'_, DbPool>,
 ) -> Result<Value, Value> {
-    let token = hash(serial_number.clone(), DEFAULT_COST).unwrap();
-
     match &state.pool {
         PoolType::Postgres(pool) => {
             let count: (i64,) =
@@ -148,90 +163,129 @@ pub async fn create_user_session(
     }
 }
 
-// pub async fn get_user_id(state: State<'_, DbPool>) -> i32 {
-//     let serial_number = read_specific_line(2).unwrap();
-//     print!("Serial Number: {}", serial_number);
-//     //check is postgres or sqlite in users table where serial_number = serial_number return user.id else return 0
-//     match &state.pool {
-//         PoolType::Postgres(pool) => {
-//             let query = "SELECT id FROM users WHERE serial_number = $1";
-//             let result = sqlx::query_as::<_, UserRow>(query)
-//                 .bind(&serial_number)
-//                 .fetch_one(pool)
-//                 .await;
-//             match result {
-//                 Ok(user) => user.id,
-//                 Err(_) => 0,
-//             }
-//         }
-//         PoolType::SQLite(pool) => {
-//             let query = "SELECT id FROM users WHERE serial_number = ?";
-//             let result = sqlx::query_as::<_, UserRow>(query)
-//                 .bind(&serial_number)
-//                 .fetch_one(pool)
-//                 .await;
-//             match result {
-//                 Ok(user) => user.id,
-//                 Err(_) => 0,
-//             }
-//         }
-//     }
-// }
-
-//token is passed here as serial_number which is the user's serial number stored in cookies and encrypted by bcrypt hash before storing to db
-pub async fn verify_session(serial_number: &str, state: State<'_, DbPool>) -> Option<String> {
-    match &state.pool {
+pub async fn verify_session(state: State<'_, DbPool>) -> String {
+    let user_token_from_file = get_store_value("user_hashed_token".to_string()).unwrap_or_default();
+    let serial_number = get_store_value("user_serial_number".to_string()).unwrap_or_default();
+    let result: Result<String, Error> = match &state.pool {
         PoolType::Postgres(pool) => {
             let session_query = "SELECT token FROM sessions WHERE user_serial_number = $1";
-            let session_result = sqlx::query_as::<_, (String,)>(session_query)
-                .bind(serial_number)
+            let token_result = sqlx::query_as::<_, (String,)>(session_query)
+                .bind(&serial_number)
                 .fetch_one(pool)
                 .await;
-
-            if let Ok((token,)) = session_result {
-                if verify(&serial_number, &token).unwrap_or(false) {
-                    let user_query = "SELECT staff_number FROM users WHERE serial_number = $1";
-                    let user_result = sqlx::query_as::<_, (String,)>(user_query)
-                        .bind(serial_number)
-                        .fetch_one(pool)
-                        .await;
-
-                    if let Ok((staff_number,)) = user_result {
-                        return Some(staff_number);
+            match token_result {
+                Ok((token,)) => {
+                    if user_token_from_file == token {
+                        let user_query = "SELECT staff_number FROM users WHERE serial_number = $1";
+                        sqlx::query_as::<_, (String,)>(user_query)
+                            .bind(&serial_number)
+                            .fetch_one(pool)
+                            .await
+                            .map(|(staff_number,)| staff_number)
+                    } else {
+                        println!("Postgres: Hashes do not match");
+                        Err(Error::RowNotFound)
                     }
                 }
+                Err(e) => {
+                    println!("Postgres session_query error: {:?}", e);
+                    Err(e)
+                }
             }
-
-            None
         }
         PoolType::SQLite(pool) => {
             let session_query = "SELECT token FROM sessions WHERE user_serial_number = ?";
-            let session_result = sqlx::query_as::<_, (String,)>(session_query)
-                .bind(serial_number)
+            let token_result = sqlx::query_as::<_, (String,)>(session_query)
+                .bind(&serial_number)
                 .fetch_one(pool)
                 .await;
-
-            if let Ok((token,)) = session_result {
-                if verify(&serial_number, &token).unwrap_or(false) {
-                    let user_query = "SELECT staff_number FROM users WHERE serial_number = ?";
-                    let user_result = sqlx::query_as::<_, (String,)>(user_query)
-                        .bind(serial_number)
-                        .fetch_one(pool)
-                        .await;
-
-                    if let Ok((staff_number,)) = user_result {
-                        return Some(staff_number);
+            match token_result {
+                Ok((token,)) => {
+                    if user_token_from_file == token {
+                        let user_query = "SELECT staff_number FROM users WHERE serial_number = ?";
+                        sqlx::query_as::<_, (String,)>(user_query)
+                            .bind(&serial_number)
+                            .fetch_one(pool)
+                            .await
+                            .map(|(staff_number,)| staff_number)
+                    } else {
+                        println!("SQLite: Hashes do not match");
+                        Err(Error::RowNotFound)
                     }
                 }
+                Err(e) => {
+                    println!("SQLite session_query error: {:?}", e);
+                    Err(e)
+                }
             }
-
-            None
         }
-    }
+    };
+
+    result.unwrap_or_else(|_| "not-authed".to_string())
 }
 
-// fn verify(serial_number: &str, token: &str) -> Result<bool, bcrypt::BcryptError> {
-//     verify(serial_number, token)
+// pub async fn verify_session(state: State<'_, DbPool>) -> Option<String> {
+//     let user_token_from_file = get_store_value("user_hashed_token".to_string()).unwrap_or_default();
+//     let serial_number = get_store_value("user_serial_number".to_string()).unwrap_or_default();
+
+//     let result: Result<Option<String>, Error> = match &state.pool {
+//         PoolType::Postgres(pool) => {
+//             let session_query = "SELECT token FROM sessions WHERE user_serial_number = $1";
+//             let token_result = sqlx::query_as::<_, (String,)>(session_query)
+//                 .bind(&serial_number)
+//                 .fetch_one(pool)
+//                 .await;
+
+//             match token_result {
+//                 Ok((token,)) => {
+//                     if user_token_from_file == token {
+//                         let user_query = "SELECT staff_number FROM users WHERE serial_number = $1";
+//                         sqlx::query_as::<_, (Option<String>,)>(user_query)
+//                             .bind(&serial_number)
+//                             .fetch_one(pool)
+//                             .await
+//                             .map(|(staff_number,)| staff_number)
+//                     } else {
+//                         println!("Postgres: Hashes do not match");
+//                         Ok(None)
+//                     }
+//                 }
+//                 Err(e) => {
+//                     println!("Postgres session_query error: {:?}", e);
+//                     Err(e)
+//                 }
+//             }
+//         }
+//         PoolType::SQLite(pool) => {
+//             let session_query = "SELECT token FROM sessions WHERE user_serial_number = ?";
+//             let token_result = sqlx::query_as::<_, (String,)>(session_query)
+//                 .bind(&serial_number)
+//                 .fetch_one(pool)
+//                 .await;
+
+//             match token_result {
+//                 Ok((token,)) => {
+//                     if user_token_from_file == token {
+//                         let user_query = "SELECT staff_number FROM users WHERE serial_number = ?";
+//                         sqlx::query_as::<_, (Option<String>,)>(user_query)
+//                             .bind(&serial_number)
+//                             .fetch_one(pool)
+//                             .await
+//                             .map(|(staff_number,)| staff_number)
+//                     } else {
+//                         println!("SQLite: Hashes do not match");
+//                         Ok(None)
+//                     }
+//                 }
+//                 Err(e) => {
+//                     println!("SQLite session_query error: {:?}", e);
+//                     Err(e)
+//                 }
+//             }
+//         }
+//     };
+
+//     result.unwrap_or(None)
 // }
 
 #[tauri::command]

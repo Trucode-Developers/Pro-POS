@@ -56,7 +56,6 @@ export const RoleSchema = z.object({
 });
 export type TypeRoleSchema = z.infer<typeof RoleSchema>;
 
-
 //files storage
 export const FileSchema = z.object({
   file: z.object({}).optional(),

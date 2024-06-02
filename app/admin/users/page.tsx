@@ -200,7 +200,7 @@ export default function Page() {
               <TableCell className="w-{100px]">{user.total_roles}</TableCell>
               <TableCell className="w-{100px]">
                 {user.is_active ? (
-                  <div className="px-2 py-1 text-center text-white  rounded-full bg-success">
+                  <div className="px-2 py-1 text-center text-white rounded-full bg-success">
                     Active
                   </div>
                 ) : (

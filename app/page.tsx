@@ -68,29 +68,28 @@ export default function Page() {
   //   useThemeStore.setState({ token: null });
   // };
 
-
   //very important to unload resources before closing the app
-     useEffect(() => {
-       const setupBeforeCloseListener = async () => {
-         console.log("Setting up before-close listener");
+  useEffect(() => {
+    const setupBeforeCloseListener = async () => {
+      console.log("Setting up before-close listener");
 
-         const unlisten = await listen("before-close", async () => {
-           console.log("Before-close event triggered");
-           // Place your resource unloading logic here
-           useThemeStore.setState({ server_running: "" });
-           useThemeStore.setState({ permissions: [] });
-           useThemeStore.setState({ token: null });
+      const unlisten = await listen("before-close", async () => {
+        console.log("Before-close event triggered");
+        // Place your resource unloading logic here
+        useThemeStore.setState({ server_running: "" });
+        useThemeStore.setState({ permissions: [] });
+        useThemeStore.setState({ token: null });
 
-           await invoke("unload_resources");
-         });
+        await invoke("unload_resources");
+      });
 
-         return () => {
-           unlisten();
-         };
-       };
+      return () => {
+        unlisten();
+      };
+    };
 
-       setupBeforeCloseListener();
-     }, []);
+    setupBeforeCloseListener();
+  }, []);
 
   return (
     <main className="relative grid min-h-screen md:grid-cols-2">

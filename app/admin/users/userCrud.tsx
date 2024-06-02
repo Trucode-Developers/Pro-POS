@@ -18,9 +18,15 @@ import Info from "@/components/info";
 import Error from "@/components/error";
 import { CustomSwitch } from "@/components/custom/switch";
 
-export default function UserCrud({roles,allocatedRoles,setAllocatedRoles, user, get_all_users, active_id }: any) {
+export default function UserCrud({
+  roles,
+  allocatedRoles,
+  setAllocatedRoles,
+  user,
+  get_all_users,
+  active_id,
+}: any) {
   const token = useThemeStore((state) => state.token);
-
 
   const {
     register,
@@ -35,8 +41,6 @@ export default function UserCrud({roles,allocatedRoles,setAllocatedRoles, user, 
   });
   const is_active = watch("is_active");
 
-  
-
   useEffect(() => {
     reset(user); // Update the form values when `user` changes
   }, [user, reset]);
@@ -47,8 +51,11 @@ export default function UserCrud({roles,allocatedRoles,setAllocatedRoles, user, 
       return;
     }
     let user = data; //as rust expects an object with a key of user
+    // console.log(user);
+    // return;
+
     try {
-      const response:any = await invoke("create", {token, user });
+      const response: any = await invoke("create", { token, user });
       if (response.status === 200) {
         toast.success("User created successfully");
       } else {
@@ -56,25 +63,20 @@ export default function UserCrud({roles,allocatedRoles,setAllocatedRoles, user, 
       }
       reset();
       get_all_users();
-    } catch (error:any) {
+    } catch (error: any) {
       // toast.error("User creation failed, check your inputs and try again");
-       toast.error(
-         <Error
-           title="Error!!!"
-           message={error.message}
-         />,
-         { duration: 10000, position: "top-right" }
-       );
+      toast.error(<Error title="Error!!!" message={error.message} />, {
+        duration: 10000,
+        position: "top-right",
+      });
       // console.error(error.message);
     }
   };
 
-
-
   const updateUser = async (data: TypeUserSchema) => {
     let user = data;
     let id = parseInt(active_id);
-    
+
     await invoke("update_user", { id, allocatedRoles, user })
       .then((response: any) => {
         if (response.status === 200) {

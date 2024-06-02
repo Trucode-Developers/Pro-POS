@@ -26,8 +26,6 @@
 ## END OF src-tauri/migrations/postgres/0002_branches_table.sql
 ## src-tauri/migrations/sqlite/0002_branches_table.sql
 ## END OF src-tauri/migrations/sqlite/0002_branches_table.sql
-## src-tauri/src/routes/users.rs
-## END OF src-tauri/src/routes/users.rs
 ## app/admin/dashboard.tsx
 ## END OF app/admin/dashboard.tsx
 ## app/admin/roles/page.tsx
@@ -74,12 +72,6 @@
 ## END OF app/error.tsx
 ## .github/workflows/main.yml
 ## END OF .github/workflows/main.yml
-## app/admin/users/userCrud.tsx
-## END OF app/admin/users/userCrud.tsx
-## app/admin/users/page.tsx
-## END OF app/admin/users/page.tsx
-## src/lib/types/users.ts
-## END OF src/lib/types/users.ts
 ## /Users/silomalo/.cargo/registry/src/index.crates.io-6f17d22bba15001f/base64-0.22.1/src/lib.rs
 ## END OF /Users/silomalo/.cargo/registry/src/index.crates.io-6f17d22bba15001f/base64-0.22.1/src/lib.rs
 ## src-tauri/src/routes/global.rs
