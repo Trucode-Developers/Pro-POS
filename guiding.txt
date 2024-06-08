@@ -64,6 +64,9 @@ Allowing port through Windows defender, Open the PostgreSQL server's firewall:
 // Click "Next" and ensure that the rule applies to all profiles (Domain, Private, and Public).
 // Provide a name for the rule, such as "PostgreSQL Server", and click "Finish".
 
-
 //The final expected output should be:
 postgres://postgres:Server@2244@192.168.0.105:5433/pos
+
+
+
+CONNECTING FOLDERS ON TWO LAPTOPS/COMPUTERS ON THE SAME NETWORK
