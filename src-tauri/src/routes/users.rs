@@ -11,13 +11,26 @@ use uuid::Uuid;
 #[derive(Serialize, Deserialize, Debug, sqlx::FromRow)]
 pub struct User {
     pub id: Option<i32>,
-    pub total_roles: Option<i32>,
-    pub name: String,
+    pub serial_number: String,
     pub staff_number: String,
-    pub role: i32,
+    pub branch_slug: String,
+    pub profile_picture: Option<String>,
+    pub name: String,
     pub email: String,
     pub password: String,
-    pub is_active: bool,
+    pub phone_no: Option<String>,
+    pub id_no: Option<String>,
+    pub date_of_birth: Option<String>,
+    pub gender: Option<String>,
+    pub country: Option<i32>,
+    pub location: Option<String>,
+    pub email_verified: bool,
+    pub phone_verified: bool,
+    pub status: bool,
+    pub description: Option<String>,
+    pub created_by: Option<String>,
+    pub created_at: Option<String>,
+    pub updated_by: Option<i32>,
 }
 
 #[tauri::command]
@@ -39,15 +52,26 @@ pub async fn create(user: User, state: State<'_, DbPool>) -> Result<Value, Value
 
     match &state.pool {
         PoolType::Postgres(pool) => {
-            let query = "INSERT INTO users (serial_number,staff_number,name, role, email, password, is_active,created_by) VALUES ($1, $2, $3, $4, $5,$6,$7,$8) RETURNING id";
+            let query = "INSERT INTO users (serial_number, staff_number, branch_slug, profile_picture, name, email, password, phone_no, id_no, date_of_birth, gender, country, location, email_verified, phone_verified, status, description, created_by) 
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18) RETURNING id";
             let result = sqlx::query(query)
                 .bind(Uuid::new_v4().to_string())
                 .bind(&user.staff_number)
+                .bind(&user.branch_slug)
+                .bind(&user.profile_picture)
                 .bind(&user.name)
-                .bind(&user.role)
                 .bind(&user.email)
                 .bind(&hashed_password)
-                .bind(&user.is_active)
+                .bind(&user.phone_no)
+                .bind(&user.id_no)
+                .bind(&user.date_of_birth)
+                .bind(&user.gender)
+                .bind(&user.country)
+                .bind(&user.location)
+                .bind(&user.email_verified)
+                .bind(&user.phone_verified)
+                .bind(&user.status)
+                .bind(&user.description)
                 .bind(staff_number)
                 .fetch_one(pool)
                 .await;
@@ -56,7 +80,7 @@ pub async fn create(user: User, state: State<'_, DbPool>) -> Result<Value, Value
                 Ok(_) => {
                     let json = json!({
                         "status": 200,
-                        "message": "Role created successfully",
+                        "message": "User created successfully",
                     });
                     Ok(json)
                 }
@@ -69,18 +93,45 @@ pub async fn create(user: User, state: State<'_, DbPool>) -> Result<Value, Value
                 }
             }
         }
-        PoolType::SQLite(pool) => {
-            let query =
-                "INSERT INTO users (serial_number,staff_number,name, role, email, password, is_active,created_by) VALUES (?,?, ?, ?, ?, ?,?,?)";
+        PoolType::SQLite(_) => {
+            // Implement SQLite version if needed
+            Err(json!({
+                "status": 501,
+                "message": "SQLite implementation not available"
+            }))
+        }
+    }
+}
+
+#[tauri::command]
+pub async fn update_user(id: i32, user: User, state: State<'_, DbPool>) -> Result<Value, Value> {
+    match &state.pool {
+        PoolType::Postgres(pool) => {
+            let query = "UPDATE users SET 
+                staff_number = $1, branch_slug = $2, profile_picture = $3, name = $4, 
+                email = $5, phone_no = $6, id_no = $7, date_of_birth = $8, gender = $9, 
+                country = $10, location = $11, email_verified = $12, phone_verified = $13, 
+                status = $14, description = $15, updated_by = $16
+                WHERE id = $17";
+
             let result = sqlx::query(query)
-                .bind(Uuid::new_v4().to_string())
                 .bind(&user.staff_number)
+                .bind(&user.branch_slug)
+                .bind(&user.profile_picture)
                 .bind(&user.name)
-                .bind(&user.role)
                 .bind(&user.email)
-                .bind(&hashed_password)
-                .bind(&user.is_active)
-                .bind(staff_number)
+                .bind(&user.phone_no)
+                .bind(&user.id_no)
+                .bind(&user.date_of_birth)
+                .bind(&user.gender)
+                .bind(&user.country)
+                .bind(&user.location)
+                .bind(&user.email_verified)
+                .bind(&user.phone_verified)
+                .bind(&user.status)
+                .bind(&user.description)
+                .bind(&user.updated_by)
+                .bind(id)
                 .execute(pool)
                 .await;
 
@@ -88,99 +139,25 @@ pub async fn create(user: User, state: State<'_, DbPool>) -> Result<Value, Value
                 Ok(_) => {
                     let json = json!({
                         "status": 200,
-                        "message": "Role created successfully",
+                        "message": "User updated successfully",
                     });
                     Ok(json)
                 }
                 Err(e) => {
                     let json = json!({
                         "status": 500,
-                        "data": e.to_string()
+                        "message": e.to_string()
                     });
                     Err(json)
                 }
             }
         }
-    }
-}
-
-#[tauri::command]
-pub async fn update_user(
-    id: i32,
-    allocated_roles: Vec<i32>,
-    user: User,
-    state: State<'_, DbPool>,
-) -> Result<Value, Value> {
-    let hashed_password = hash(user.password.clone(), DEFAULT_COST).unwrap();
-    match &state.pool {
-        PoolType::Postgres(pool) => {
-            let query = "UPDATE users SET name = $1, email = $2, password = $3, is_active = $4 WHERE id = $5";
-            let _ = sqlx::query(query)
-                .bind(&user.name)
-                .bind(&user.email)
-                .bind(&hashed_password)
-                .bind(&user.is_active)
-                .bind(id)
-                .execute(pool)
-                .await
-                .map_err(|e| json!({ "status": 500, "message": e.to_string() }))?;
-
-            // Delete existing user_roles
-            let delete_query = "DELETE FROM user_roles WHERE user_id = $1";
-            sqlx::query(delete_query)
-                .bind(&id)
-                .execute(pool)
-                .await
-                .map_err(|e| json!({ "status": 500, "message": e.to_string() }))?;
-
-            // Insert new user_roles
-            for role_id in allocated_roles {
-                let insert_query = "INSERT INTO user_roles (user_id, role_id) VALUES ($1, $2)";
-                sqlx::query(insert_query)
-                    .bind(&id)
-                    .bind(&role_id)
-                    .execute(pool)
-                    .await
-                    .map_err(|e| json!({ "status": 500, "message": e.to_string() }))?;
-            }
-
-            let json = json!({ "status": 200, "message": "User updated successfully", });
-            Ok(json)
-        }
-        PoolType::SQLite(pool) => {
-            let query =
-                "UPDATE users SET name = ?, email = ?, password = ?, is_active = ? WHERE id = ?";
-            let _ = sqlx::query(query)
-                .bind(&user.name)
-                .bind(&user.email)
-                .bind(&hashed_password)
-                .bind(&user.is_active)
-                .bind(id)
-                .execute(pool)
-                .await
-                .map_err(|e| json!({ "status": 500, "message": e.to_string() }))?;
-
-            // Delete existing user_roles
-            let delete_query = "DELETE FROM user_roles WHERE user_id = ?";
-            sqlx::query(delete_query)
-                .bind(&id)
-                .execute(pool)
-                .await
-                .map_err(|e| json!({ "status": 500, "message": e.to_string() }))?;
-
-            // Insert new user_roles
-            for role_id in allocated_roles {
-                let insert_query = "INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)";
-                sqlx::query(insert_query)
-                    .bind(&id)
-                    .bind(&role_id)
-                    .execute(pool)
-                    .await
-                    .map_err(|e| json!({ "status": 500, "message": e.to_string() }))?;
-            }
-
-            let json = json!({ "status": 200, "message": "User updated successfully", });
-            Ok(json)
+        PoolType::SQLite(_) => {
+            // Implement SQLite version if needed
+            Err(json!({
+                "status": 501,
+                "message": "SQLite implementation not available"
+            }))
         }
     }
 }

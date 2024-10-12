@@ -6,7 +6,7 @@ use std::result::Result;
 
 use crate::routes::permissions::compare_and_add_permissions;
 use crate::routes::users::User;
-use crate::settings::global::{local_data_path, get_store_value, save_store_value};
+use crate::settings::global::{get_store_value, local_data_path, save_store_value};
 use bcrypt::{hash, DEFAULT_COST};
 use uuid::Uuid;
 pub struct DbPool {
@@ -33,7 +33,7 @@ pub async fn set_active_db(db_pool: DbPool) -> DbPool {
         //this allows the app to re-render only when active db has changed
         let _ = save_store_value("active_db".to_string(), content);
     }
-    seed_admin_user(&db_pool).await;
+    // seed_admin_user(&db_pool).await;
     db_pool
 }
 
@@ -109,73 +109,69 @@ async fn run_sqlite_migrations(pool: &SqlitePool) {
     }
 }
 
-
 //seed the admin user
-pub async fn seed_admin_user(db_pool: &DbPool) {
-    match &db_pool.pool {
-        PoolType::Postgres(pool) => {
-            let count: (i64,) = sqlx::query_as("SELECT COUNT(*) FROM users")
-                .fetch_one(pool)
-                .await
-                .unwrap_or((0,));
+// pub async fn seed_admin_user(db_pool: &DbPool) {
+//     match &db_pool.pool {
+//         PoolType::Postgres(pool) => {
+//             let count: (i64,) = sqlx::query_as("SELECT COUNT(*) FROM users")
+//                 .fetch_one(pool)
+//                 .await
+//                 .unwrap_or((0,));
 
-            if count.0 == 0 {
-                let user = User {
-                    id: Some(0),
-                    total_roles: Some(0),
-                    staff_number: "0000".to_string(),
-                    name: "admin".to_string(),
-                    role: 0,
-                    email: "admin@admin.com".to_string(),
-                    password: "admin".to_string(),
-                    is_active: true,
-                };
+//             if count.0 == 0 {
+//                 let user = User {
+//                     id: Some(0),
+//                     total_roles: Some(0),
+//                     staff_number: "0000".to_string(),
+//                     name: "admin".to_string(),
+//                     // role: 0,
+//                     email: "admin@admin.com".to_string(),
+//                     password: "admin".to_string(),
+//                 };
 
-                let hashed_password = hash(user.password.clone(), DEFAULT_COST).unwrap();
+//                 let hashed_password = hash(user.password.clone(), DEFAULT_COST).unwrap();
 
-                let _ = sqlx::query("INSERT INTO users (serial_number, name, role, email, password, is_active) VALUES ($1, $2, $3, $4, $5, $6)")
-                    .bind(Uuid::new_v4().to_string())
-                    .bind(&user.name)
-                    .bind(&user.role)
-                    .bind(&user.email)
-                    .bind(&hashed_password)
-                    .bind(&user.is_active)
-                    .execute(pool)
-                    .await;
-            }
-        }
-        PoolType::SQLite(pool) => {
-            let count: (i64,) = sqlx::query_as("SELECT COUNT(*) FROM users")
-                .fetch_one(pool)
-                .await
-                .unwrap_or((0,));
+//                 let _ = sqlx::query("INSERT INTO users (serial_number, name, role, email, password) VALUES ($1, $2, $3, $4, $5)")
+//                     .bind(Uuid::new_v4().to_string())
+//                     .bind(&user.name)
+//                     // .bind(&user.role)
+//                     .bind(&user.email)
+//                     .bind(&hashed_password)
+//                     .bind(&user.is_active)
+//                     .execute(pool)
+//                     .await;
+//             }
+//         }
+//         PoolType::SQLite(pool) => {
+//             let count: (i64,) = sqlx::query_as("SELECT COUNT(*) FROM users")
+//                 .fetch_one(pool)
+//                 .await
+//                 .unwrap_or((0,));
 
-            if count.0 == 0 {
-                let user = User {
-                    id: Some(0),
-                    total_roles: Some(0),
-                    staff_number: "0000".to_string(),
-                    name: "admin".to_string(),
-                    role: 0,
-                    email: "admin@admin.com".to_string(),
-                    password: "admin".to_string(),
-                    is_active: true,
-                };
+//             if count.0 == 0 {
+//                 let user = User {
+//                     id: Some(0),
+//                     total_roles: Some(0),
+//                     staff_number: "0000".to_string(),
+//                     name: "admin".to_string(),
+//                     email: "admin@admin.com".to_string(),
+//                     password: "admin".to_string(),
+//                     status: true,
+//                 };
 
-                // let serial_number = Uuid::new_v4().to_string();
+//                 // let serial_number = Uuid::new_v4().to_string();
 
-                let hashed_password = hash(user.password.clone(), DEFAULT_COST).unwrap();
+//                 let hashed_password = hash(user.password.clone(), DEFAULT_COST).unwrap();
 
-                let _ = sqlx::query("INSERT INTO users (serial_number, name, role, email, password, is_active) VALUES (?, ?, ?, ?, ?, ?)")
-                    .bind(Uuid::new_v4().to_string())
-                    .bind(&user.name)
-                    .bind(&user.role)
-                    .bind(&user.email)
-                    .bind(&hashed_password)
-                    .bind(&user.is_active)
-                    .execute(pool)
-                    .await;
-            }
-        }
-    }
-}
+//                 let _ = sqlx::query("INSERT INTO users (serial_number, name, role, email, password) VALUES (?, ?, ?, ?, ?, ?)")
+//                     .bind(Uuid::new_v4().to_string())
+//                     .bind(&user.name)
+//                     .bind(&user.role)
+//                     .bind(&user.email)
+//                     .bind(&user.status)
+//                     .execute(pool)
+//                     .await;
+//             }
+//         }
+//     }
+// }

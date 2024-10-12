@@ -18,10 +18,6 @@
 ## END OF src-tauri/migrations/20240320202335_branches_table.sql
 ## src-tauri/migrations/20230926202334_user_table.sql
 ## END OF src-tauri/migrations/20230926202334_user_table.sql
-## src-tauri/migrations/sqlite/0001_user_table.sql
-## END OF src-tauri/migrations/sqlite/0001_user_table.sql
-## src-tauri/migrations/postgres/0001_user_table.sql
-## END OF src-tauri/migrations/postgres/0001_user_table.sql
 ## src-tauri/migrations/postgres/0002_branches_table.sql
 ## END OF src-tauri/migrations/postgres/0002_branches_table.sql
 ## src-tauri/migrations/sqlite/0002_branches_table.sql
@@ -34,8 +30,6 @@
 ## END OF app/admin/roles/rolesCrud.tsx
 ## src-tauri/src/routes/roles.rs
 ## END OF src-tauri/src/routes/roles.rs
-## src/components/custom/select.tsx
-## END OF src/components/custom/select.tsx
 ## src/components/custom/textarea.tsx
 ## END OF src/components/custom/textarea.tsx
 ## src/components/custom/radio.tsx
@@ -80,5 +74,3 @@
 ## END OF src-tauri/src/routes/mod.rs
 ## app/admin/users/upload.tsx
 ## END OF app/admin/users/upload.tsx
-## src-tauri/src/db_connections.rs
-## END OF src-tauri/src/db_connections.rs

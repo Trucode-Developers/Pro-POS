@@ -25,13 +25,14 @@ import { TypeUserSchema } from "@/lib/types/users";
 
 const defaultUser = {
   id: 0,
-  name: "",
   staff_number: "",
+  branch_slug: "",
+  name: "",
   role: 1,
   email: "",
   password: "",
   confirmPassword: "",
-  is_active: true,
+  status: true,
 };
 
 export default function Page() {

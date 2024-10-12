@@ -39,7 +39,7 @@ export default function UserCrud({
     resolver: zodResolver(UserSchema),
     defaultValues: user,
   });
-  const is_active = watch("is_active");
+  const status = watch("status");
 
   useEffect(() => {
     reset(user); // Update the form values when `user` changes
@@ -202,11 +202,11 @@ export default function UserCrud({
             <CustomSwitch
               isRequired
               label="Status"
-              register={register("is_active")}
-              error={errors.is_active}
-              checked={is_active}
+              register={register("status")}
+              error={errors.status}
+              checked={status}
               onCheckedChange={(checked: any) => {
-                setValue("is_active", checked);
+                setValue("status", checked);
               }}
             />
 
@@ -214,14 +214,14 @@ export default function UserCrud({
               <input
                 id="activeNess"
                 type="checkbox"
-                {...register("is_active")}
+                {...register("status")}
                 className="text-2xl"
               />
               <label htmlFor="activeNess">Is user active</label>
-              {errors.is_active && (
+              {errors.status && (
                 <span className="text-red-500 animate-pulse">
                   {" "}
-                  {errors.is_active.message}{" "}
+                  {errors.status.message}{" "}
                 </span>
               )}
             </div> */}

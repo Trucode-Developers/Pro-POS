@@ -16,14 +16,24 @@ export type TypeLoginSchema = z.infer<typeof LoginSchema>;
 export const UserSchema = z
   .object({
     id: z.number().optional(),
-    logo: z.string().optional(),
-    name: z.string().min(3, " must be at least 3 characters"),
     staff_number: z.string().min(4, " number must be at least 4 characters"),
-    role: z.number(),
+    branch_slug: z.string().optional(),
+    profile_picture: z.string().optional(),
+    name: z.string().min(3, " must be at least 3 characters"),
     email: z.string().email(),
     password: z.string().min(6, " must be at least 6 characters"),
+    phone_no: z.string().optional(),
+    id_no: z.string().optional(),
+    date_of_birth: z.string().optional(),
+    gender: z.string().optional(),
+    country: z.string().optional(),
+    location: z.string().optional(),
+    description: z.string().optional(),
     confirmPassword: z.string().min(6),
-    is_active: z.boolean(),
+    status: z.boolean({
+      required_error: " is required",
+      invalid_type_error: " must be a boolean",
+    }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",

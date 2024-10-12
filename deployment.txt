@@ -1,7 +1,7 @@
 After successful building of app and ready to build using github actions CI/CD:
 Do the following to trigger github workflow set: 
-     git tag v1.0.0
-     git push --tags
+    git tag v1.0.0
+    git push --tags
     or push and manually trigger github workflow
 
 //progress
@@ -13,3 +13,6 @@ Connect a folder over the network and share files ****
 make a user profile to add user and edit user
 make different structs to add and edit user
 make a modal to edit user password and primary phone and/or email 
+
+lite:  id INTEGER PRIMARY KEY AUTOINCREMENT,
+pgsql: id SERIAL PRIMARY KEY,

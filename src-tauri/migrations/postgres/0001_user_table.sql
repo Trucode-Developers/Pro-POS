@@ -1,13 +1,25 @@
 -- For PostgreSQL
 CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
+    id INTEGER PRIMARY KEY,
+    -- id <?sqlite INTEGER PRIMARY KEY AUTOINCREMENT ?>
+    -- <?postgres SERIAL PRIMARY KEY ?>,
     serial_number VARCHAR(255) NOT NULL UNIQUE,
     staff_number VARCHAR(255) NOT NULL UNIQUE DEFAULT '000000',
+    branch_slug VARCHAR(255) NOT NULL UNIQUE DEFAULT 'main',
+    profile_picture VARCHAR(255) NULL,
     name VARCHAR(255) NOT NULL,
-    role INT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    phone_no VARCHAR(255) NULL,
+    id_no VARCHAR(255) NULL,
+    date_of_birth TIMESTAMP NULL,
+    gender VARCHAR(255) NULL,
+    country INT NULL,
+    location VARCHAR(255) NULL,
+    email_verified  BOOLEAN NOT NULL DEFAULT FALSE,
+    phone_verified  BOOLEAN NOT NULL DEFAULT FALSE,
+    status  BOOLEAN NOT NULL DEFAULT TRUE,
+    description TEXT NULL,
     created_by VARCHAR(255) NULL,
     created_at TIMESTAMP NULL,
     updated_by INT NULL

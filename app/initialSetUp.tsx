@@ -144,8 +144,8 @@ export default function InitialSetUp() {
         console.log("Required data not found in the response");
         toast.error(
           <Error
-            title="Error!!!"
-            message="No servers found in the network. Please check your network connection."
+            title="No Params-Error!!!"
+            message="No servers found in the network. Please check your network connection and set expected parameters."
           />,
           { duration: 10000, position: "top-right" }
         );

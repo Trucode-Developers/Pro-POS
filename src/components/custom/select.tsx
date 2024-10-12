@@ -17,7 +17,7 @@ export default function CustomSelect({
   options,
   ...props
 }: Props) {
-    const { isRequired = false, ...restProps } = props; 
+  const { isRequired = false, ...restProps } = props;
   return (
     <div className={cn("relative my-0 bg-inherit w-[400px] ", outerClass)}>
       <select
