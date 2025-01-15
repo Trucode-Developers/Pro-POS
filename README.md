@@ -2,6 +2,12 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+Download and install binaries 
+
+```bash
+Download the latest Releases  and install in any OS
+```
+
 First, run the development server: edited
 
 ```bash
